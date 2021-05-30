@@ -24,11 +24,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Run Docker
 
-`docker-compose up --build`
-
-## Deploy in production
-
 `docker run -it -v $PWD:/home/node/app -w /home/node/app my/ng-cli ng build`
+
+Then,
+
+`docker-compose up --build`
 
 ## Development server
 
