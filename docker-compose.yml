@@ -1,0 +1,13 @@
+version: '3.6'
+services: 
+    prod:
+        restart: always
+        build: 
+            context: .
+            dockerfile: Dockerfile.nginx
+        volumes: 
+            - "./dist/ProjectTimer:/usr/share/nginx/html"
+        ports: 
+            - "80:80"
+
+
