@@ -10,7 +10,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 `docker run -it  -v $PWD:/home/node/app -w /home/node/app my/ng-cli npm install`
 
-## Build Dependencies
+## Build the project
 
 `docker run -it  -v $PWD:/home/node/app  -w /home/node/app my/ng-cli ng build`
 
