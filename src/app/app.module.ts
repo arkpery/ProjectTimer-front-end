@@ -4,8 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbSidebarService, NbButtonModule} from '@nebular/theme';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
@@ -15,14 +15,10 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NbThemeModule.forRoot({ name: 'dark' }),
-    NbSidebarModule,
-    NbLayoutModule,
-    NbEvaIconsModule,
-    NbButtonModule
+    NgbModule,
+
   ],
   providers: [
-    NbSidebarService
   ],
   bootstrap: [AppComponent]
 })
