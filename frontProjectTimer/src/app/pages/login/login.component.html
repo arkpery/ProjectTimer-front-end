@@ -6,23 +6,23 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-9 col-lg-8 mx-auto">
-                            <h2 class="login-register-heading mb-4">Login / Register</h2>
-                            <form>
-                                <div class="mb-3">
-                                    <label for="inputEmail" class="form-label">Email address</label>
+                            <h2 class="login-register-heading mb-4">Login</h2>
+                            <form (ngSubmit)="onSubmit(login)" #login="ngForm">
+                                <div class="mb-3 form-group">
+                                    <label for="email" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="email"
-                                        aria-describedby="emailHelp">
+                                        aria-describedby="emailHelp" name="email" ngModel required>
                                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="inputPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" aria-describedby="passwordHelp">
+                                <div class="mb-3 form-group">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" name="password" ngModel required>
                                     <div id="passwordHelp" class="form-text">We'll never share your password with anyone
                                         else.</div>
                                 </div>
-                                <button type="submit" class="btn btn-primary me-2" value="login">Login</button>
-                                <button type="submit" class="btn btn-secondary" value="register">Register</button>
+                                <button type="submit" class="btn btn-primary me-2" value="login" [disabled]="login.invalid">Login</button>
+                                <a routerLink="/register" class="btn btn-link" role="button" data-bs-toggle="button">Register</a>
                             </form>
                         </div>
                     </div>
