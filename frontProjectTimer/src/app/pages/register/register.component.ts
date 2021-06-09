@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models/user/user.model';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-register',
@@ -44,8 +44,9 @@ export class RegisterComponent implements OnInit {
     );
     this.userService.addUser(newUser).subscribe(
         response => {
+          localStorage.setItem('Authorization',response.user.accessToken);
           console.log(response);
-          this.router.navigate(['']);
+          this.router.navigate(['/teams']);
         },
         error => {
           console.log(error);

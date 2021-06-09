@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
@@ -9,19 +10,20 @@ import { UserService } from '../../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  message = '';
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
-    this.message = '';
+    
   }
 
   onSubmit(form: NgForm) {
     this.userService.login(form.value)
       .subscribe(
         response => {
+          localStorage.setItem('Authorization',response.user.accessToken);
           console.log(response);
+          this.router.navigate(['/teams']);
         },
         error => {
           console.log(error);
