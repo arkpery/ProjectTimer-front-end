@@ -1,1 +1,49 @@
-<p>projects works!</p>
+<article>
+    <div class="container mb-4">
+        <div class="mb-4">
+            <h3>Projet</h3>
+        </div>
+        <article>
+            <div class="my-4">
+                <button class="btn btn-primary">Ajouter un projet</button>
+            </div>
+            <section>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Créée le</th>
+                            <th scope="col">Groupes</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Administrateur</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="projects">
+                        <tr *ngFor="let project of projects; let i = index">
+                            <td>{{ project.name }}</td>
+                            <td>{{ project.created_at | date: "dd / MM / y" }}</td>
+                            <td>
+                                <ng-select [items]="project.groups" bindLabel="name" bindValue="_id" autofocus [(ngModel)]="defaultGroupId[i]"></ng-select>
+                            </td>
+                            <td><span class="badge"
+                                    [ngClass]="{ 'badge-success': !project.close, 'badge-danger': project.close }">{{ status(project) }}</span>
+                            </td>
+                            <td>{{ project.admin.email }}</td>
+                            <td>
+                                <div>
+                                    <a class="mx-2 link link-info" routerLink="/projects/{{project._id}}">
+                                        <fa-icon [icon]="faCogs"></fa-icon>
+                                    </a>
+                                    <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id" class="mx-2 link link-danger" (click)="onDeleteProject(project)">
+                                        <fa-icon [icon]="faTrash"></fa-icon>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </article>
+    </div>
+</article>

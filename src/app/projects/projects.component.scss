@@ -1,0 +1,15 @@
+.link {
+    cursor: pointer;
+}
+
+.link-danger {
+    color: red;
+}
+
+.link-info {
+    color: blueviolet;
+}
+
+a.link-danger, a.link-info {
+    text-decoration: none;
+}

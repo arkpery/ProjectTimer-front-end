@@ -9,6 +9,9 @@ import { ProjectsComponent } from './projects/projects.component';
 import { UiNavbarComponent } from './ui-navbar/ui-navbar.component';
 import { HttpClientModule } from "@angular/common/http";
 import { ProjectComponent } from './project/project.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,8 +25,10 @@ import { ProjectComponent } from './project/project.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     NgbModule,
-    HttpClientModule
-
+    HttpClientModule,
+    FontAwesomeModule,
+    NgSelectModule, 
+    FormsModule
   ],
   providers: [
   ],
