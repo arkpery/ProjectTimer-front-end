@@ -13,6 +13,7 @@ import { TeamViewComponent } from './pages/team-view/team-view.component';
 import { UserService } from './services/user/user.service';
 import { TeamService } from './services/team/team.service';
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AuthGuardService } from './services/auth-guard/auth-guard.service';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [
     UserService,

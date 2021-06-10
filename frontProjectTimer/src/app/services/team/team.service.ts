@@ -8,19 +8,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class TeamService {
-  private teams: Team[] = [];
-  teamSubject = new Subject<Team[]>();
-
+  
   GROUP_URL = '/groups';
 
   constructor(private http: HttpClient) { }
 
-  emitUsers() {
-    this.teamSubject.next(this.teams.slice());
-  }
-
-  getAll(): Observable<any> {
-    return this.http.get(environment.baseUrl + this.GROUP_URL,{ headers: {'Authorization':`${localStorage.getItem('Authorization')}`}});
+  getAll(): Observable<Team[]> {
+    return this.http.get<Team[]>(environment.baseUrl + this.GROUP_URL,{ headers: {'Authorization':`${localStorage.getItem('Authorization')}`}});
   }
 
   get(id: any): Observable<any> {
