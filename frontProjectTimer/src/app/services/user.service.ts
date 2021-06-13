@@ -15,6 +15,10 @@ export class UserService {
   LOGIN_URL = '/users/login';
   LOGOUT_URL = '/users/logout';
   ADD_URL = '/users';
+  RESET_PASSWORD='/resetPassword';
+  NEW_PASSWORD='/new-password';
+  VALID_PASSWORD_TOKEN = '/valid-password-token';
+  
 
   constructor(private http: HttpClient) { }
 
@@ -28,5 +32,17 @@ export class UserService {
 
   login(data: any): Observable<any> {
     return this.http.post(environment.baseUrl + this.LOGIN_URL, data);
+  }
+
+  requestReset(body: any): Observable<any> {
+    return this.http.post(environment.baseUrl+this.ADD_URL+this.RESET_PASSWORD, body);
+  }
+
+  newPassword(data: any): Observable<any> {
+    return this.http.post(environment.baseUrl+this.ADD_URL+this.NEW_PASSWORD, data);
+  }
+
+  ValidPasswordToken(data: any): Observable<any> {
+    return this.http.post(environment.baseUrl+this.ADD_URL+this.VALID_PASSWORD_TOKEN, data);
   }
 }

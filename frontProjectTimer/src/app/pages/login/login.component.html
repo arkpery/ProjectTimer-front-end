@@ -16,10 +16,11 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 form-group">
-                                    <label for="password" class="form-label">Password</label>
+                                    <label for="password" class="form-label">Password</label> <a routerLink="/request-reset-password" class="btn btn-link" role="button" data-bs-toggle="button">Forgot Password?</a>
                                     <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" name="password" ngModel required>
                                     <div id="passwordHelp" class="form-text">We'll never share your password with anyone
-                                        else.</div>
+                                        else.</div> 
+                                    
                                 </div>
                                 <button type="submit" class="btn btn-primary me-2" value="login" [disabled]="login.invalid">Login</button>
                                 <a routerLink="/register" class="btn btn-link" role="button" data-bs-toggle="button">Register</a>
