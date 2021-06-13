@@ -254,13 +254,9 @@ export class TimelineComponent {
     if (header.key === "ID" || header.key === "Description") {
       const key = header.key;
 
-      console.log(key);
       if (!this.sortedIndex[key]) {
         this.sortedIndex[key] = 1;
       }
-      console.log(this.sortedIndex);
-
-      console.log(this.__rows);
       this.sortedIndex[key] = -this.sortedIndex[key];
     }
     else if (this.type === "perDay") {
