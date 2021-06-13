@@ -1,6 +1,8 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Query, ViewChildren } from '@angular/core';
 import { Component, ElementRef, Input, OnChanges, OnInit, QueryList, SimpleChanges } from '@angular/core';
-import { Column, HeaderColumn, Row } from "../../app/viewModels/index";
+import { cpuUsage } from 'process';
+import { Column, HeaderColumn, Ribbon, Row } from "../../app/viewModels/index";
 import { RibbonComponent } from '../ribbon/ribbon.component';
 
 @Component({
@@ -8,103 +10,133 @@ import { RibbonComponent } from '../ribbon/ribbon.component';
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent implements OnInit, OnChanges {
+export class TimelineComponent implements OnInit {
 
   @Input() headers: Array<HeaderColumn> = [];
   @Input() rows: Array<Row> = [];
-  @ViewChildren(RibbonComponent) private list!: QueryList<RibbonComponent>;
 
- 
+  @ViewChildren("columnView") cols!: QueryList<ElementRef>;
+
+  public styles: { [key: string]: any } = {};
+  public viewModel: { [key: string]: any } = {};
+  public ribbons: Array<{ [key: string]: any }> = [];
+  private columns: Array<Column> = [];
 
   constructor(public el: ElementRef) {
 
-  }
-
-
-  getHighestWidth(index: number, headers: Array<HTMLElement>, rows: Array<HTMLElement>) {
-    const header = headers[index];
-    const cols = [header];
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const columns = row.querySelectorAll(".row-column");
-
-      cols.push(columns[index] as HTMLElement);
-    }
-    const sizes = cols.map(col => Math.ceil(col.getBoundingClientRect().width));
-    let max = 0;
-    for (let size of sizes) {
-      if (size > max) {
-        max = size;
-      }
-    }
-    return (max);
-  }
-
-  setColumnWidth(index: number, widths: Array<number>, headers: Array<HTMLElement>, rows: Array<HTMLElement>) {
-    const header = headers[index] as HTMLElement;
-    const width = widths[index];
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const columns = row.querySelectorAll(".row-column");
-      const column = columns[index] as HTMLElement;
-
-      column.style.minWidth = `${width}px`;
-      column.style.width = `100%`;
-    }
-    header.style.minWidth = `${width}px`;
-    header.style.width = `100%`;
   }
 
   ngOnInit(): void {
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngAfterViewChecked() {
 
   }
 
-  getTimelineWidth(){
-    return ((this.el.nativeElement).getBoundingClientRect().width);
+  get BoundingClientRect() {
+    return ((this.el.nativeElement).getBoundingClientRect());
   }
 
-  getContent(row: Row, header: HeaderColumn){
-      const columns = row.columns as Array<Column>;
+  getContent(row: Row, header: HeaderColumn) {
+    const columns = row.columns as Array<Column>;
 
-      for (let i = 0; i < columns.length; i++){
-        const column = columns[i];
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i];
 
-        if (header.key === column.key){
-          const str = column.value.trim();
+      if (header.key === column.key) {
+        const str = column.value.trim();
 
-          if(str.length > 10){
-            return (`${str.substr(0, 10)}...`);
-          }
-          return (str);
-        }
+        return (str);
       }
-      return ("");
+    }
+    return ("");
   }
 
-  ngAfterViewInit(){
-    console.log("enter");
-    const headersRow = this.el.nativeElement.querySelector(".header-row");
-    const rows = this.el.nativeElement.querySelector(".rows");
-    const tabRow = this.el.nativeElement.querySelectorAll(".rows div.content-row");
-    const tabHeader = this.el.nativeElement.querySelectorAll(".header-row .header");
-    const widths = [];
+  adjustHeader(headerModel: HeaderColumn, headerView: HTMLElement) {
+    const key = headerModel.key!;
 
-    for (let i = 0; i < tabHeader.length; i++) {
-      widths.push(this.getHighestWidth(i, tabHeader, tabRow));
+    if (!this.viewModel[key]) {
+      this.viewModel[key] = {};
+      this.styles[key] = {};
     }
-     
-    for (let i = 0; i < widths.length; i++) {
-      this.setColumnWidth(i, widths, tabHeader, tabRow);
+    const rect = headerView.getBoundingClientRect();
+
+    if (!this.viewModel[key]["width"]) {
+      this.viewModel[key]["width"] = headerView.scrollWidth;
     }
-    for (let i = 0; i < this.list.length; i++){
-      this.list.get(i)?.onLoad();
+    if (rect.width > this.viewModel[key]["width"]) {
+      this.viewModel[key]["width"] = rect.width;
     }
+    return (this.styles[key]);
+  }
+
+  adjustRow(row: Row, view: HTMLElement) {
+    return {};
+  }
+
+
+  verifyRibbon(row: Row, column: HeaderColumn) {
+    const ribbons = row.ribbons!;
+
+    for (let ribbon of ribbons) {
+      if (ribbon.colStart?.key === column.key) {
+        return (ribbon);
+      }
+    }
+    return (null);
+  }
+
+  getRibbon(row: Row, column: HeaderColumn) {
+    const ribbons = row.ribbons!;
+
+    for (let ribbon of ribbons) {
+      if (ribbon.colStart?.key === column.key) {
+        return (ribbon);
+      }
+    }
+    return (null);
+  }
+
+  adjustColumn(column: HeaderColumn, view: HTMLElement) {
+    const key = column.key!;
+
+    if (!this.viewModel[key]) {
+      this.viewModel[key] = {};
+      this.styles[key] = {};
+    }
+    const rect = view.getBoundingClientRect();
+    if (!this.viewModel[key]["width"]) {
+      this.viewModel[key] = {
+        width: 0,
+        x: 0,
+      };
+    }
+    if (rect.width > this.viewModel[key]["width"]) {
+      this.viewModel[key] = {
+        width: rect.width,
+        x: rect.x,
+      };
+    }
+    this.styles[key] = {
+      "min-width.px": this.viewModel[key]["width"]
+    };
+    return (this.styles[key]);
+  }
+
+  collectionElToHTMLElement(){
+    const list = [];
+
+    if (this.cols){
+      for (let item of this.cols){
+        list.push(item.nativeElement as HTMLElement);
+      }
+    }
+    return (list);
+  }
+
+  ngAfterViewInit() {
+
   }
 
 }

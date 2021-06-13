@@ -1,18 +1,18 @@
 export class Ribbon {
-    colNo: number = 0;
-    end: number = 0;
+    colStart?: Column;
+    colEnd?: Column;
     content?: string;
     author?: string;
 }
 
-export class HeaderColumn {
-    key?: string;
-}
-
 export class Column {
-    uid: number = 0;
+    uid?: number = 0;
     key?: string;
     value?: any;
+    width?: number;
+}
+
+export class HeaderColumn extends Column{
 }
 
 export class Row {

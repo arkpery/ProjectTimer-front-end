@@ -13,7 +13,7 @@ import { TimelineComponent } from '../timeline/timeline.component';
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent  {
   // 60c18f1982379a05b6e286a8
   token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBjMThjNDJjNzcyYWEwNTQ2NDAyNjJmIiwiZW1haWwiOiJtYXhpbWVAbWFpbC5mciJ9LCJpYXQiOjE2MjMyOTcwOTAsImV4cCI6MTYyNTg4OTA5MH0.pElOdmwMGf9H2RUr1wxunCXSZLXhKhWg1e90gvZ6R1s";
   project?: Project;
@@ -32,7 +32,7 @@ export class ProjectComponent implements OnInit {
     window.localStorage.setItem("token", this.token);
 
     await this.FetchProject();
-
+    await this.InitTimers();
   }
 
   async FetchProject() {
@@ -58,7 +58,7 @@ export class ProjectComponent implements OnInit {
     this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).map((date) => {
       return {
         value: date,
-        label: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+        label: `${moment(date).format("DD/MM/YYYY")}`
       }
     }).sort((a, b) => {
       if (a.value.getTime() > a.value.getTime()) {
@@ -88,16 +88,31 @@ export class ProjectComponent implements OnInit {
     if (this.selectDate.length) {
       this.currentDate = this.selectDate[0];
     }
-    await this.InitTimers();
+  }
+
+  get Total(){
+    const total = this.timers?.map(t => t.duration).reduce((p, v) => {
+      p += v;
+
+      return (p);
+    });
+    const date = moment(total).toDate()
+
+    console.log(date);
+    return (date);
   }
 
   async InitTimers() {
-    console.log("init");
-    console.log(this);
     if (!this.timers) {
       this.timers = [];
     }
-    const rows = this.timers.map((timer, index) => {
+    const rows = this.timers.filter((timer) => {
+      const time = moment(timer.startTime).toDate();
+
+      return (time.getDate() === this.currentDate?.value.getDate() && 
+      time.getMonth() === this.currentDate.value.getMonth() && 
+      time.getFullYear() === this.currentDate.value.getFullYear());
+    }).map((timer, index) => {
       const row = new Row();
       const columns = [];
       const arr = ["_id", "description"];
@@ -131,17 +146,18 @@ export class ProjectComponent implements OnInit {
               this.currentDate.value.getMonth() === start.getMonth() &&
               this.currentDate.value.getFullYear() && start.getFullYear() &&
               this.currentDate.value.getDate() && start.getDate()) {
-              ribbon.colNo = i - 1;
+                ribbon.colStart = this.headers[i];
             }
             if (date.getHours() === end.getHours() &&
               this.currentDate.value.getMonth() === end.getMonth() &&
               this.currentDate.value.getFullYear() && end.getFullYear() &&
               this.currentDate.value.getDate() && end.getDate()) {
-              ribbon.end = i - 1;
+                ribbon.colEnd = this.headers[i];
             }
           }
           ribbons.push(ribbon);
         }
+        console.log(ribbons);
         row.ribbons = ribbons;
       }
       row.columns = columns;

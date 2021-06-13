@@ -1,18 +1,18 @@
 <div class="timeline my-4">
     <div class="header-row">
-        <div class="header mp-4" *ngFor="let header of headers">
+        <div class="header mp-4" #view [ngStyle]="adjustHeader(header, view)" *ngFor="let header of headers">
             {{ header.key }}
         </div>
     </div>
     <div class="rows">
-        <div class="content-row" *ngFor="let row of rows; let i = index">
-            <div class="row-column mp-4"  *ngFor="let header of headers">
-                {{ getContent(row, header) }}
-            </div>
-            <div *ngFor="let ribbon of row.ribbons">
-                <app-ribbon [ribbon]="ribbon" [headers]="headers" [timelineEl]="el" [row]="row"></app-ribbon>
+        <div class="content-row" #rowView *ngFor="let row of rows; let i = index">
+            <div class="row-column mp-4" [attr.row]="row.uid" [attr.col]="column.key" #columnView [ngStyle]="adjustColumn(column, columnView)" *ngFor="let column of headers">
+                {{ getContent(row, column) }}
+
+                <div *ngIf="verifyRibbon(row, column)">
+                    <app-ribbon [timeline]="BoundingClientRect" [columnView]="columnView" [column]="column" [ribbon]="getRibbon(row, column)!"></app-ribbon>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
