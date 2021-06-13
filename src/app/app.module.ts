@@ -12,13 +12,21 @@ import { ProjectComponent } from './project/project.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from './ui-button/ui-button.component';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { TimelineComponent } from './timeline/timeline.component';
+import { RibbonComponent } from './ribbon/ribbon.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectsComponent,
     UiNavbarComponent,
-    ProjectComponent
+    ProjectComponent,
+    UiButtonComponent,
+    ProjectListComponent,
+    TimelineComponent,
+    RibbonComponent
   ],
   imports: [
     BrowserModule,

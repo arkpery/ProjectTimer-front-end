@@ -7,9 +7,9 @@
             <div class="my-4">
                 <button class="btn btn-primary">Ajouter un projet</button>
             </div>
-            <section>
-                <table class="table table-striped">
-                    <thead>
+            <section *ngIf="projects.length">
+                <table class="table">
+                    <thead class="thead-primary">
                         <tr>
                             <th scope="col">Nom</th>
                             <th scope="col">Créée le</th>
@@ -43,6 +43,9 @@
                         </tr>
                     </tbody>
                 </table>
+            </section>
+            <section *ngIf="!projects.length">
+                <p>En cours de chargement....</p>
             </section>
         </article>
     </div>

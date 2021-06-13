@@ -13,3 +13,8 @@
 a.link-danger, a.link-info {
     text-decoration: none;
 }
+
+thead.thead-primary {
+   background: linear-gradient(0deg, rgba(134,85,145,1) 0%, rgba(198,165,240,1) 100%);
+   color: white;
+}

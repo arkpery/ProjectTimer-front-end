@@ -6,7 +6,7 @@ export interface Timer {
     description: string;
     taskType: string;
     user: User | string | any;
-    startTime: Date,
+    startTime: string,
     duration: number,
     project: Project | string | any;
 };

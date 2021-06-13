@@ -52,4 +52,12 @@ export class ProjectService {
       }
     });
   }
+  
+  public close(project: Project){
+    return this.http.delete(`${this.hostname}/projects/${project._id}/close`, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+  }
 }

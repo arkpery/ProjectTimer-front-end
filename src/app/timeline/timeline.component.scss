@@ -1,0 +1,33 @@
+.content-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.row-column, .header-row .header {
+    display: inline-block;
+}
+
+.header-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-row  .header {
+    border: 1px solid grey;
+    background: gray;
+}
+
+.rows .content-row .row-column {
+    border: 1px solid grey;
+}
+
+.timeline {
+    
+    overflow: scroll;
+    border: 1px solid grey;
+    position: relative; 
+}
+
+.mp-4 {
+    padding: 35px;
+}

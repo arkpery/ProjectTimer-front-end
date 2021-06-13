@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Project } from '../models/Project';
 import { ProjectService } from '../project.service';
 import { faTrash, faCogs } from '@fortawesome/free-solid-svg-icons';
 import { Group } from '../models/Group';
 import { UserService } from '../user.service';
 import { User } from '../models/User';
+import { TimelineComponent } from '../timeline/timeline.component';
 
 @Component({
   selector: 'app-projects',
@@ -19,6 +20,7 @@ export class ProjectsComponent implements OnInit {
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
   currentUser?: User;
+
 
   constructor(private projectService: ProjectService, private userService: UserService) { }
 
