@@ -16,6 +16,8 @@ import { UiButtonComponent } from './ui-button/ui-button.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ResponseResetPasswordComponent } from './pages/response-reset-password/response-reset-password.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { RibbonComponent } from './ribbon/ribbon.component';
     UiButtonComponent,
     ProjectListComponent,
     TimelineComponent,
-    RibbonComponent
+    RibbonComponent,
+    ResetPasswordComponent,
+    ResponseResetPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,7 @@ import { RibbonComponent } from './ribbon/ribbon.component';
     NgbModule,
     HttpClientModule,
     FontAwesomeModule,
-    NgSelectModule, 
+    NgSelectModule,
     FormsModule
   ],
   providers: [
