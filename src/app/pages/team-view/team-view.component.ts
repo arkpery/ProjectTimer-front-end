@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Team } from 'src/app/models/team/team.model';
-import { TeamService } from 'src/app/services/team/team.service';
+import { TeamService } from 'src/app/team/team.service';
 
 @Component({
   selector: 'app-team-view',
@@ -25,11 +25,11 @@ export class TeamViewComponent implements OnInit {
   findById(id: string): void {
     this.teamService.getGroup(id)
       .subscribe(
-        response => {
+        (response: any) => {
           this.teams = response;
           console.log(response);
         },
-        error => {
+        (error: any) => {
           console.log(error);
         });
   }

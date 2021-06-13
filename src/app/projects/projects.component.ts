@@ -24,8 +24,13 @@ export class ProjectsComponent implements OnInit {
   constructor(private projectService: ProjectService, private userService: UserService) { }
 
   async ngOnInit(): Promise<void> {
-    await this.CurrentUser();
-    await this.onFetchProjects();
+    try {
+      await this.CurrentUser();
+      await this.onFetchProjects();
+    }
+    catch (e) {
+      this.requestDone = true;
+    }
   }
 
   status(project: Project) {

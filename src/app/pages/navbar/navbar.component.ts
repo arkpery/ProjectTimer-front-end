@@ -20,8 +20,7 @@ export class NavbarComponent {
   CurrentUser() {
     const user = window.localStorage.getItem("user");
 
-    console.log(user);
-    if (user){
+    if (user) {
       this.currentUser = JSON.parse(user);
     }
     else {
@@ -30,7 +29,7 @@ export class NavbarComponent {
     }
   }
 
-  logout(event: any){
+  logout(event: any) {
     event.preventDefault();
 
     window.localStorage.clear();

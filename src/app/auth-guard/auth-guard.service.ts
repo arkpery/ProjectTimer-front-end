@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean|any> | Promise<boolean|any> | boolean | any {
 
-      const token = localStorage.getItem('Authorization');
+      const token = localStorage.getItem('token');
       if (token) {
         return true;
       } else {
