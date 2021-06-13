@@ -25,11 +25,11 @@
         </div>
   
        <br><br>
-  
+         
        <div class="form-group row">
         <label for="admin" class="col-sm-4 col-form-label">Creator</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" formControlName="admin" id="admin">
+            <input class="form-control" type="text" placeholder="you" aria-label="readonly input example" readonly>
           </div>
        </div>
   
@@ -71,7 +71,7 @@
         <br><br>
   
         <div class="modal-footer">
-             <button type="button" (click)="modal.dismiss()" class="favorite styled" >Cancel</button> 
+             <button type="button" (click)="modal.dismiss()" class="btn btn-secondary" >Cancel</button> 
              <button type="submit" class="favorite styled" >Create</button>
         </div>
       </form>
