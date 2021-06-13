@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row no-gutter mt-4">
+        <h2>Group list</h2>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+            <button class="btn btn-primary" type="button">Create Group</button>
+        </div>
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Name</th>
+                        <th scope="col">Members</th>
+                        <th scope="col">Created at</th>
+                        <th scope="col">Creator</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let team of teams">
+                        <td>{{team.name}}</td>
+                        <td *ngFor="let member of team.members">{{member.firstname}} </td>
+                        <td>{{team.created_at | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                        <td>{{team.admin.firstname}}</td>
+                        <td>
+                            <button type="button" routerLink="/teams/{{team._id}}" class="btn btn-primary  btn-circle btn-floating btn-sm me-1">
+                                <fa-icon [icon]="faCog"></fa-icon>
+                            </button>
+                            <button type="button" (click)="onDelete('{{team._id}}')" class="btn btn-danger  btn-circle btn-floating btn-sm">
+                                <fa-icon [icon]="faTrash"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

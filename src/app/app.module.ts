@@ -21,6 +21,11 @@ import { ResponseResetPasswordComponent } from './pages/response-reset-password/
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { NavbarComponent } from './pages/navbar/navbar.component';
+import { TeamsListComponent } from './pages/teams-list/teams-list.component';
+import { TeamViewComponent } from './pages/team-view/team-view.component';
+import { UserService } from './user.service';
+import { TeamService } from './team/team.service';
+import { AuthGuardService } from './auth-guard/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +41,9 @@ import { NavbarComponent } from './pages/navbar/navbar.component';
     ResponseResetPasswordComponent,
     LoginComponent,
     RegisterComponent,
-    NavbarComponent
+    NavbarComponent,
+    TeamsListComponent,
+    TeamViewComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +57,9 @@ import { NavbarComponent } from './pages/navbar/navbar.component';
     ReactiveFormsModule
   ],
   providers: [
+    UserService,
+    TeamService,
+    AuthGuardService
   ],
   bootstrap: [AppComponent]
 })

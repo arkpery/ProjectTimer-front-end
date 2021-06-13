@@ -6,6 +6,9 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { ResponseResetPasswordComponent } from './pages/response-reset-password/response-reset-password.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { TeamsListComponent } from './pages/teams-list/teams-list.component';
+import { AuthGuardService } from './auth-guard/auth-guard.service';
+import { TeamViewComponent } from './pages/team-view/team-view.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,6 +17,8 @@ const routes: Routes = [
   { path: "projects/:id", component: ProjectComponent },
   { path: 'request-reset-password', component: ResetPasswordComponent },
   { path: 'response-reset-password/:token', component: ResponseResetPasswordComponent },
+  { path: 'teams', canActivate: [AuthGuardService], component: TeamsListComponent },
+  { path: 'teams/:id', canActivate: [AuthGuardService], component: TeamViewComponent },
   { path: '', component: LoginComponent }
 ];
 
