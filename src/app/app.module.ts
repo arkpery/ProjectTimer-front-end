@@ -16,6 +16,7 @@ import { UiButtonComponent } from './ui-button/ui-button.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
+import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RibbonComponent } from './ribbon/ribbon.component';
     UiButtonComponent,
     ProjectListComponent,
     TimelineComponent,
-    RibbonComponent
+    RibbonComponent,
+    TimerComponent
   ],
   imports: [
     BrowserModule,
