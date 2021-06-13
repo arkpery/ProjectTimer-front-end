@@ -44,9 +44,8 @@
                             </app-ui-button>
                         </div>
                     </div>
-                    <div>
-                        <ng-select class="my-4" name="date" [items]="selectDate" bindLabel="label" autofocus (change)="InitTimers()" [(ngModel)]="currentDate"></ng-select>
-                        <app-timeline *ngIf="rows.length && currentDate !== null" [headers]="headers" [rows]="rows"></app-timeline>
+                    <div *ngIf="rows.length && headers.length && currentDate !== null" >
+                        <app-timeline (changeTimer)="InitTimers($event)" [selectDate]="selectDate" [currentDate]="currentDate" [headers]="headers" [rows]="rows"></app-timeline>
                     </div>
                 </div>
             </div>

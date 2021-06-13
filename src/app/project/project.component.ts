@@ -7,6 +7,7 @@ import { TimerrsService } from '../timerrs.service';
 import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
 import moment from "moment";
 import { TimelineComponent } from '../timeline/timeline.component';
+import { time } from 'console';
 
 @Component({
   selector: 'app-project',
@@ -32,7 +33,7 @@ export class ProjectComponent  {
     window.localStorage.setItem("token", this.token);
 
     await this.FetchProject();
-    await this.InitTimers();
+    await this.InitTimers(null);
   }
 
   async FetchProject() {
@@ -48,13 +49,6 @@ export class ProjectComponent  {
       }
     ];
     moment.locale("fr");
-    for (let i = 0; i < 24; i++) {
-      const date = moment().startOf("date").add(i, "hours");
-
-      this.headers.push({
-        key: `${date.format("HH")}`
-      });
-    }
     this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).map((date) => {
       return {
         value: date,
@@ -98,14 +92,22 @@ export class ProjectComponent  {
     });
     const date = moment(total).toDate()
 
-    console.log(date);
     return (date);
   }
 
-  async InitTimers() {
+  async InitTimers(event: any) {
+    console.log("enter ?");
     if (!this.timers) {
       this.timers = [];
     }
+    if (event){
+      const t = moment(event, "DD/MM/YYYY");
+      this.currentDate = {
+        value: t.toDate(),
+        label: event
+      };
+    }
+    this.rows = [];
     const rows = this.timers.filter((timer) => {
       const time = moment(timer.startTime).toDate();
 
@@ -130,41 +132,18 @@ export class ProjectComponent  {
       }
       const start = moment.parseZone(timer.startTime).toDate();
       const end = moment(start.getTime() + timer.duration).toDate();
-      if (this.headers && this.headers.length > 2) {
-        const ribbons: Array<Ribbon> = [];
-        if (this.currentDate){
-          const ribbon = new Ribbon();
-          for (let i = 2; i < this.headers.length; i++) {
-            ribbon.content = timer.taskType;
-            if (timer.user) {
-              ribbon.author = timer.user.email;
-            }
-            const value = this.headers[i].key;
-            const date = moment(value, "HH").toDate();
-  
-            if (date.getHours() === start.getHours() &&
-              this.currentDate.value.getMonth() === start.getMonth() &&
-              this.currentDate.value.getFullYear() && start.getFullYear() &&
-              this.currentDate.value.getDate() && start.getDate()) {
-                ribbon.colStart = this.headers[i];
-            }
-            if (date.getHours() === end.getHours() &&
-              this.currentDate.value.getMonth() === end.getMonth() &&
-              this.currentDate.value.getFullYear() && end.getFullYear() &&
-              this.currentDate.value.getDate() && end.getDate()) {
-                ribbon.colEnd = this.headers[i];
-            }
-          }
-          ribbons.push(ribbon);
-        }
-        console.log(ribbons);
-        row.ribbons = ribbons;
+      row.content = timer.taskType;
+      if (timer.user){
+        row.author = timer.user.email;
       }
+      row.start = start;
+      row.stop = end;
       row.columns = columns;
       row.uid = index;
       return (row);
     });
     this.rows = rows;
+    console.log(this.rows);
   }
 
 

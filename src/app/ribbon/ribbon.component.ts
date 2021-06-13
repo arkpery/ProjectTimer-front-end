@@ -2,6 +2,7 @@ import { HostListener, ViewChild } from '@angular/core';
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { off } from 'process';
 import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
+import moment from "moment";
 
 @Component({
   selector: 'app-ribbon',
@@ -13,6 +14,7 @@ export class RibbonComponent  {
   @Input() timeline!: DOMRect;
   @Input() columnView!: HTMLElement;
   @Input() column!: Column;
+  @Input() type: string = "";
 
   @ViewChild("view") ribbonView!: ElementRef;
 
@@ -23,10 +25,30 @@ export class RibbonComponent  {
 
   ngDoCheck(){
     const rect = this.columnView.getBoundingClientRect();
-    const diff = parseInt(this.ribbon.colEnd?.key!, 10) - parseInt(this.ribbon?.colStart?.key!, 10);
-    const totalWidth = rect.width * diff;
-
-    this.style["min-width.px"] = totalWidth;
+    if (this.type === "perHour"){
+      const end = moment(this.ribbon.colEnd?.key!, "HH:mm").toDate().getMinutes();
+      const start = moment(this.ribbon?.colStart?.key!, "HH:mm").toDate().getMinutes();
+      const diff =  end - start;
+      console.log(diff);
+      if (Number.isNaN(diff)){
+        this.style["display"] = "none";
+      }
+      else {
+        const totalWidth = rect.width * (diff + 1);
+        this.style["min-width.px"] = totalWidth;
+      }
+    }
+    else if (this.type === "perDay"){
+      const diff = parseInt(this.ribbon.colEnd?.key!, 10) - parseInt(this.ribbon?.colStart?.key!, 10);
+  
+      if (Number.isNaN(diff)){
+        this.style["display"] = "none";
+      }
+      else {
+        const totalWidth = rect.width * (diff + 1);
+        this.style["min-width.px"] = totalWidth;
+      }
+    }
   }
 
   taskType() {
@@ -34,7 +56,6 @@ export class RibbonComponent  {
   }
 
   ngAfterViewInit() {
-    console.log("hello");
   }
 
 }
