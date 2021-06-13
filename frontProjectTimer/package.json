@@ -1,5 +1,5 @@
 {
-  "name": "project-timer",
+  "name": "front-project-timer",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -11,7 +11,6 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~12.0.2",
-    "@angular/cdk": "^11.0.0",
     "@angular/common": "~12.0.2",
     "@angular/compiler": "~12.0.2",
     "@angular/core": "~12.0.2",
@@ -23,16 +22,7 @@
     "@ng-bootstrap/ng-bootstrap": "^9.1.2",
     "@popperjs/core": "^2.9.2",
     "ajv": "^8.5.0",
-    "@fortawesome/angular-fontawesome": "^0.9.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@nebular/eva-icons": "7.0.0",
-    "@nebular/theme": "^7.0.0",
-    "@ng-select/ng-select": "^6.1.0",
-    "bootstrap": "^4.5.0",
-    "eva-icons": "^1.1.2",
-    "moment": "^2.29.1",
-    "moment-timezone": "^0.5.33",
+    "bootstrap": "^5.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
@@ -41,7 +31,6 @@
     "@angular-devkit/build-angular": "~12.0.2",
     "@angular/cli": "~12.0.2",
     "@angular/compiler-cli": "~12.0.2",
-    "@schematics/angular": "~12.0.2",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.7.0",

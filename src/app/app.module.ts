@@ -18,6 +18,9 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ResponseResetPasswordComponent } from './pages/response-reset-password/response-reset-password.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { NavbarComponent } from './pages/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { ResponseResetPasswordComponent } from './pages/response-reset-password/
     TimelineComponent,
     RibbonComponent,
     ResetPasswordComponent,
-    ResponseResetPasswordComponent
+    ResponseResetPasswordComponent,
+    LoginComponent,
+    RegisterComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

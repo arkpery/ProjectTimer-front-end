@@ -16,43 +16,41 @@ export class ProjectsComponent implements OnInit {
 
   faTrash = faTrash;
   faCogs = faCogs;
-  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBjMThjNDJjNzcyYWEwNTQ2NDAyNjJmIiwiZW1haWwiOiJtYXhpbWVAbWFpbC5mciJ9LCJpYXQiOjE2MjMyOTcwOTAsImV4cCI6MTYyNTg4OTA5MH0.pElOdmwMGf9H2RUr1wxunCXSZLXhKhWg1e90gvZ6R1s";
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
   currentUser?: User;
-
+  requestDone: boolean = false;
 
   constructor(private projectService: ProjectService, private userService: UserService) { }
 
   async ngOnInit(): Promise<void> {
-    window.localStorage.setItem("token", this.token);
-
     await this.CurrentUser();
     await this.onFetchProjects();
   }
 
-  status(project: Project){
+  status(project: Project) {
     return (project.close ? "Fermé" : "En cours");
   }
 
-  async CurrentUser(){
+  async CurrentUser() {
     this.currentUser = await this.userService.CurrentUser();
     console.log("enter");
     console.log(this.currentUser);
   }
 
-  async onFetchProjects(){
+  async onFetchProjects() {
     this.projects = await this.projectService.findAll().toPromise();
     this.defaultGroupId = this.projects.map(project => this.defaultGroup(project.groups));
+    this.requestDone = true;
   }
 
-  async onDeleteProject(project: Project){
+  async onDeleteProject(project: Project) {
     await this.projectService.deleteOne(project).toPromise();
     await this.onFetchProjects();
   }
 
-  defaultGroup(groups: Array<Group>){
-    if (groups.length){
+  defaultGroup(groups: Array<Group>) {
+    if (groups.length) {
       return (groups[0]._id);
     }
     return ("");

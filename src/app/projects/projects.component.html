@@ -44,8 +44,11 @@
                     </tbody>
                 </table>
             </section>
-            <section *ngIf="!projects.length">
+            <section *ngIf="!requestDone">
                 <p>En cours de chargement....</p>
+            </section>
+            <section *ngIf="requestDone && !projects.length">
+                <p>Pas de projets en cours</p>
             </section>
         </article>
     </div>
