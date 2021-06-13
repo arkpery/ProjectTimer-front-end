@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Team } from 'src/app/models/team/team.model';
 import { TeamService } from 'src/app/services/team/team.service';
@@ -13,14 +14,17 @@ export class TeamsListComponent implements OnInit {
   faTrash = faTrash
   teams: Team[] = [];
 
-  constructor(private teamService: TeamService) { }
+  constructor(
+    private teamService: TeamService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.getAllTeams();
   }
 
   getAllTeams() {
-    this.teamService.getAll()
+    this.teamService.getAllGroup()
       .subscribe(
         response => {
           this.teams = response;
@@ -31,12 +35,16 @@ export class TeamsListComponent implements OnInit {
         });
   }
 
-  editGroup(){
-
-  }
-
-  deleteGroup() {
-    
+  onDelete(id: string): void {
+    this.teamService.deleteGroup(id)
+      .subscribe(
+        response => {
+          console.log(response);
+          this.router.navigate(['/teams']);
+        },
+        error => {
+          console.log(error);
+        });
   }
 
 }

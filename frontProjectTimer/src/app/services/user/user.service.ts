@@ -29,4 +29,8 @@ export class UserService {
   login(data: any): Observable<any> {
     return this.http.post(environment.baseUrl + this.LOGIN_URL, data);
   }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(environment.baseUrl + this.ADD_URL,{ headers: {'Authorization':`${localStorage.getItem('Authorization')}`}});
+  }
 }
