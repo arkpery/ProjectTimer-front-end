@@ -2,75 +2,90 @@
     
     
   <button type="button" class="favorite styled" (click)="createGroup(createGroupModal)" >Create Group</button>
-
+  
   <ng-template #createGroupModal let-modal>
-   <div class="modal-header">
-    <h5 class="modal-title" id="editProfileLabel">Create Group</h5>
-    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
-     <span aria-hidden="true">&times;</span>
-    </button>
-   </div>
-   
-   <div class="modal-body">
-    <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()">
-     <div class="form-group row">
-      <label for="name" class="col-sm-4 col-form-label">Name</label>
-      <div class="col-sm-8">
-       <input type="text" class="form-control" formControlName="name" id="name">
-      </div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editProfileLabel">Create Group</h5>
+      <button (click)="modal.dismiss()" type="button" class="close" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+      </button>
      </div>
-
-     <div class="form-group row">
-      <ng-template #rt let-r="result" let-t="term">
-        <ngb-highlight [result]="' '+r.firstname+' '+r.lastname" [term]="t"></ngb-highlight>
-      </ng-template>
-      <label for="admin" class="col-sm-4 col-form-label">Creator</label>
-      <div class="col-sm-8">
-       <input type="text" class="form-control" formControlName="admin" [(ngModel)]="model" [inputFormatter]="formatter" [ngbTypeahead]="search" [resultTemplate]="rt" id="lastname">
-      </div>
-     </div>
-     
-     
-      <div>
-       <ng-template #rt let-r="result" let-t="term">
-         <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['avatar']" class="mr-1" style="width: 16px">
-         <ngb-highlight [result]="' '+r.firstname+' '+r.lastname" [term]="t"></ngb-highlight>
-       </ng-template>
-       
-       <label for="typeahead-template">Search for a members:</label>
-       <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [resultTemplate]="rt"
-         [inputFormatter]="formatter" />
-       <table class="table">
-         <thead>
-           <tr>
-             <th scope="col">Avatar</th>
-             <th scope="col">Firstname</th>
-             <th scope="col">Lastname</th>
-             <th scope="col">Email</th>
-           </tr>
-         </thead>
-           <tbody>
-             <tr *ngFor="let item of Users | filter:model">
-               <td>{{item.avatar}}</td>
-               <td>{{item.firstname}}</td>
-               <td>{{item.lastname}}</td>
-               <td>{{item.email}}</td>
-               <td><button class="favorite styled" type="button" (click)="addMemberToGroup()">  Add </button></td>
-             </tr>
-           </tbody>
-         
-       </table>
-   </div>  
-     <div class="modal-footer">
-      <button type="button" class="favorite styled" (click)="modal.dismiss()">Cancel</button>
-      <button type="submit" class="favorite styled" >Create</button>
-     </div>
-    </form>
-   </div>
-  </ng-template>
- 
+     <br>
+     <div class="modal-body">
+      <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()">
+  
+        <br><br>
+  
+  
+        <div class="form-group row">
+          <label for="name" class="col-sm-4 col-form-label">Name</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="name" id="name">
+            </div>
+        </div>
+  
+       <br><br>
+  
+       <div class="form-group row">
+        <label for="admin" class="col-sm-4 col-form-label">Creator</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="admin" id="admin">
+          </div>
+       </div>
+  
+       <br><br>
+  
+       <div class="form-group row" [formGroup]="selectForm">
+        <label for="typeahead-template" class="col-sm-4 col-form-label">Select a members:</label>
+          <div class="col-sm-8">
+                    <ng-select
+                    [items]="userList"
+                    bindLabel="search_label"
+                    bindValue="_id"
+                    labelForId="state"
+                    [multiple]="true"
+                    placeholder="Select members"
+                    clearAllText="Clear"
+                    [searchable]="true"
+                    [(ngModel)]="selectedMembersId"
+                    [searchFn]="customSearchFn"
+                    formControlName="selectedMembers">
+          </ng-select>
+  
+          
+  
+        
+          <br>
+          <button (click)="clearListSelected()" class="btn btn-sm btn-secondary">Clear</button>
+  
+  
+              
+                   
+        <div>
+          <br/>Selected members ID: {{selectedMembersId | json}}
+        </div>
+  
+          </div>
+        </div>
+      
+        <br><br>
+  
+        <div class="modal-footer">
+             <button type="button" (click)="modal.dismiss()" class="favorite styled" >Cancel</button> 
+             <button type="submit" class="favorite styled" >Create</button>
+        </div>
+      </form>
+    </div>
   
 
 
+  </ng-template>
+</div>
+
+
+
+
+
+  
 
   

@@ -10,7 +10,9 @@ import { RegisterComponent } from './pages/register/register.component';
 import { TeamModalComponent } from './pages/team-modal/team-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatTableModule } from '@angular/material/table'; 
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -18,9 +20,8 @@ import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    TeamModalComponent
-    
-  ],
+    TeamModalComponent,
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -29,11 +30,14 @@ import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NgbModule,
-    Ng2FilterPipeModule
+    NgSelectModule,
+    MatTableModule,
+    CommonModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [TeamModalComponent]
+  entryComponents: []
 
 })
 export class AppModule { }
