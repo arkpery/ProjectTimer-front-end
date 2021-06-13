@@ -8,7 +8,7 @@ import { TimerComponent } from './timer/timer.component';
 const routes: Routes = [
   {path: 'projects', component: ProjectsComponent},
   {path: "projects/:id", component: ProjectComponent},
-  {path: 'my-timers/:id', component: TimerComponent}
+  {path: 'timers', component: TimerComponent}
 ];
 
 @NgModule({

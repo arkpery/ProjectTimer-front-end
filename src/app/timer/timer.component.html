@@ -1,1 +1,24 @@
-<p>timer works!</p>
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Timer</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <p>{{time.toISOString().substr(11, 8)}}</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" (click)="startTimer()">Start</button>
+            <button class="btn btn-danger" (click)="pauseTimer()">Stop</button>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-lg btn-danger" (click)="open(content)">Launch timer modal</button>
+    
+  <pre>{{ closeResult }}</pre>
