@@ -1,0 +1,19 @@
+.btn-primary {
+    background: linear-gradient(90deg, rgba(102,145,233,1) 0%, rgba(112,60,193,1) 100%) !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, rgba(63,115,222,1) 0%, rgba(78,60,226,1) 100%) !important;
+}
+
+.btn-primary:active {
+    background: linear-gradient(90deg, rgba(63,115,222,1) 0%, rgba(23,83,237,1) 100%) !important;
+}
+
+button.danger {
+    color: red;
+}
+
+button {
+    width: 100%;
+}

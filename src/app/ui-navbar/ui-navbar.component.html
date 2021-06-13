@@ -1,0 +1,7 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <ul ngbNav [(activeId)]="active" class="navbar-nav">
+        <li class="nav-item" [ngbNavItem]="link.id" *ngFor="let link of links">
+            <a ngbNavLink [routerLink]="link.link">{{ link.title }}</a>
+        </li>
+    </ul>
+</nav>

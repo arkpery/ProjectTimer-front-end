@@ -7,4 +7,21 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ProjectTimer';
+  links = [
+    {
+      id: 1,
+      link: "/home",
+      title: "Accueil"
+    },
+    {
+      id: 2,
+      link: "/groups",
+      title: "Groupes"
+    },
+    {
+      id: 3,
+      link: "/projects",
+      title: "Projets"
+    }
+  ];
 }
