@@ -11,6 +11,12 @@ import { time } from 'console';
 import { Group } from '../models/Group';
 import { TeamService } from '../team/team.service';
 import { Team } from '../models/team/team.model';
+import { ChartOptions, ChartType } from 'chart.js';
+import { Label } from 'ng2-charts';
+import chart from 'chart.js';
+import { ItemsList } from '@ng-select/ng-select/lib/items-list';
+import { BarChartComponent } from '../bar-chart/bar-chart.component';
+import { PieChartComponent } from '../pie-chart/pie-chart.component';
 
 @Component({
   selector: 'app-project',
@@ -30,7 +36,7 @@ export class ProjectComponent {
   currentDate?: { label: string, value: Date };
   teams: Team[] = [];
 
-  constructor(private projectService: ProjectService, private timerService: TimerrsService, private route: ActivatedRoute, private teamService: TeamService) { }
+  constructor(private projectService: ProjectService, public timerService: TimerrsService, private route: ActivatedRoute, private teamService: TeamService) { }
 
   getAllTeams() {
     this.teamService.getAllGroupByProject(this.project!)
@@ -72,7 +78,7 @@ export class ProjectComponent {
 
   async FetchProject() {
     this.project = await this.projectService.findOne(this.route.snapshot.paramMap.get("id") as string).toPromise();
-    this.timers = await this.timerService.getAll(this.project).toPromise();
+    this.timers = await this.timerService.findByProject(this.project).toPromise();
 
     this.headers = [
       {
@@ -179,7 +185,6 @@ export class ProjectComponent {
       return (row);
     });
     this.rows = rows;
+
   }
-
-
 }

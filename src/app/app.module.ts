@@ -28,6 +28,9 @@ import { TeamService } from './team/team.service';
 import { AuthGuardService } from './auth-guard/auth-guard.service';
 import { BadgeComponent } from './badge/badge.component';
 import { TeamsComponent } from './teams/teams.component';
+import { ChartsModule } from 'ng2-charts';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,9 @@ import { TeamsComponent } from './teams/teams.component';
     TeamsListComponent,
     TeamViewComponent,
     BadgeComponent,
-    TeamsComponent
+    TeamsComponent,
+    BarChartComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +63,8 @@ import { TeamsComponent } from './teams/teams.component';
     FontAwesomeModule,
     NgSelectModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
     UserService,
