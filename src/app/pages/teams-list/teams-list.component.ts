@@ -14,6 +14,7 @@ export class TeamsListComponent implements OnInit {
   faCog = faCog;
   faTrash = faTrash
   @Input() teams: Team[] = [];
+  @Input() canAdd: boolean = true;
   defaultMemberId: Array<string> = [];
 
   constructor(
