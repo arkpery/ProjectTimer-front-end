@@ -6,7 +6,7 @@ export interface Project {
     name: string;
     admin: User | string | any;
     groups: Array<Group> | Array<string> | Array<any> | any;
-    created_at: Date;
-    updated_at: Date;
+    created_at?: Date;
+    updated_at?: Date;
     close: boolean;
 };

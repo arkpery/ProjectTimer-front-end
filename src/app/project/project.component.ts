@@ -8,13 +8,14 @@ import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
 import moment from "moment";
 import { TimelineComponent } from '../timeline/timeline.component';
 import { time } from 'console';
+import { Group } from '../models/Group';
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss']
 })
-export class ProjectComponent  {
+export class ProjectComponent {
   // 60c18f1982379a05b6e286a8
   project?: Project;
   timers?: Array<Timer>;
@@ -31,6 +32,24 @@ export class ProjectComponent  {
   async ngOnInit() {
     await this.FetchProject();
     await this.InitTimers(null);
+  }
+
+  async close(project: Project) {
+    await this.projectService.close(project).toPromise();
+    await this.FetchProject();
+  }
+
+  async update(project: Project) {
+    const toUpdate : Project = {
+      _id: project._id,
+      name: project.name,
+      close: project.close,
+      groups: project.groups.map((g: Group) => g._id),
+      admin: project.admin._id
+    };
+
+    await this.projectService.update(toUpdate).toPromise();
+    await this.FetchProject();
   }
 
   async FetchProject() {
@@ -76,12 +95,12 @@ export class ProjectComponent  {
       }
       return (p);
     }, []);
-    if (this.selectDate.length) {
+    if (this.selectDate.length && !this.currentDate) {
       this.currentDate = this.selectDate[0];
     }
   }
 
-  get Total(){
+  get Total() {
     const total = this.timers?.map(t => t.duration).reduce((p, v) => {
       p += v;
 
@@ -97,7 +116,7 @@ export class ProjectComponent  {
     if (!this.timers) {
       this.timers = [];
     }
-    if (event){
+    if (event) {
       const t = moment(event, "DD/MM/YYYY");
       this.currentDate = {
         value: t.toDate(),
@@ -108,9 +127,9 @@ export class ProjectComponent  {
     const rows = this.timers.filter((timer) => {
       const time = moment(timer.startTime).toDate();
 
-      return (time.getDate() === this.currentDate?.value.getDate() && 
-      time.getMonth() === this.currentDate.value.getMonth() && 
-      time.getFullYear() === this.currentDate.value.getFullYear());
+      return (time.getDate() === this.currentDate?.value.getDate() &&
+        time.getMonth() === this.currentDate.value.getMonth() &&
+        time.getFullYear() === this.currentDate.value.getFullYear());
     }).map((timer, index) => {
       const row = new Row();
       const columns = [];
@@ -130,7 +149,7 @@ export class ProjectComponent  {
       const start = moment.parseZone(timer.startTime).toDate();
       const end = moment(start.getTime() + timer.duration).toDate();
       row.content = timer.taskType;
-      if (timer.user){
+      if (timer.user) {
         row.author = timer.user.email;
       }
       row.start = start;

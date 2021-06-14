@@ -13,7 +13,7 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  public findAll() : Observable<Array<Project>>{
+  public findAll(): Observable<Array<Project>> {
     return this.http.get<Array<Project>>(`${this.hostname}/projects`, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
@@ -21,7 +21,7 @@ export class ProjectService {
     });
   }
 
-  public findOne(id: string) : Observable<Project>{
+  public findOne(id: string): Observable<Project> {
     return this.http.get<Project>(`${this.hostname}/projects/${id}`, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
@@ -29,7 +29,7 @@ export class ProjectService {
     });
   }
 
-  public save(project: Project){
+  public save(project: Project) {
     return this.http.post(`${this.hostname}/projects`, project, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
@@ -37,24 +37,24 @@ export class ProjectService {
     });
   }
 
-  public update(project: Project){
-    return this.http.post(`${this.hostname}/projects/${project._id}`, project, {
+  public update(project: Project) {
+    return this.http.put(`${this.hostname}/projects/${project._id}`, project, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }
     });
   }
 
-  public deleteOne(project: Project){
+  public deleteOne(project: Project) {
     return this.http.delete(`${this.hostname}/projects/${project._id}`, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }
     });
   }
-  
-  public close(project: Project){
-    return this.http.delete(`${this.hostname}/projects/${project._id}/close`, {
+
+  public close(project: Project) {
+    return this.http.put(`${this.hostname}/projects/${project._id}/close`, null, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }
