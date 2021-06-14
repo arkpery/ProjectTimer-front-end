@@ -107,5 +107,8 @@
       }
     }
   },
-  "defaultProject": "ProjectTimer"
+  "defaultProject": "ProjectTimer",
+  "cli": {
+    "analytics": "4d0c8fdd-b145-4989-9808-2f06929f095e"
+  }
 }
