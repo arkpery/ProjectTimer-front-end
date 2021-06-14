@@ -9,6 +9,8 @@ import moment from "moment-timezone";
 import { TimelineComponent } from '../timeline/timeline.component';
 import { time } from 'console';
 import { Group } from '../models/Group';
+import { TeamService } from '../team/team.service';
+import { Team } from '../models/team/team.model';
 
 @Component({
   selector: 'app-project',
@@ -26,12 +28,28 @@ export class ProjectComponent {
   validTimer: boolean = false;
   selectDate: Array<{ label: string, value: Date }> = [];
   currentDate?: { label: string, value: Date };
+  teams: Team[] = [];
 
-  constructor(private projectService: ProjectService, private timerService: TimerrsService, private route: ActivatedRoute) { }
+  constructor(private projectService: ProjectService, private timerService: TimerrsService, private route: ActivatedRoute, private teamService: TeamService) { }
+
+  getAllTeams() {
+    this.teamService.getAllGroupByProject(this.project!)
+      .subscribe(
+        (response: any) => {
+          this.teams = response.data;
+          console.log(this.teams);
+          console.log(response);
+        },
+        (error: any) => {
+          console.log(error);
+        });
+  }
 
   async ngOnInit() {
     await this.FetchProject();
     await this.InitTimers(null);
+    this.getAllTeams();
+
   }
 
   async close(project: Project) {
@@ -40,7 +58,7 @@ export class ProjectComponent {
   }
 
   async update(project: Project) {
-    const toUpdate : Project = {
+    const toUpdate: Project = {
       _id: project._id,
       name: project.name,
       close: project.close,
@@ -101,7 +119,7 @@ export class ProjectComponent {
   }
 
   get Total() {
-    if (!this.timers || !this.timers?.length){
+    if (!this.timers || !this.timers?.length) {
       return (moment(0).subtract(1, "hours").toDate());
     }
     const total = this.timers?.map(t => t.duration).reduce((p, v) => {

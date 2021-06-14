@@ -24,7 +24,8 @@
                             <td>{{ project.name }}</td>
                             <td>{{ project.created_at | date: "dd / MM / y" }}</td>
                             <td>
-                                <ng-select [items]="project.groups" bindLabel="name" bindValue="_id" autofocus [(ngModel)]="defaultGroupId[i]"></ng-select>
+                                <ng-select [items]="project.groups" bindLabel="name" bindValue="_id"
+                                    [(ngModel)]="defaultGroupId[i]"></ng-select>
                             </td>
                             <td><span class="badge"
                                     [ngClass]="{ 'badge-success': !project.close, 'badge-danger': project.close }">{{ status(project) }}</span>
@@ -35,7 +36,8 @@
                                     <a class="mx-2 link link-info" routerLink="/projects/{{project._id}}">
                                         <fa-icon [icon]="faCogs"></fa-icon>
                                     </a>
-                                    <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id" class="mx-2 link link-danger" (click)="onDeleteProject(project)">
+                                    <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id"
+                                        class="mx-2 link link-danger" (click)="onDeleteProject(project)">
                                         <fa-icon [icon]="faTrash"></fa-icon>
                                     </a>
                                 </div>

@@ -16,16 +16,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let team of teams">
+                    <tr *ngFor="let team of teams; let i = index">
                         <td>{{team.name}}</td>
-                        <td *ngFor="let member of team.members">{{member.firstname}} </td>
+                        <td>
+                            <ng-select [items]="team.members!" bindLabel="firstname" bindValue="_id" [(ngModel)]="defaultMemberId[i]"></ng-select>
+                        </td>
                         <td>{{team.created_at | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                         <td *ngIf="team.admin">{{team.admin.firstname}}</td>
                         <td>
-                            <button type="button" routerLink="/teams/{{team._id}}" class="btn btn-primary  btn-circle btn-floating btn-sm me-1">
+                            <button type="button" routerLink="/teams/{{team._id}}" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
                                 <fa-icon [icon]="faCog"></fa-icon>
                             </button>
-                            <button type="button" (click)="onDelete('{{team._id}}')" class="btn btn-danger  btn-circle btn-floating btn-sm">
+                            <button type="button" (click)="onDelete('{{team._id}}')" class="btn btn-danger btn-circle btn-floating btn-sm">
                                 <fa-icon [icon]="faTrash"></fa-icon>
                             </button>
                         </td>

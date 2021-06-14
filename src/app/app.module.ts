@@ -27,6 +27,7 @@ import { UserService } from './user.service';
 import { TeamService } from './team/team.service';
 import { AuthGuardService } from './auth-guard/auth-guard.service';
 import { BadgeComponent } from './badge/badge.component';
+import { TeamsComponent } from './teams/teams.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { BadgeComponent } from './badge/badge.component';
     NavbarComponent,
     TeamsListComponent,
     TeamViewComponent,
-    BadgeComponent
+    BadgeComponent,
+    TeamsComponent
   ],
   imports: [
     BrowserModule,
