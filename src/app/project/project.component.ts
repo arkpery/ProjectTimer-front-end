@@ -5,7 +5,7 @@ import { Timer } from '../models/Timer';
 import { ProjectService } from '../project.service';
 import { TimerrsService } from '../timerrs.service';
 import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
-import moment from "moment";
+import moment from "moment-timezone";
 import { TimelineComponent } from '../timeline/timeline.component';
 import { time } from 'console';
 import { Group } from '../models/Group';
@@ -101,18 +101,20 @@ export class ProjectComponent {
   }
 
   get Total() {
+    if (!this.timers || !this.timers?.length){
+      return (moment(0).subtract(1, "hours").toDate());
+    }
     const total = this.timers?.map(t => t.duration).reduce((p, v) => {
       p += v;
 
       return (p);
     });
-    const date = moment(total).toDate()
+    const date = moment(total).subtract(1, "hours").toDate()
 
     return (date);
   }
 
   async InitTimers(event: any) {
-    console.log("enter ?");
     if (!this.timers) {
       this.timers = [];
     }
@@ -159,7 +161,6 @@ export class ProjectComponent {
       return (row);
     });
     this.rows = rows;
-    console.log(this.rows);
   }
 
 
