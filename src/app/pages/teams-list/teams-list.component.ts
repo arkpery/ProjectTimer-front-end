@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Team } from 'src/app/models/team/team.model';
+import { User } from 'src/app/models/user.model';
 import { TeamService } from 'src/app/team/team.service';
 
 @Component({
@@ -12,7 +13,8 @@ import { TeamService } from 'src/app/team/team.service';
 export class TeamsListComponent implements OnInit {
   faCog = faCog;
   faTrash = faTrash
-  teams: Team[] = [];
+  @Input() teams: Team[] = [];
+  defaultMemberId: Array<string> = [];
 
   constructor(
     private teamService: TeamService,
@@ -20,19 +22,7 @@ export class TeamsListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getAllTeams();
-  }
-
-  getAllTeams() {
-    this.teamService.getAllGroup()
-      .subscribe(
-        (response: any) => {
-          this.teams = response;
-          console.log(response);
-        },
-        (error: any) => {
-          console.log(error);
-        });
+    this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members!)!);
   }
 
   onDelete(id: string): void {
@@ -45,6 +35,13 @@ export class TeamsListComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+  }
+
+  defaultUser(users: Array<User>) {
+    if (users.length) {
+      return (users[0]._id);
+    }
+    return ("");
   }
 
 }

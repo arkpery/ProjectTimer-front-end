@@ -39,7 +39,7 @@
                 <div class="col-md-12">
                     <div class="opposite">
                         <div>
-                            <h4>Timeline</h4>
+                            <h2>Timeline</h2>
                         </div>
                         <div *ngIf="!project.close">
                             <app-ui-button [type]="'primary'" [icon]="'home'" [content]="'Ajouter une tâche'">
@@ -52,5 +52,6 @@
                 </div>
             </div>
         </form>
+        <app-teams-list [teams]="teams"></app-teams-list>
     </div>
 </article>
