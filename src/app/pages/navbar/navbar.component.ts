@@ -18,10 +18,14 @@ export class NavbarComponent {
   }
 
   CurrentUser() {
-    const user = window.localStorage.getItem("user");
+    const token = window.localStorage.getItem("token");
 
-    if (user) {
-      this.currentUser = JSON.parse(user);
+    if (token && token.length) {
+      const user = window.localStorage.getItem("user");
+
+      if(user){
+        this.currentUser = JSON.parse(user);
+      }
     }
     else {
       window.localStorage.clear()
