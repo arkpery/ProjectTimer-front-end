@@ -22,17 +22,40 @@ export class TeamService {
     return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  createGroup(team: Team): Observable<Team> {
-    return this.http.post<Team>(environment.baseUrl + this.GROUP_URL, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  // createGroup(team: Team): Observable<Team> {
+  //   return this.http.post<Team>(environment.baseUrl + this.GROUP_URL, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  // }
+
+  createGroup(team : Team): Observable<Team> {
+    return this.http.post(`${environment.baseUrl}${this.GROUP_URL}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
   updateGroup(id: any, team: Team): Observable<Team> {
     return this.http.put<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  deleteGroup(id: any): Observable<any> {
-    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  public update(team: Team) {
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${team._id}`, team, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
   }
+
+
+  public findOne(id: string): Observable<Team> {
+    return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+  }
+
+  deleteGroup(id: any): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  }
+
+  
 
   getAllGroupByProject(project: Project): Observable<Team[]> {
     return this.http.get<Team[]>(`${environment.baseUrl}${this.GROUP_URL}/project/${project._id}`, {
