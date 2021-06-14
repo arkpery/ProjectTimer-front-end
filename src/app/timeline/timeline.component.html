@@ -1,16 +1,16 @@
 <div>
-    <ng-select class="my-4" name="date" [items]="selectDate" bindLabel="label" autofocus (change)="changeTimers()" [(ngModel)]="currentDate"></ng-select>
+    <ng-select class="my-4" name="date" [items]="toLabels(selectDate)" autofocus (change)="changeTimers($event)" [ngModel]="label"></ng-select>
     <span class="badge rounded-pill bg-primary text-white" *ngFor="let filter of filters; let i = index" (click)="removeFilter(i)">
          à {{ filter | date: "HH" }} heures
     </span>
-    <div class="timeline my-4">
-        <div class="header-row" *ngIf="__headers.length">
+    <div class="timeline my-4" *ngIf="draw">
+        <div class="header-row" *ngIf="__headers && __headers.length">
             <div class="header mp-4" #view [ngStyle]="adjustHeader(header, view)" *ngFor="let header of __headers"
                 (dblclick)="changeView(header)">
                 {{ header.key }}
             </div>
         </div>
-        <div class="rows" *ngIf="__rows.length">
+        <div class="rows" *ngIf="__rows && __rows.length">
             <div class="content-row" #rowView *ngFor="let row of __rows; let i = index">
                 <div class="row-column mp-4" [attr.row]="row.uid" [attr.col]="column.key" #columnView
                     [ngStyle]="adjustColumn(column, columnView)" *ngFor="let column of __headers">

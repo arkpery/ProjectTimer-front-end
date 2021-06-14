@@ -6,6 +6,7 @@ import { Column, HeaderColumn, Ribbon, Row } from "../../app/viewModels/index";
 import { RibbonComponent } from '../ribbon/ribbon.component';
 import moment from "moment";
 import { faDiceD20 } from '@fortawesome/free-solid-svg-icons';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-timeline',
@@ -15,24 +16,30 @@ import { faDiceD20 } from '@fortawesome/free-solid-svg-icons';
 export class TimelineComponent {
   @Input() headers: Array<HeaderColumn> = [];
   @Input() rows: Array<Row> = [];
-  @Input() currentDate?: { label: string, value: Date };
+  @Input() currentDate?: Date;
   @Input() type: string = "perDay";
-  @Input() selectDate: Array<{ label: string, value: Date }> = [];
+  @Input() selectDate: Array<Date> = [];
+
+  public draw: boolean = false;
+
+  public propagate: boolean = false;
 
   @ViewChildren("columnView") cols!: QueryList<ElementRef>;
 
-  public styles: { [key: string]: any } = {};
-  public __headers: Array<HeaderColumn> = [];
-  public __currentDate?: { label: string, value: Date };
-  public __rows: Array<Row> = [];
-  public viewModel: { [key: string]: any } = {};
+  public styles?: { [key: string]: any };
+  public __headers?: Array<HeaderColumn>;
+  public __currentDate?: Date;
+  public __rows?: Array<Row>;
+  public viewModel?: { [key: string]: any };
   public ribbons: Array<{ [key: string]: any }> = [];
   private columns: Array<Column> = [];
 
   private sortedIndex: { [key: string]: number } = {};
   public filters: Array<Date> = [];
 
-  @Output() changeTimer = new EventEmitter<string>();
+  public label: string = "";
+
+  @Output() changeTimer = new EventEmitter<Date>();
 
   private typesViews: { [key: string]: any } = {
     "perDay": this.perDay.bind(this),
@@ -40,11 +47,12 @@ export class TimelineComponent {
     "perHour": this.perHour.bind(this)
   }
 
-  constructor(public el: ElementRef) {
+  constructor(public el: ElementRef, private ref: ChangeDetectorRef) {
 
   }
 
   ngDoCheck(): void {
+    this.draw = false;
     const defaultView = "perDay";
     if (!this.type) {
       this.typesViews[defaultView]();
@@ -59,6 +67,7 @@ export class TimelineComponent {
     else {
       this.typesViews[defaultView]();
     }
+    this.label = moment(this.currentDate).format("DD/MM/YYYY");
   }
 
   ngAfterViewChecked() {
@@ -68,22 +77,28 @@ export class TimelineComponent {
   removeFilter(index: number) {
     this.filters = this.filters.filter((f, i) => i !== index);
     if (this.type === "perHour") {
-      const d = this.currentDate?.value;
-
-      d?.setHours(0);
-      this.currentDate = {
-        label: this.currentDate?.label!,
-        value: d!
-      };
-      this.__headers = [];
-      this.__rows = [];
-      this.styles = {};
-      this.viewModel = {};
+      if (this.currentDate) {
+        this.currentDate.setHours(0);
+      }
+      this.__headers = undefined;
+      this.__rows = undefined;
+      this.styles = undefined;
+      this.viewModel = undefined;
       this.perDay();
+      setTimeout(() => {
+        if (!this.propagate){
+          this.ref.detectChanges();
+          this.propagate = true;
+        }
+
+        //this.ref.detectChanges();
+      }, 500);
     }
   }
 
   perDay() {
+    this.draw = false;
+
     if (!this.headers) {
       this.headers = [];
     }
@@ -119,15 +134,15 @@ export class TimelineComponent {
             const date = moment(value, "HH").toDate();
 
             if (date.getHours() === row.start?.getHours() &&
-              this.currentDate.value.getMonth() === row.start?.getMonth() &&
-              this.currentDate.value.getFullYear() === row.start?.getFullYear() &&
-              this.currentDate.value.getDate() === row.start?.getDate()) {
+              this.currentDate.getMonth() === row.start?.getMonth() &&
+              this.currentDate.getFullYear() === row.start?.getFullYear() &&
+              this.currentDate.getDate() === row.start?.getDate()) {
               ribbon.colStart = this.__headers[i];
             }
             if (date.getHours() === row.stop?.getHours() &&
-              this.currentDate.value.getMonth() === row.stop?.getMonth() &&
-              this.currentDate.value.getFullYear() === row.stop?.getFullYear() &&
-              this.currentDate.value.getDate() === row.stop?.getDate()) {
+              this.currentDate.getMonth() === row.stop?.getMonth() &&
+              this.currentDate.getFullYear() === row.stop?.getFullYear() &&
+              this.currentDate.getDate() === row.stop?.getDate()) {
               ribbon.colEnd = this.__headers[i];
             }
           }
@@ -139,9 +154,13 @@ export class TimelineComponent {
     });
     this.sortOnDisplay();
     this.type = "perDay";
+    this.draw = true;
   }
 
   sortOnDisplay() {
+    if (!this.__rows) {
+      return;
+    }
     for (let row of this.__rows) {
       for (let column of row.columns!) {
         if (!this.sortedIndex[column.key!]) {
@@ -174,6 +193,7 @@ export class TimelineComponent {
   }
 
   perHour() {
+    this.draw = false;
     if (!this.headers) {
       this.headers = [];
     }
@@ -183,14 +203,12 @@ export class TimelineComponent {
     this.__currentDate = this.currentDate;
     this.__headers = this.headers.slice();
     for (let i = 0; i < 60; i++) {
-      const date = moment(this.__currentDate?.value).add(i, "minutes");
+      const date = moment(this.__currentDate).add(i, "minutes");
 
       this.__headers.push({
         key: `${date.format("HH:mm")}`
       });
     }
-    console.log(this.__headers);
-    console.log(this.currentDate);
     this.__rows = this.rows.map((row) => {
       const r = new Row();
 
@@ -205,16 +223,16 @@ export class TimelineComponent {
 
         if (this.currentDate) {
           const ribbon = new Ribbon();
-          if (row.start! && this.currentDate.value.getHours() > row.start?.getHours() &&
-            this.currentDate.value.getMonth() === row.start?.getMonth() &&
-            this.currentDate.value.getFullYear() === row.start?.getFullYear() &&
-            this.currentDate.value.getDate() === row.start?.getDate()) {
+          if (row.start! && this.currentDate.getHours() > row.start?.getHours() &&
+            this.currentDate.getMonth() === row.start?.getMonth() &&
+            this.currentDate.getFullYear() === row.start?.getFullYear() &&
+            this.currentDate.getDate() === row.start?.getDate()) {
             ribbon.colStart = this.__headers[2];
           }
-          if (row.stop! && this.currentDate.value.getHours() < row.stop?.getHours() &&
-            this.currentDate.value.getMonth() === row.start?.getMonth() &&
-            this.currentDate.value.getFullYear() === row.start?.getFullYear() &&
-            this.currentDate.value.getDate() === row.start?.getDate()) {
+          if (row.stop! && this.currentDate.getHours() < row.stop?.getHours() &&
+            this.currentDate.getMonth() === row.start?.getMonth() &&
+            this.currentDate.getFullYear() === row.start?.getFullYear() &&
+            this.currentDate.getDate() === row.start?.getDate()) {
             ribbon.colEnd = this.__headers[this.__headers.length - 1];
           }
           for (let i = 2; i < this.__headers.length; i++) {
@@ -225,18 +243,18 @@ export class TimelineComponent {
 
             if (date.getMinutes() === row.start?.getMinutes() &&
               !ribbon.colStart &&
-              this.currentDate.value.getHours() === row.start?.getHours() &&
-              this.currentDate.value.getMonth() === row.start?.getMonth() &&
-              this.currentDate.value.getFullYear() === row.start?.getFullYear() &&
-              this.currentDate.value.getDate() === row.start?.getDate()) {
+              this.currentDate.getHours() === row.start?.getHours() &&
+              this.currentDate.getMonth() === row.start?.getMonth() &&
+              this.currentDate.getFullYear() === row.start?.getFullYear() &&
+              this.currentDate.getDate() === row.start?.getDate()) {
               ribbon.colStart = this.__headers[i];
             }
             if (row.stop! && date.getMinutes() === row.stop?.getMinutes() &&
               !ribbon.colEnd &&
-              this.currentDate.value.getHours() === row.stop?.getHours() &&
-              this.currentDate.value.getMonth() === row.stop?.getMonth() &&
-              this.currentDate.value.getFullYear() === row.stop?.getFullYear() &&
-              this.currentDate.value.getDate() === row.stop?.getDate()) {
+              this.currentDate.getHours() === row.stop?.getHours() &&
+              this.currentDate.getMonth() === row.stop?.getMonth() &&
+              this.currentDate.getFullYear() === row.stop?.getFullYear() &&
+              this.currentDate.getDate() === row.stop?.getDate()) {
               ribbon.colEnd = this.__headers[i];
             }
           }
@@ -248,6 +266,7 @@ export class TimelineComponent {
     });
     this.type = "perHour";
     this.sortOnDisplay();
+    this.draw = true;
   }
 
   changeView(header: HeaderColumn) {
@@ -259,24 +278,26 @@ export class TimelineComponent {
       }
       this.sortedIndex[key] = -this.sortedIndex[key];
     }
-    else if (this.type === "perDay") {
-      const nb = parseInt(header.key!, 10);
+    else if (this.type === "perDay" && header.key) {
+      const nb = parseInt(header.key, 10);
 
       if (nb) {
-        const d = this.currentDate?.value;
-
-        d?.setHours(nb);
-        d?.setMinutes(0);
-        this.currentDate = {
-          label: this.currentDate?.label!,
-          value: d!
-        };
-        this.filters.push(d!);
-        this.__headers = [];
-        this.__rows = [];
-        this.styles = {};
-        this.viewModel = {};
+        if (this.currentDate) {
+          this.currentDate.setHours(nb);
+          this.currentDate.setMinutes(0);
+          this.filters.push(this.currentDate);
+        }
+        this.__headers = undefined;
+        this.__rows = undefined;
+        this.styles = undefined;
+        this.viewModel = undefined;
         this.perHour();
+        setTimeout(() => {
+          if (!this.propagate){
+            this.ref.detectChanges();
+            this.propagate = true;
+          }
+        }, 500);
       }
     }
   }
@@ -303,8 +324,16 @@ export class TimelineComponent {
   adjustHeader(headerModel: HeaderColumn, headerView: HTMLElement) {
     const key = headerModel.key!;
 
+    if (!this.viewModel) {
+      this.viewModel = {};
+    }
+    if (!this.styles) {
+      this.styles = {};
+    }
     if (!this.viewModel[key]) {
       this.viewModel[key] = {};
+    }
+    if (!this.styles[key]) {
       this.styles[key] = {};
     }
     const rect = headerView.getBoundingClientRect();
@@ -348,8 +377,16 @@ export class TimelineComponent {
   adjustColumn(column: HeaderColumn, view: HTMLElement) {
     const key = column.key!;
 
+    if (!this.viewModel) {
+      this.viewModel = {};
+    }
+    if (!this.styles) {
+      this.styles = {};
+    }
     if (!this.viewModel[key]) {
       this.viewModel[key] = {};
+    }
+    if (!this.styles[key]) {
       this.styles[key] = {};
     }
     const rect = view.getBoundingClientRect();
@@ -365,9 +402,7 @@ export class TimelineComponent {
         x: Math.ceil(rect.x),
       };
     }
-    this.styles[key] = {
-      "min-width.px": this.viewModel[key]["width"]
-    };
+    this.styles[key]["min-width.px"] = this.viewModel[key]["width"];
     return (this.styles[key]);
   }
 
@@ -386,7 +421,13 @@ export class TimelineComponent {
 
   }
 
-  changeTimers() {
-    this.changeTimer.emit(this.currentDate?.label);
+  toLabels(dates: Array<Date>) {
+    return (dates.map(date => moment(date).format("DD/MM/YYYY")));
+  }
+
+  changeTimers(str: string) {
+    this.currentDate = moment(str, "DD/MM/YYYY").toDate();
+
+    this.changeTimer.emit(this.currentDate);
   }
 }
