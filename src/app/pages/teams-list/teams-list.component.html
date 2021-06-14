@@ -1,8 +1,8 @@
 <div>
     <div class="no-gutter mt-4">
-        <h2 class="my-2">Group list</h2>
-        <div *ngIf="canAdd" class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-            <button class="btn btn-primary" type="button">Create Group</button>
+        <h2 class="row">Group list</h2>
+        <div class="row d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+            <button class="btn btn-primary" (click)="createGroup(createGroupModal)"  type="button">Create Group</button>
         </div>
         <div>
             <table class="table table-striped">
@@ -29,9 +29,9 @@
                                 class="btn btn-primary btn-circle btn-floating btn-sm me-1">
                                 <fa-icon [icon]="faCog"></fa-icon>
                             </button>
-                            <button type="button" (click)="onDelete('{{team._id}}')"
-                                class="btn btn-danger btn-circle btn-floating btn-sm">
-                                <fa-icon [icon]="faTrash"></fa-icon>
+                            <button *ngIf="team._id" type="button" (click)="onDelete(team._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
+                              <fa-icon [icon]="faTrash"></fa-icon>
+
                             </button>
                         </td>
                     </tr>
@@ -40,3 +40,62 @@
         </div>
     </div>
 </div>
+
+
+
+<ng-container>
+    <ng-template #createGroupModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProfileLabel">Create Group</h5>
+        <button (click)="modal.dismiss()" type="button" class="close" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+        </button>
+       </div>
+       <br>
+       <div class="modal-body">
+        
+        <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()">
+
+          <br><br>
+          <div class="form-group row">
+            <label for="name" class="col-sm-4 col-form-label">Name</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="name" id="name">
+              </div>
+          </div>
+    
+         <br><br>
+         <br><br>
+    
+         <div class="form-group row" [formGroup]="selectForm">
+          <label for="typeahead-template" class="col-sm-4 col-form-label">Select a members:</label>
+            <div class="col-sm-8">
+                      <ng-select
+                      [items]="userList"
+                      bindLabel="search_label"
+                      bindValue="_id"
+                      labelForId="state"
+                      [multiple]="true"
+                      placeholder="Select members"
+                      clearAllText="Clear"
+                      [searchable]="true"
+                      [(ngModel)]="selectedMembersId"
+                      [searchFn]="customSearchFn"
+                      formControlName="members">
+            </ng-select>
+            <br>
+            <button (click)="clearListSelected()" class="btn btn-sm btn-secondary">Clear</button>
+            </div>
+          </div>
+        
+          <br><br>
+    
+          <div class="modal-footer">
+               <button type="button" (click)="modal.dismiss()" class="btn btn-secondary" >Cancel</button> 
+               <button type="submit"  class="favorite styled" >Create</button>
+          </div>
+        </form>
+        
+      </div>
+    </ng-template>
+  </ng-container>
