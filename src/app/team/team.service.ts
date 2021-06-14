@@ -18,16 +18,16 @@ export class TeamService {
     return this.http.get<Team[]>(environment.baseUrl + this.GROUP_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  getGroup(id: any): Observable<Team[]> {
-    return this.http.get<Team[]>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  getGroup(id: any): Observable<Team> {
+    return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  createGroup(team: Team): Observable<Team[]> {
-    return this.http.post<Team[]>(environment.baseUrl + this.GROUP_URL, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  createGroup(team: Team): Observable<Team> {
+    return this.http.post<Team>(environment.baseUrl + this.GROUP_URL, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  updateGroup(id: any, team: Team): Observable<Team[]> {
-    return this.http.put<Team[]>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  updateGroup(id: any, team: Team): Observable<Team> {
+    return this.http.put<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
   deleteGroup(id: any): Observable<any> {
