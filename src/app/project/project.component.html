@@ -52,6 +52,6 @@
                 </div>
             </div>
         </form>
-        <app-teams-list [teams]="teams"></app-teams-list>
+        <app-teams-list *ngIf="project" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
     </div>
 </article>
