@@ -9,12 +9,14 @@ import { RegisterComponent } from './pages/register/register.component';
 import { TeamsComponent } from './teams/teams.component';
 import { AuthGuardService } from './auth-guard/auth-guard.service';
 import { TeamViewComponent } from './pages/team-view/team-view.component';
+import { UsersTimersComponent } from './users-timers/users-timers.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: "projects/:id", component: ProjectComponent },
+  { path: "users/timers", component: UsersTimersComponent },
   { path: 'request-reset-password', component: ResetPasswordComponent },
   { path: 'response-reset-password/:token', component: ResponseResetPasswordComponent },
   { path: 'teams', canActivate: [AuthGuardService], component: TeamsComponent },

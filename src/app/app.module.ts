@@ -36,6 +36,7 @@ import { PieChartService } from './pie-chart-service.service';
 import { TimelineService } from './timeline-service.service';
 import { ProjectService } from './project.service';
 import { TimerrsService } from './timerrs.service';
+import { UsersTimersComponent } from './users-timers/users-timers.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { TimerrsService } from './timerrs.service';
     BadgeComponent,
     TeamsComponent,
     BarChartComponent,
-    PieChartComponent
+    PieChartComponent,
+    UsersTimersComponent
   ],
   imports: [
     BrowserModule,

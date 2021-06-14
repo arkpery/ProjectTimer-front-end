@@ -17,7 +17,6 @@ import { Team } from '../models/team/team.model';
   styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent {
-  // 60c18f1982379a05b6e286a8
   project?: Project;
   timers?: Array<Timer>;
 
