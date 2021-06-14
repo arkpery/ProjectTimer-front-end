@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Project } from './models/Project';
+import { Timer } from './models/Timer';
+import { TimelineService } from './timeline-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ export class ProjectService {
   hostname: string = "http://localhost:7777";
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private timelineService: TimelineService) { }
 
   public findAll(): Observable<Array<Project>> {
     return this.http.get<Array<Project>>(`${this.hostname}/projects`, {
@@ -60,4 +62,9 @@ export class ProjectService {
       }
     });
   }
+
+  public timeline(timers: Array<Timer>, timestamp: number) {
+    return (this.timelineService.apply(timers, timestamp));
+  }
+
 }

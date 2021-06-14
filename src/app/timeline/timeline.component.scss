@@ -12,9 +12,12 @@
     flex-direction: row;
 }
 
-.header-row  .header {
-    border: 1px solid grey;
-    background: gray;
+.header-row {
+    border: 1px solid #b8daff;
+}
+
+.header-row .header {
+    background: #b8daff;
 }
 
 .rows .content-row .row-column {
@@ -23,7 +26,7 @@
 
 .timeline {
     
-    overflow: scroll;
+    overflow: auto;
     border: 1px solid grey;
     position: relative; 
 }

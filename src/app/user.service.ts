@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { User } from './models/User';
 import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
+import { TimelineService } from './timeline-service.service';
+import { Timer } from './models/Timer';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +23,15 @@ export class UserService {
   LOGIN_URL = '/users/login';
   LOGOUT_URL = '/users/logout';
   ADD_URL = '/users';
-  RESET_PASSWORD='/resetPassword';
-  NEW_PASSWORD='/new-password';
+  RESET_PASSWORD = '/resetPassword';
+  NEW_PASSWORD = '/new-password';
   VALID_PASSWORD_TOKEN = '/valid-password-token';
-  
-
-  constructor(private http: HttpClient) { }
 
 
-  async CurrentUser(){
+  constructor(private http: HttpClient, private timelineService: TimelineService) { }
+
+
+  async CurrentUser() {
     const token = window.localStorage.getItem("token");
 
     return this.http.get<User>(`${this.hostname}/users/me`, {
@@ -38,7 +40,7 @@ export class UserService {
       }
     }).toPromise();
   }
-  
+
   emitUsers() {
     this.userSubject.next(this.users.slice());
   }
@@ -52,15 +54,19 @@ export class UserService {
   }
 
   requestReset(body: any): Observable<any> {
-    return this.http.post(environment.baseUrl+this.ADD_URL+this.RESET_PASSWORD, body);
+    return this.http.post(environment.baseUrl + this.ADD_URL + this.RESET_PASSWORD, body);
   }
 
   newPassword(data: any): Observable<any> {
-    return this.http.post(environment.baseUrl+this.ADD_URL+this.NEW_PASSWORD, data);
+    return this.http.post(environment.baseUrl + this.ADD_URL + this.NEW_PASSWORD, data);
   }
 
   ValidPasswordToken(data: any): Observable<any> {
-    return this.http.post(environment.baseUrl+this.ADD_URL+this.VALID_PASSWORD_TOKEN, data);
+    return this.http.post(environment.baseUrl + this.ADD_URL + this.VALID_PASSWORD_TOKEN, data);
+  }
+
+  public timeline(timers: Array<Timer>, timestamp: number) {
+    return (this.timelineService.apply(timers, timestamp));
   }
 
 }

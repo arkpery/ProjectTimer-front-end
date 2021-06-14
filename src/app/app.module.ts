@@ -28,6 +28,15 @@ import { TeamService } from './team/team.service';
 import { AuthGuardService } from './auth-guard/auth-guard.service';
 import { BadgeComponent } from './badge/badge.component';
 import { TeamsComponent } from './teams/teams.component';
+import { ChartsModule } from 'ng2-charts';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { BarChartService } from './bar-chart-service.service';
+import { PieChartService } from './pie-chart-service.service';
+import { TimelineService } from './timeline-service.service';
+import { ProjectService } from './project.service';
+import { TimerrsService } from './timerrs.service';
+import { UsersTimersComponent } from './users-timers/users-timers.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +56,10 @@ import { TeamsComponent } from './teams/teams.component';
     TeamsListComponent,
     TeamViewComponent,
     BadgeComponent,
-    TeamsComponent
+    TeamsComponent,
+    BarChartComponent,
+    PieChartComponent,
+    UsersTimersComponent
   ],
   imports: [
     BrowserModule,
@@ -58,12 +70,18 @@ import { TeamsComponent } from './teams/teams.component';
     FontAwesomeModule,
     NgSelectModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
     UserService,
     TeamService,
-    AuthGuardService
+    AuthGuardService,
+    BarChartService,
+    PieChartService,
+    TimelineService,
+    ProjectService,
+    TimerrsService
   ],
   bootstrap: [AppComponent]
 })

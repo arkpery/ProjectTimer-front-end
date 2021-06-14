@@ -1,0 +1,8 @@
+<div>
+    <div class="my-2" *ngIf="title">
+        <h4>{{ title }}</h4>
+    </div>
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+    </canvas>
+</div>

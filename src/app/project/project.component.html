@@ -19,18 +19,21 @@
                     </div>
                     <div class="row">
                         <p>
-                            Temps total: {{ Total | date: "HH:mm:ss" }}  
+                            Temps total: {{ Total | date: "HH:mm:ss" }}
                         </p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="row">
-                        <app-ui-button *ngIf="!project.close" class="col-md-6" (click)="close(project)" [type]="'danger'" [icon]="'trash'" [content]="'Clore'">
+                        <app-ui-button *ngIf="!project.close" class="col-md-6" (click)="close(project)"
+                            [type]="'danger'" [icon]="'trash'" [content]="'Clore'">
                         </app-ui-button>
 
-                        <app-badge *ngIf="project.close"  [type]="'danger'" class="col-md-6"  [content]="'Projet clos'"></app-badge>
+                        <app-badge *ngIf="project.close" [type]="'danger'" class="col-md-6" [content]="'Projet clos'">
+                        </app-badge>
 
-                        <app-ui-button class="col-md-6" (click)="update(project)" [type]="'primary'" [icon]="'save'" [content]="'Mettre à jour'">
+                        <app-ui-button class="col-md-6" (click)="update(project)" [type]="'primary'" [icon]="'save'"
+                            [content]="'Mettre à jour'">
                         </app-ui-button>
                     </div>
                 </div>
@@ -46,12 +49,17 @@
                             </app-ui-button>
                         </div>
                     </div>
-                    <div *ngIf="rows.length && headers.length && currentDate !== null" >
-                        <app-timeline (changeTimer)="InitTimers($event)" [selectDate]="selectDate" [currentDate]="currentDate" [headers]="headers" [rows]="rows"></app-timeline>
+                    <div *ngIf="rows.length && headers.length && currentDate !== null">
+                        <app-timeline [selectDate]="selectDate"
+                            [currentDate]="currentDate" [headers]="headers" [rows]="rows"></app-timeline>
                     </div>
                 </div>
             </div>
         </form>
-        <app-teams-list *ngIf="project" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
+        <app-teams-list class="my-4" *ngIf="project" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
+        <div class="row my-4" *ngIf="timers && timers.length">
+            <app-bar-chart class="col-md-6" [title]="'Temps moyen par jour(/min)'" *ngIf="timers" [items]="timers" [transform]="barChart"></app-bar-chart>
+            <app-pie-chart class="col-md-6" [title]="'Temps passé en fonction du type de tâche(/s)'" *ngIf="timers" [items]="timers" [transform]="pieChart"></app-pie-chart>
+        </div>
     </div>
 </article>
