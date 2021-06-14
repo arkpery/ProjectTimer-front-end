@@ -430,4 +430,13 @@ export class TimelineComponent {
 
     this.changeTimer.emit(this.currentDate);
   }
+
+  parent(element: HTMLElement){
+    const rect = element.getBoundingClientRect();
+    const style = {
+      "min-width.px": rect.width
+    };
+
+    return (style);
+  }
 }

@@ -3,8 +3,8 @@
     <span class="badge rounded-pill bg-primary text-white" *ngFor="let filter of filters; let i = index" (click)="removeFilter(i)">
          à {{ filter | date: "HH" }} heures
     </span>
-    <div class="timeline my-4" *ngIf="draw">
-        <div class="header-row" *ngIf="__headers && __headers.length">
+    <div class="timeline my-4" #timeline *ngIf="draw">
+        <div class="header-row background-primary" [ngStyle]="parent(timeline)" *ngIf="__headers && __headers.length">
             <div class="header mp-4" #view [ngStyle]="adjustHeader(header, view)" *ngFor="let header of __headers"
                 (dblclick)="changeView(header)">
                 {{ header.key }}
