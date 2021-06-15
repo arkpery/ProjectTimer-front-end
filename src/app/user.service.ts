@@ -31,6 +31,14 @@ export class UserService {
   constructor(private http: HttpClient, private timelineService: TimelineService) { }
 
 
+  public findAll(): Observable<Array<User>> {
+    return this.http.get<Array<User>>(`${this.hostname}${this.ADD_URL}`, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+  }
+
   async CurrentUser() {
     const token = window.localStorage.getItem("token");
 
