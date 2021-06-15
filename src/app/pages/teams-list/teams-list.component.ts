@@ -29,7 +29,7 @@ export class TeamsListComponent implements OnInit {
   selectForm!: FormGroup;
   tableForm!: FormGroup;
   selectedMembersId?: [''];
-  memberss?: []  
+  members?: []  
   currentUser?: User;
   requestDone: boolean = false;
 
@@ -60,7 +60,7 @@ export class TeamsListComponent implements OnInit {
     this.getUsersList();
 
     this.selectForm = this.fb.group({
-      memberss: []
+      members: []
     });
     this.createGroupForm = this.fb.group({
       name: ['']
@@ -149,7 +149,7 @@ export class TeamsListComponent implements OnInit {
   // clear list selected 
   clearListSelected() {
     console.log("selected clear")
-    this.selectForm.get('memberss')?.patchValue([]);
+    this.selectForm.get('members')?.patchValue([]);
   }
 
    //  create group 
@@ -158,7 +158,7 @@ export class TeamsListComponent implements OnInit {
     const formValue = this.createGroupForm.value;
     const newGroup = {
       name: formValue['name'],
-      memberss: this.selectedMembersId
+      members: this.selectedMembersId
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
