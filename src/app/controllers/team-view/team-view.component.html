@@ -2,41 +2,42 @@
     <br>
     <div class="row" *ngIf="team">
         <div class="input-group" class="col-md-3">
-            <input type="text" class="form-control" [(ngModel)]="team.name" id="team.name"
-                id="group_name" name="group_name" />
+            <input type="text" class="form-control" [(ngModel)]="team.name" id="team.name" id="group_name" name="group_name" />
         </div>
         <div class="offset-md-1 col-md-4">
             <div class="row">
                 <p>
-                    Created at: {{team.created_at | date: "dd / MM / y" }} 
+                    Created at: {{team.created_at | date: "dd / MM / y" }}
                 </p>
             </div>
             <div class="row">
                 <p>
-                   Updated at : {{team.updated_at | date: "dd / MM / y" }} 
+                    Updated at : {{team.updated_at | date: "dd / MM / y" }}
                 </p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="row-cols-1" *ngIf="team">
-                <app-ui-button *ngIf="team._id" class="col-md-7"  (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'Filled'" [content]="'Delete'">
+                <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'Filled'" [content]="'Delete'">
                 </app-ui-button>
 
-                <app-ui-button class="col-md-7"  [type]="'primary'" [icon]="'save'" [content]="'Update'">
+                <app-ui-button class="col-md-7" [type]="'primary'" [icon]="'save'" [content]="'Update'">
                 </app-ui-button>
             </div>
         </div>
     </div>
     <div class="row mt-4">
         <div class="col">
-          
-                <h2>Members</h2>
-          
-            <div class="col-md-4" id="div-btn">
-                <app-ui-button class="col-md-6"  [type]="'primary'" [icon]="'add'" [content]="'Add members'">
+
+            <h2>Members</h2>
+
+            <div class="col-md-4" id="div-btn" *ngIf="team">
+                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'add'" [content]="'Add members'">
                 </app-ui-button>
+
+
             </div>
-           
+
             <table class="table table-striped">
                 <thead>
                     <tr class="table-primary">
@@ -47,12 +48,12 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="team">
-                    <tr *ngFor="let member of team.members; let i = index" >
+                    <tr *ngFor="let member of team.members; let i = index">
                         <td>{{ member.firstname }}</td>
                         <td>{{ member.lastname }}</td>
                         <td>{{member.email}}</td>
                         <td>
-                            <button *ngIf="team._id"  type="button" (click)="deleteUserOnGroup(team,member._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <button *ngIf="team" type="button" (click)="deleteUserOnGroup(team,member._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
                             <fa-icon [icon]="faTrash"></fa-icon>
                           </button>
                         </td>
@@ -63,11 +64,11 @@
     </div>
     <div class="row mt-4">
         <div class="col">
-            
+
             <h2>Projects</h2>
-          
+
             <div class="col-md-4" id="div-btn">
-                <app-ui-button class="col-md-6"  [type]="'primary'" [icon]="'add'" [content]="'Add Projects'">
+                <app-ui-button class="col-md-6" [type]="'primary'" [icon]="'add'" [content]="'Add Projects'">
                 </app-ui-button>
             </div>
             <table class="table table-striped">
@@ -86,18 +87,16 @@
                         <td>{{ project.name }}</td>
                         <td>{{ project.created_at | date: "dd / MM / y" }}</td>
                         <td>
-                            <ng-select [items]="project.groups" bindLabel="name" bindValue="_id"
-                                [(ngModel)]="defaultGroupId[0]"></ng-select>
+                            <ng-select [items]="project.groups" bindLabel="name" bindValue="_id" [(ngModel)]="defaultGroupId[0]"></ng-select>
                         </td>
-                        <td><span class="badge"
-                                [ngClass]="{ 'badge-success': !project.close, 'badge-danger': project.close }">{{ status(project) }}</span>
+                        <td><span class="badge" [ngClass]="{ 'badge-success': !project.close, 'badge-danger': project.close }">{{ status(project) }}</span>
                         </td>
                         <td>{{ project.admin.email }}</td>
                         <td *ngIf="team">
-                            <button type="button"  class="btn btn-primary btn-circle btn-floating btn-sm me-1">
+                            <button type="button" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
                                 <fa-icon [icon]="faCog"></fa-icon>
                             </button>
-                            <button *ngIf="team._id" type="button"  class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <button *ngIf="team._id" type="button" class="btn btn-danger btn-circle btn-floating btn-sm">
                             <fa-icon [icon]="faTrash"></fa-icon>
                             </button>
                         </td>
@@ -107,3 +106,34 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header" *ngIf="team">
+        <h4 class="modal-title" id="modal-basic-title">Add member to {{team.name}} </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group row" [formGroup]="selectForm">
+                <label for="typeahead-template" class="col-sm-4 col-form-label">Select a members:</label>
+                <div class="col-sm-8">
+                    <ng-select [items]="userList" bindLabel="search_label" bindValue="_id" labelForId="state" [multiple]="true" placeholder="Select members" clearAllText="Clear" [searchable]="true" [(ngModel)]="selectedMembersId" [searchFn]="customSearchFn" formControlName="members">
+                    </ng-select>
+                    <br>
+                    <button class="btn btn-sm btn-secondary">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
+
+<hr>
+
+<pre>{{ closeResult }}</pre>
