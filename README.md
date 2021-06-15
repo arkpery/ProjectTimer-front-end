@@ -2,47 +2,21 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
 
-## Build Docker Angular
+## Production server
 
-`docker build -f Dockerfile.angular -t my/ng-cli .`
-
-## Install Dependencies
-
-`docker run -it  -v $PWD:/home/node/app -w /home/node/app my/ng-cli npm install`
-
-## Build the project
-
-`docker run -it  -v $PWD:/home/node/app  -w /home/node/app my/ng-cli ng build`
-
-## Run development server
-
-`docker run -it -p 4200:4200/tcp -v $PWD:/home/node/app -w /home/node/app my/ng-cli ng serve --host 0.0.0.0`
-
-## Run Angular Test
-
-`docker run -it -v $PWD:/home/node/app -w /home/node/app my/ng-cli ng test`
-
-## Run Docker
-
-`docker run -it -v $PWD:/home/node/app -w /home/node/app my/ng-cli ng build`
-
-Then,
-
-`docker-compose up --build`
+Run `make` in order to run the development server.
 
 ## Development server
 
-`hit http://127.0.0.1:4200`
+Run `make init` in order to init the project.
 
-## Production server
+Run `make install` in order to install the dependencies.
 
-`hit http://127.0.0.1:80`
-
+Run `make dev` in order to start the development server.
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
 
 ## Running unit tests
 
