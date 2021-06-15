@@ -1,37 +1,50 @@
 # ProjectTimer
+Serveur de l'application :notebook_with_decorative_cover: Project Timer, dans le cadre du projet sur le module d'**Algorithmie et Javascript avancé** de l'année 2021-2022 du **« Mastère  Développeur Front Servicenow »  - titre Chef(fe) de projets Informatique** à l'école : **La Passerelle des Métiers du Numérique**.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
+
+Les membres du groupe sont :
+- Ouahab Fenniche
+- Vincent TEISSIER-COUTURIER
+- Thomas SIMOES
+
+# Description du projet
+
+La description du projet est disponible ici >[Project](Project.md)
 
 # Prérequis
+
 Pour pouvoir compiler et lancer le serveur depuis les sources les logiciels suivants sont nécessaire :
 - Docker
 - docker-compose
 - Cygwin sur windows
 
-## Production server
+# Installation & Utilisation(Production)
 
-Run `make` in order to run the development server.
+- Run: `make` 
+- Stop : `make shutdown`
+- Reset : `make clear`
 
-## Development server
+# Installation & Utilisation(Development)
 
-Run `make init` in order to init the project.
+- Initialisation: `make init`
+- Install: `make init`
+- Dev Environment: `make dev`
 
-Run `make install` in order to install the dependencies.
 
-Run `make dev` in order to start the development server.
+# Technologies
 
-## Code scaffolding
+Voici les principales technologies et framework utilisé dans le projet :
+- Node.js
+- Angular
+- Docker
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Documenation
 
-## Running unit tests
+Les informations sur le fonctionnement et l'utilisation de l'API du serveur sont trouvable dans le [dossier /doc](./doc) du projet.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+De plus quelques informations pour la configuration et la gestion du projet pour les développeurs sont trouvable dans le fichier [/doc/dev.md](./doc/dev.md).
 
-## Running end-to-end tests
+## Partie Back-end du projet
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Voici le lien vers la partie Frontend de notre projet :
+- [ProjectTimer-back-end](https://github.com/arkpery/ProjectTimer-back-end)
