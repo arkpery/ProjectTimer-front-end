@@ -75,12 +75,7 @@ import { UsersTimersComponent } from './users-timers/users-timers.component';
     ReactiveFormsModule,
     ChartsModule
   ],
-  providers: [
-    NgbModule,
-    NgSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
+  
   providers: [
     UserService,
     TeamService,
@@ -89,7 +84,11 @@ import { UsersTimersComponent } from './users-timers/users-timers.component';
     PieChartService,
     TimelineService,
     ProjectService,
-    TimerrsService
+    TimerrsService,
+    NgbModule,
+    NgSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent]
 })
