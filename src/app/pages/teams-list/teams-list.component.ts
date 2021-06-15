@@ -29,7 +29,7 @@ export class TeamsListComponent implements OnInit {
   selectForm!: FormGroup;
   tableForm!: FormGroup;
   selectedMembersId?: [''];
-  members?: []  
+  memberss?: []  
   currentUser?: User;
   requestDone: boolean = false;
 
@@ -41,7 +41,7 @@ export class TeamsListComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private modalService: NgbModal,
-    private http: HttpClient,
+    private http: HttpClient, 
     private userService: UserService,
   ) { }
 
@@ -60,11 +60,10 @@ export class TeamsListComponent implements OnInit {
     this.getUsersList();
 
     this.selectForm = this.fb.group({
-      members: []
+      memberss: []
     });
     this.createGroupForm = this.fb.group({
-      name: [''],
-      members: ['']
+      name: ['']
     });
 
   }
@@ -77,14 +76,14 @@ export class TeamsListComponent implements OnInit {
 
 
   // update group
-  async update(team: Team) {
-     const toUpdate: Team = {
-       _id: team._id,
-      members: team.members.map((g: User) => g._id)
-    };
+  // async update(team: Team) {
+  //    const toUpdate: Team = {
+  //      _id: team._id,
+  //     members: team.members.map((g: User) => g._id)
+  //   };
 
-    await this.teamService.update(toUpdate).toPromise();
-  }
+  //   await this.teamService.update(toUpdate).toPromise();
+  // }
 
   
 
@@ -104,7 +103,7 @@ export class TeamsListComponent implements OnInit {
   // Fetching users data 
   getUsersList() {
     this.http
-      .get<any>(environment.baseUrl+this.ADD_URL)
+      .get<any>(environment.baseUrl+this.ADD_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } })
       .subscribe(response => {
         this.userList = response.map((o: { search_label: string; firstname: string; lastname: string; email: string; }) => {
           o.search_label =
@@ -112,7 +111,7 @@ export class TeamsListComponent implements OnInit {
           `
           return o
         });
-
+        console.log(this.userList)
       }, error => {
         console.log(error);
       });
@@ -125,7 +124,6 @@ export class TeamsListComponent implements OnInit {
       centered: true,
       backdrop: 'static'
      });
-
    }
 
    // function used to select members added to group
@@ -150,7 +148,8 @@ export class TeamsListComponent implements OnInit {
 
   // clear list selected 
   clearListSelected() {
-    this.selectForm.get('members')?.patchValue([]);
+    console.log("selected clear")
+    this.selectForm.get('memberss')?.patchValue([]);
   }
 
    //  create group 
@@ -159,7 +158,7 @@ export class TeamsListComponent implements OnInit {
     const formValue = this.createGroupForm.value;
     const newGroup = {
       name: formValue['name'],
-      members: this.selectedMembersId
+      memberss: this.selectedMembersId
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
