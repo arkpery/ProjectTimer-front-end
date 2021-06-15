@@ -1,4 +1,4 @@
-all: init install test prod
+all: init install prod
 
 init:
 	docker build -f Dockerfile.angular -t my/ng-cli .
