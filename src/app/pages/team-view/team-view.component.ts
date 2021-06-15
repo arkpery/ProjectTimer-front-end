@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Team } from 'src/app/models/team/team.model';
 import { TeamService } from 'src/app/team/team.service';
@@ -27,6 +27,7 @@ export class TeamViewComponent implements OnInit {
   requestDone: boolean = false;
 
 
+  currentMembers:  Array<User> = [];
   faCog = faCog;
   constructor(
     private teamService: TeamService,
@@ -74,6 +75,8 @@ export class TeamViewComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.team = response;
+          this.currentMembers= response.members
+         
         },
         (error: any) => {
           console.log(error);
@@ -146,9 +149,18 @@ export class TeamViewComponent implements OnInit {
   }
   
    // delete user on team view
-   deleteUserOnGroup(){
-    console.log("delete")
-  }
-
+   deleteUserOnGroup(team: Team, idMember: string){
+    this.currentMembers.forEach( (item : User, index) => {
+      if(item._id === idMember) this.currentMembers.splice(index,1);
+    });
+    
+    this.teamService.update(team).subscribe(
+      (response: any) => {
+        this.router.navigate([`/teams/${team._id}`]);
+      },
+      (error: any) => {
+        console.log(error);
+      });
+   }
 }
 

@@ -35,12 +35,16 @@ export class TeamService {
     return this.http.post(`${environment.baseUrl}${this.GROUP_URL}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  updateGroup(id: any, team: Team): Observable<Team> {
-    return this.http.put<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
-  }
 
   public update(team: Team) {
     return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${team._id}`, team, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+  }
+  public updateGroup(id: string) {
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${id}`, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }

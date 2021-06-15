@@ -47,12 +47,12 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="team">
-                    <tr *ngFor="let member of team.members" >
+                    <tr *ngFor="let member of team.members; let i = index" >
                         <td>{{ member.firstname }}</td>
                         <td>{{ member.lastname }}</td>
-                        <td>{{ member.email }}</td>
+                        <td>{{member.email}}</td>
                         <td>
-                            <button  type="button" (click)="deleteUserOnGroup()" class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <button *ngIf="team._id"  type="button" (click)="deleteUserOnGroup(team,member._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
                             <fa-icon [icon]="faTrash"></fa-icon>
                           </button>
                         </td>
