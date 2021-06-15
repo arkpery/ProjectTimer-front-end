@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Project } from './models/Project';
-import { Timer } from './models/Timer';
-import { TimelineService } from './timeline-service.service';
+import { Project } from '../../models/Project';
+import { Timer } from '../../models/Timer';
+import { TimelineService } from '../services.utils/timeline/timeline-service.service';
 
 @Injectable({
   providedIn: 'root'

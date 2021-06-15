@@ -1,9 +1,9 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Project } from '../models/Project';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../services/projects/project.service';
 import { faTrash, faCogs } from '@fortawesome/free-solid-svg-icons';
 import { Group } from '../models/Group';
-import { UserService } from '../user.service';
+import { UserService } from '../services/users/user.service';
 import { User } from '../models/User';
 import { TimelineComponent } from '../timeline/timeline.component';
 

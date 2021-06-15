@@ -5,10 +5,10 @@ import { TeamService } from 'src/app/team/team.service';
 import {  faCog,faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Project } from '../../models/Project';
 import Swal from 'sweetalert2';
-import { ProjectService } from '../../project.service';
+import { ProjectService } from '../../services/projects/project.service';
 import { Group } from '../../models/Group';
 import { User } from 'src/app/models/User';
-import { UserService } from 'src/app/user.service';
+import { UserService } from 'src/app/services/users/user.service';
 
 
 @Component({

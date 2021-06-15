@@ -7,7 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from 'src/app/models/team/team.model';
 import { User } from '../../models/User';
 import { TeamService } from 'src/app/team/team.service';
-import { UserService } from 'src/app/user.service';
+import { UserService } from 'src/app/services/users/user.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 

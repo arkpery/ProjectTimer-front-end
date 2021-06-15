@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import moment from "moment";
-import { Timer } from './models/Timer';
-import { Column, Row } from './viewModels';
+import { Timer } from '../../../models/Timer';
+import { Column, Row } from '../../../viewModels';
 
 @Injectable({
   providedIn: 'root'

@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Project } from './models/Project';
-import { Timer } from './models/Timer';
+import { Project } from '../../models/Project';
+import { Timer } from '../../models/Timer';
 import moment from "moment-timezone";
-import { User } from './models/User';
-import { BarChartService } from './bar-chart-service.service';
-import { PieChartService } from './pie-chart-service.service';
+import { User } from '../../models/User';
+import { BarChartService } from '../services.utils/bar/bar-chart-service.service';
+import { PieChartService } from '../services.utils/pie/pie-chart-service.service';
 
 @Injectable({
   providedIn: 'root'

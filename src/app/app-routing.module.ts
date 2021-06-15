@@ -8,7 +8,7 @@ import { ResponseResetPasswordComponent } from './pages/response-reset-password/
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { TeamsComponent } from './teams/teams.component';
-import { AuthGuardService } from './auth-guard/auth-guard.service';
+import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 import { TeamViewComponent } from './pages/team-view/team-view.component';
 import { UsersTimersComponent } from './users-timers/users-timers.component';
 

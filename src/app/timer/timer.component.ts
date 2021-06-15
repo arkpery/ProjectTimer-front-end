@@ -4,10 +4,11 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../models/Project';
 import { User } from '../models/User';
 import { Timer } from '../models/Timer';
-import { ProjectService } from '../project.service';
-import { UserService } from '../user.service';
-import { TimerrsService } from '../timerrs.service';
+import { ProjectService } from '../services/projects/project.service';
+import { UserService } from '../services/users/user.service';
+import { TimerrsService } from '../services/timers/timerrs.service';
 import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-timer',

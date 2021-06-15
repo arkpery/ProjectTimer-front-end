@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TimerrsService } from '../timerrs.service';
-import { UserService } from '../user.service';
+import { TimerrsService } from '../services/timers/timerrs.service';
+import { UserService } from '../services/users/user.service';
 import moment from "moment-timezone";
 import { Timer } from '../models/Timer';
 import { HeaderColumn, Row } from '../viewModels';

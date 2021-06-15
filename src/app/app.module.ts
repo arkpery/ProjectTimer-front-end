@@ -24,20 +24,20 @@ import { RegisterComponent } from './pages/register/register.component';
 import { NavbarComponent } from './pages/navbar/navbar.component';
 import { TeamsListComponent } from './pages/teams-list/teams-list.component';
 import { TeamViewComponent } from './pages/team-view/team-view.component';
-import { UserService } from './user.service';
 import { TeamService } from './team/team.service';
-import { AuthGuardService } from './auth-guard/auth-guard.service';
+import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 import { BadgeComponent } from './badge/badge.component';
 import { TeamsComponent } from './teams/teams.component';
 import { ChartsModule } from 'ng2-charts';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
-import { BarChartService } from './bar-chart-service.service';
-import { PieChartService } from './pie-chart-service.service';
-import { TimelineService } from './timeline-service.service';
-import { ProjectService } from './project.service';
-import { TimerrsService } from './timerrs.service';
+import { BarChartService } from './services/services.utils/bar/bar-chart-service.service';
+import { PieChartService } from './services/services.utils/pie/pie-chart-service.service';
+import { TimelineService } from './services/services.utils/timeline/timeline-service.service';
+import { ProjectService } from './services/projects/project.service';
+import { TimerrsService } from './services/timers/timerrs.service';
 import { UsersTimersComponent } from './users-timers/users-timers.component';
+import { UserService } from './services/users/user.service';
 
 @NgModule({
   declarations: [
