@@ -5,17 +5,19 @@ import { Timer } from '../models/Timer';
 import { ProjectService } from '../project.service';
 import { TimerrsService } from '../timerrs.service';
 import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
-import moment from "moment";
-import { TimelineComponent } from '../timeline/timeline.component';
+import moment from "moment-timezone";
+import { Group } from '../models/Group';
+import { TeamService } from '../team/team.service';
+import { Team } from '../models/team/team.model';
+
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss']
 })
-export class ProjectComponent  {
-  // 60c18f1982379a05b6e286a8
-  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBiZjZhN2ZlNjUwOTcwMDJjOWVhOGNjIiwiZW1haWwiOiJ2aW5jZW50QGNhcnRlZ3Jpc2VleHByZXNzLmNvbSJ9LCJpYXQiOjE2MjM2NjU2NDMsImV4cCI6MTYyNjI1NzY0M30.k6iMzHF7zbpRRlLUTdkfP3cCkiV207WPX8GsHA751Do";
+
+export class ProjectComponent {
   project?: Project;
   timers?: Array<Timer>;
 
@@ -23,21 +25,57 @@ export class ProjectComponent  {
   rows: Array<Row> = [];
   rowsEl: Array<HTMLElement> = [];
   validTimer: boolean = false;
-  selectDate: Array<{ label: string, value: Date }> = [];
-  currentDate?: { label: string, value: Date };
+  selectDate: Array<Date> = [];
+  currentDate?: Date;
+  teams: Team[] = [];
 
-  constructor(private projectService: ProjectService, private timerService: TimerrsService, private route: ActivatedRoute) { }
+  constructor(private projectService: ProjectService, private timerService: TimerrsService, private teamService: TeamService, private route: ActivatedRoute) {
+    this.pieChart = this.pieChart.bind(this);
+    this.barChart = this.barChart.bind(this);
+  }
+
+  getAllTeams() {
+    this.teamService.getAllGroupByProject(this.project!)
+      .subscribe(
+        (response: any) => {
+          this.teams = response.data;
+          console.log(this.teams);
+          console.log(response);
+        },
+        (error: any) => {
+          console.log(error);
+        });
+  }
 
   async ngOnInit() {
-    window.localStorage.setItem("token", this.token);
-
     await this.FetchProject();
-    await this.InitTimers();
+    if (this.timers && this.currentDate) {
+      this.rows = await this.projectService.timeline(this.timers, this.currentDate.getTime());
+    }
+    this.getAllTeams();
+  }
+
+  async close(project: Project) {
+    await this.projectService.close(project).toPromise();
+    await this.FetchProject();
+  }
+
+  async update(project: Project) {
+    const toUpdate: Project = {
+      _id: project._id,
+      name: project.name,
+      close: project.close,
+      groups: project.groups.map((g: Group) => g._id),
+      admin: project.admin._id
+    };
+
+    await this.projectService.update(toUpdate).toPromise();
+    await this.FetchProject();
   }
 
   async FetchProject() {
     this.project = await this.projectService.findOne(this.route.snapshot.paramMap.get("id") as string).toPromise();
-    this.timers = await this.timerService.getAll(this.project).toPromise();
+    this.timers = await this.timerService.findByProject(this.project).toPromise();
 
     this.headers = [
       {
@@ -48,124 +86,55 @@ export class ProjectComponent  {
       }
     ];
     moment.locale("fr");
-    for (let i = 0; i < 24; i++) {
-      const date = moment().startOf("date").add(i, "hours");
-
-      this.headers.push({
-        key: `${date.format("HH")}`
-      });
-    }
-    this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).map((date) => {
-      return {
-        value: date,
-        label: `${moment(date).format("DD/MM/YYYY")}`
-      }
-    }).sort((a, b) => {
-      if (a.value.getTime() > a.value.getTime()) {
+    this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).sort((a, b) => {
+      if (a.getTime() > b.getTime()) {
         return (1);
       }
-      else if (a.value.getTime() < a.value.getTime()) {
+      else if (a.getTime() < b.getTime()) {
         return (-1);
       }
       return (0);
-    }).reduce((p: Array<{ label: string, value: Date }>, v: { label: string, value: Date }) => {
+    }).reduce((p: Array<Date>, v: Date) => {
       if (!p) {
         p = [];
       }
       let flag = false;
 
       for (let item of p) {
-        if (item.label === v.label) {
+        if (moment(item).format("DD/MM/YYYY") === moment(v).format("DD/MM/YYYY")) {
           flag = true;
         }
       }
-
       if (!flag) {
         p.push(v);
       }
       return (p);
     }, []);
-    if (this.selectDate.length) {
+    if (this.selectDate.length && !this.currentDate) {
       this.currentDate = this.selectDate[0];
     }
   }
 
-  get Total(){
+  get Total() {
+    if (!this.timers || !this.timers?.length) {
+      return (moment(0).subtract(1, "hours").toDate());
+    }
     const total = this.timers?.map(t => t.duration).reduce((p, v) => {
       p += v;
 
       return (p);
     });
-    const date = moment(total).toDate()
+    const date = moment(total).subtract(1, "hours").toDate()
 
-    console.log(date);
     return (date);
   }
 
-  async InitTimers() {
-    if (!this.timers) {
-      this.timers = [];
-    }
-    const rows = this.timers.filter((timer) => {
-      const time = moment(timer.startTime).toDate();
-
-      return (time.getDate() === this.currentDate?.value.getDate() && 
-      time.getMonth() === this.currentDate.value.getMonth() && 
-      time.getFullYear() === this.currentDate.value.getFullYear());
-    }).map((timer, index) => {
-      const row = new Row();
-      const columns = [];
-      const arr = ["_id", "description"];
-      const mapId: any = {
-        "_id": "ID",
-        "description": "Description"
-      };
-      for (let k = 0; k < arr.length; k++) {
-        const column = new Column();
-
-        column.key = mapId[arr[k]];
-        column.value = arr[k] === "_id" ? `${(index + 1)}` : (Reflect.get(timer, arr[k]) || "Pas de valeur définie");
-        column.uid = k;
-        columns.push(column);
-      }
-      const start = moment.parseZone(timer.startTime).toDate();
-      const end = moment(start.getTime() + timer.duration).toDate();
-      if (this.headers && this.headers.length > 2) {
-        const ribbons: Array<Ribbon> = [];
-        if (this.currentDate){
-          const ribbon = new Ribbon();
-          for (let i = 2; i < this.headers.length; i++) {
-            ribbon.content = timer.taskType;
-            if (timer.user) {
-              ribbon.author = timer.user.email;
-            }
-            const value = this.headers[i].key;
-            const date = moment(value, "HH").toDate();
-  
-            if (date.getHours() === start.getHours() &&
-              this.currentDate.value.getMonth() === start.getMonth() &&
-              this.currentDate.value.getFullYear() && start.getFullYear() &&
-              this.currentDate.value.getDate() && start.getDate()) {
-                ribbon.colStart = this.headers[i];
-            }
-            if (date.getHours() === end.getHours() &&
-              this.currentDate.value.getMonth() === end.getMonth() &&
-              this.currentDate.value.getFullYear() && end.getFullYear() &&
-              this.currentDate.value.getDate() && end.getDate()) {
-                ribbon.colEnd = this.headers[i];
-            }
-          }
-          ribbons.push(ribbon);
-        }
-        console.log(ribbons);
-        row.ribbons = ribbons;
-      }
-      row.columns = columns;
-      row.uid = index;
-      return (row);
-    });
-    this.rows = rows;
+  barChart(timers: Array<Timer>) {
+    console.log(this.timerService);
+    return (this.timerService.barChart(timers));
   }
 
-
+  pieChart(timers: Array<Timer>) {
+    return (this.timerService.pieChart(timers));
+  }
 }

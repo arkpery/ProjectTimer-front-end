@@ -1,16 +1,25 @@
-<div class="timeline my-4">
-    <div class="header-row">
-        <div class="header mp-4" #view [ngStyle]="adjustHeader(header, view)" *ngFor="let header of headers">
-            {{ header.key }}
+<div>
+    <ng-select class="my-4" name="date" [items]="toLabels(selectDate)" autofocus (change)="changeTimers($event)" [ngModel]="label"></ng-select>
+    <span class="badge rounded-pill bg-primary text-white" *ngFor="let filter of filters; let i = index" (click)="removeFilter(i)">
+         à {{ filter | date: "HH" }} heures
+    </span>
+    <div class="timeline my-4" #timeline *ngIf="draw">
+        <div class="header-row background-primary" [ngStyle]="parent(timeline)" *ngIf="__headers && __headers.length">
+            <div class="header mp-4" #view [ngStyle]="adjustHeader(header, view)" *ngFor="let header of __headers"
+                (dblclick)="changeView(header)">
+                {{ header.key }}
+            </div>
         </div>
-    </div>
-    <div class="rows">
-        <div class="content-row" #rowView *ngFor="let row of rows; let i = index">
-            <div class="row-column mp-4" [attr.row]="row.uid" [attr.col]="column.key" #columnView [ngStyle]="adjustColumn(column, columnView)" *ngFor="let column of headers">
-                {{ getContent(row, column) }}
+        <div class="rows" *ngIf="__rows && __rows.length">
+            <div class="content-row" #rowView *ngFor="let row of __rows; let i = index">
+                <div class="row-column mp-4" [attr.row]="row.uid" [attr.col]="column.key" #columnView
+                    [ngStyle]="adjustColumn(column, columnView)" *ngFor="let column of __headers">
+                    {{ getContent(row, column) }}
 
-                <div *ngIf="verifyRibbon(row, column)">
-                    <app-ribbon [timeline]="BoundingClientRect" [columnView]="columnView" [column]="column" [ribbon]="getRibbon(row, column)!"></app-ribbon>
+                    <div *ngIf="verifyRibbon(row, column)">
+                        <app-ribbon [timeline]="BoundingClientRect" [type]="type" [columnView]="columnView" [column]="column"
+                            [ribbon]="getRibbon(row, column)!"></app-ribbon>
+                    </div>
                 </div>
             </div>
         </div>

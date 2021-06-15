@@ -6,6 +6,7 @@ export interface User {
     password: string;
     groups: Array<Group> | Array<string> | any; 
     avatar: string;
-    firstname: string;
-    lastname: string;
+    firstname: string,
+    lastname: string,
+    birthdate: string,
 };

@@ -19,16 +19,21 @@
                     </div>
                     <div class="row">
                         <p>
-                            Temps total: {{ Total | date: "hh:mm:ss" }}  
+                            Temps total: {{ Total | date: "HH:mm:ss" }}
                         </p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="row">
-                        <app-ui-button class="col-md-6" [type]="'danger'" [icon]="'trash'" [content]="'Clore'">
+                        <app-ui-button *ngIf="!project.close" class="col-md-6" (click)="close(project)"
+                            [type]="'danger'" [icon]="'trash'" [content]="'Clore'">
                         </app-ui-button>
 
-                        <app-ui-button class="col-md-6" [type]="'primary'" [icon]="'save'" [content]="'Mettre à jour'">
+                        <app-badge *ngIf="project.close" [type]="'danger'" class="col-md-6" [content]="'Projet clos'">
+                        </app-badge>
+
+                        <app-ui-button class="col-md-6" (click)="update(project)" [type]="'primary'" [icon]="'save'"
+                            [content]="'Mettre à jour'">
                         </app-ui-button>
                     </div>
                 </div>
@@ -37,19 +42,24 @@
                 <div class="col-md-12">
                     <div class="opposite">
                         <div>
-                            <h4>Timeline</h4>
+                            <h2>Timeline</h2>
                         </div>
-                        <div>
+                        <div *ngIf="!project.close">
                             <app-ui-button [type]="'primary'" [icon]="'home'" [content]="'Ajouter une tâche'">
                             </app-ui-button>
                         </div>
                     </div>
-                    <div>
-                        <ng-select class="my-4" name="date" [items]="selectDate" bindLabel="label" autofocus (change)="InitTimers()" [(ngModel)]="currentDate"></ng-select>
-                        <app-timeline *ngIf="rows.length && currentDate !== null" [headers]="headers" [rows]="rows"></app-timeline>
+                    <div *ngIf="rows.length && headers.length && currentDate !== null">
+                        <app-timeline [selectDate]="selectDate"
+                            [currentDate]="currentDate" [headers]="headers" [rows]="rows"></app-timeline>
                     </div>
                 </div>
             </div>
         </form>
+        <app-teams-list class="my-4" *ngIf="project" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
+        <div class="row my-4" *ngIf="timers && timers.length">
+            <app-bar-chart class="col-md-6" [title]="'Temps moyen par jour(/min)'" *ngIf="timers" [items]="timers" [transform]="barChart"></app-bar-chart>
+            <app-pie-chart class="col-md-6" [title]="'Temps passé en fonction du type de tâche(/s)'" *ngIf="timers" [items]="timers" [transform]="pieChart"></app-pie-chart>
+        </div>
     </div>
 </article>
