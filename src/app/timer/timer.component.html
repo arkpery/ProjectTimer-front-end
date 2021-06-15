@@ -1,12 +1,12 @@
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Timer</h4>
+    <h4 class="modal-title" id="modal-basic-title">Task</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="timerForm" (ngSubmit)="onSubmitForm()">
+    <form [formGroup]="timerForm" (ngClick)="onSubmitForm()">
       <div class="mb-3 form-group">
         <label for="description" class="form-label">Description *</label>
         <input type="text" class="form-control" id="description" formControlName="description">
@@ -18,7 +18,7 @@
       <div class="mb-3 form-group">
         <label for="user" class="form-label">User *</label>
         <select id="user" formControlName="user" class="form-select form-control" aria-label="select">
-          <option selected value="{{currentUser._id}}">{{currentUser.firstname}} {{currentUser.lastname}}</option>
+          <option value="{{currentUser._id}}">{{currentUser.firstname}} {{currentUser.lastname}}</option>
         </select>
       </div>
       <div class="mb-3 form-group">
@@ -32,18 +32,18 @@
       </div>
       <div class="mb-3 form-group">
         <label for="project" class="form-label">Project *</label>
-        <select required id="project" formControlName="project" class="form-select form-control" aria-label="select">
-          <option selected value="{{project._id}}">{{project.name}}</option>
+        <select id="project" formControlName="project" class="form-select form-control" aria-label="select">
+          <option value="{{project._id}}">{{project.name}}</option>
         </select>
       </div>
       <div>
-        <button class="btn btn-primary" (click)="startTimer()">Start</button>
-        <button class="btn btn-danger" (click)="pauseTimer()">Stop</button>
+        <button class="btn btn-primary me-4" (click)="startTimer()">Start</button>
+        <button class="btn btn-danger ms-4" (click)="pauseTimer()">Stop</button>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" [disabled]="timerForm.invalid" (click)="onSubmitForm()">Save</button>
+    <button type="button" class="btn btn-outline-dark" [disabled]="timerForm.invalid" (click)="onSubmitForm()">Create Task</button>
   </div>
 </ng-template>
 

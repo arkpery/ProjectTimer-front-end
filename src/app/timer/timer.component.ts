@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
 import { Project } from '../models/Project';
 import { User } from '../models/User';
 import { Timer } from '../models/Timer';
 import { ProjectService } from '../project.service';
 import { UserService } from '../user.service';
 import { TimerrsService } from '../timerrs.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-timer',
@@ -15,6 +15,8 @@ import { TimerrsService } from '../timerrs.service';
   styleUrls: ['./timer.component.scss']
 })
 export class TimerComponent implements OnInit {
+  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBiZjZhN2ZlNjUwOTcwMDJjOWVhOGNjIiwiZW1haWwiOiJ2aW5jZW50QGNhcnRlZ3Jpc2VleHByZXNzLmNvbSJ9LCJpYXQiOjE2MjM3NDMxMjksImV4cCI6MTYyNjMzNTEyOX0.ydrMayvbIQO3oQHGBlBXt6OvRwKdPkIwhmvcR8klo0g";
+  
   closeResult = '';
   interval: any;
   time = new Date(0);
@@ -31,9 +33,12 @@ export class TimerComponent implements OnInit {
     ) {}
 
   async ngOnInit() {
+    window.localStorage.setItem("token", this.token);    
     await this.getProject();
     await this.CurrentUser();
-    this.initTimerForm();
+    this.initTimerForm();  
+    this.timerForm.get('user')?.disable();
+    this.timerForm.get('project')?.disable(); 
   }
 
   async CurrentUser(){
@@ -51,29 +56,32 @@ export class TimerComponent implements OnInit {
     this.timerForm = this.formBuilder.group({
       description: ['', Validators.required],
       taskType: ['', Validators.required],
-      user: ['', Validators.required],
+      user: [this.currentUser._id, Validators.required],
       startTime: '',
       duration: '',
-      project: ['', Validators.required]
+      project: [this.project._id, Validators.required]
     });
   }
 
   onSubmitForm(){
     const formValue = this.timerForm.value;
     const newTimer: Timer = {
-      _id: '',
       description: formValue['description'],
-      taskType: formValue['tasksType'],
+      taskType: formValue['taskType'],
       user: formValue['user'],
       startTime: formValue['startTime'],
       duration: formValue['duration'],
       project: formValue['project']
     };
+    console.log("this.time : " + this.time);
+    console.log(newTimer);
     this.timerrsService.save(newTimer).subscribe(
         response => {
+          Swal.fire('Whooa!', 'Task has a created', 'success');
           console.log(response);
         },
         error => {
+          Swal.fire('Oops', error, 'error');
           console.log(error);
         });    
   }
@@ -98,7 +106,7 @@ export class TimerComponent implements OnInit {
 
   startTimer(){
     this.interval = setInterval(() => {
-      this.time.setSeconds(this.time.getSeconds() + 1);
+      this.timerForm.controls['duration'].setValue(this.time.setSeconds(this.time.getSeconds() + 1));
     },1000);
   }
 

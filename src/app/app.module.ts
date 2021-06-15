@@ -42,6 +42,7 @@ import { TimerComponent } from './timer/timer.component';
     ReactiveFormsModule
   ],
   providers: [
+    NgbModule,
   ],
   bootstrap: [AppComponent]
 })
