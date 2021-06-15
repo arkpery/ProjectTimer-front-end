@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Project } from '../models/project/Project';
-import { User } from '../models/user/User';
-import { Timer } from '../models/timer/Timer';
-import { ProjectService } from '../services/projects/project.service';
-import { UserService } from '../services/users/user.service';
-import { TimerrsService } from '../services/timers/timerrs.service';
+import { Project } from '../../models/project/Project';
+import { User } from '../../models/user/User';
+import { Timer } from '../../models/timer/Timer';
+import { ProjectService } from '../../services/projects/project.service';
+import { UserService } from '../../services/users/user.service';
+import { TimerrsService } from '../../services/timers/timerrs.service';
 import Swal from 'sweetalert2';
 
 

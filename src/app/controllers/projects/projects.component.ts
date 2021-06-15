@@ -1,10 +1,10 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Project } from '../models/project/Project';
-import { ProjectService } from '../services/projects/project.service';
+import { Project } from '../../models/project/Project';
+import { ProjectService } from '../../services/projects/project.service';
 import { faTrash, faCogs } from '@fortawesome/free-solid-svg-icons';
-import { Group } from '../models/team/Group';
-import { UserService } from '../services/users/user.service';
-import { User } from '../models/user/User';
+import { Group } from '../../models/team/Group';
+import { UserService } from '../../services/users/user.service';
+import { User } from '../../models/user/User';
 import { TimelineComponent } from '../timeline/timeline.component';
 
 @Component({
