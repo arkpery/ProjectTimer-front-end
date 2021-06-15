@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Project } from '../../models/Project';
-import { Timer } from '../../models/Timer';
+import { Project } from '../../models/project/Project';
+import { Timer } from '../../models/timer/Timer';
 import moment from "moment-timezone";
-import { User } from '../../models/User';
+import { User } from '../../models/user/User';
 import { BarChartService } from '../services.utils/bar/bar-chart-service.service';
 import { PieChartService } from '../services.utils/pie/pie-chart-service.service';
 

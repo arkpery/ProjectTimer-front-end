@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Timer } from '../../../models/Timer';
+import { Timer } from '../../../models/timer/Timer';
 import moment from "moment-timezone";
 
 @Injectable({

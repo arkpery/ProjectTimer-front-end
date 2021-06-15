@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TimerrsService } from '../services/timers/timerrs.service';
 import { UserService } from '../services/users/user.service';
 import moment from "moment-timezone";
-import { Timer } from '../models/Timer';
+import { Timer } from '../models/timer/Timer';
 import { HeaderColumn, Row } from '../viewModels';
 
 @Component({

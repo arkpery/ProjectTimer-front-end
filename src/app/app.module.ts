@@ -24,7 +24,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { NavbarComponent } from './pages/navbar/navbar.component';
 import { TeamsListComponent } from './pages/teams-list/teams-list.component';
 import { TeamViewComponent } from './pages/team-view/team-view.component';
-import { TeamService } from './team/team.service';
+import { TeamService } from './services/teams/team.service';
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 import { BadgeComponent } from './badge/badge.component';
 import { TeamsComponent } from './teams/teams.component';

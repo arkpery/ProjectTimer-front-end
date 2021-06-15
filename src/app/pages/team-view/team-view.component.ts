@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Team } from 'src/app/models/team/team.model';
-import { TeamService } from 'src/app/team/team.service';
+import { TeamService } from 'src/app/services/teams/team.service';
 import {  faCog,faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Project } from '../../models/Project';
+import { Project } from '../../models/project/Project';
 import Swal from 'sweetalert2';
 import { ProjectService } from '../../services/projects/project.service';
-import { Group } from '../../models/Group';
-import { User } from 'src/app/models/User';
+import { Group } from '../../models/team/Group';
+import { User } from 'src/app/models/user/User';
 import { UserService } from 'src/app/services/users/user.service';
 
 

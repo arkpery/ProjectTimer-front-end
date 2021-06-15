@@ -1,5 +1,5 @@
-import { Group } from "./Group";
-import { User } from "./User";
+import { Group } from "../team/Group";
+import { User } from "../user/User";
 
 export interface Project {
     _id: string;

@@ -1,4 +1,4 @@
-import { Group } from "./Group";
+import { Group } from "../team/Group";
 
 export interface User {
     _id: string;

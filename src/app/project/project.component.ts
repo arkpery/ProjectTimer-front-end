@@ -1,13 +1,13 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Project } from '../models/Project';
-import { Timer } from '../models/Timer';
+import { Project } from '../models/project/Project';
+import { Timer } from '../models/timer/Timer';
 import { ProjectService } from '../services/projects/project.service';
 import { TimerrsService } from '../services/timers/timerrs.service';
 import { Column, HeaderColumn, Ribbon, Row } from '../viewModels';
 import moment from "moment-timezone";
-import { Group } from '../models/Group';
-import { TeamService } from '../team/team.service';
+import { Group } from '../models/team/Group';
+import { TeamService } from '../services/teams/team.service';
 import { Team } from '../models/team/team.model';
 
 
