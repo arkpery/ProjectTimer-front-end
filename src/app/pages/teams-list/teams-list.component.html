@@ -26,12 +26,12 @@
                         </td>
                         <td>{{team.created_at | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                         <td *ngIf="team.admin">{{team.admin.firstname}}</td>
-                        <td>
+                        <td >
                             <button type="button" routerLink="/teams/{{team._id}}"
                                 class="btn btn-primary btn-circle btn-floating btn-sm me-1">
                                 <fa-icon [icon]="faCog"></fa-icon>
                             </button>
-                            <button *ngIf="team._id" type="button" (click)="onDelete(team._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <button *ngIf="team._id" type="button" (click)="onDelete(team._id,team.members)" class="btn btn-danger btn-circle btn-floating btn-sm">
                               <fa-icon [icon]="faTrash"></fa-icon>
 
                             </button>

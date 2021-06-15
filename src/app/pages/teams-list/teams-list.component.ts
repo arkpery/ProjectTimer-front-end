@@ -9,6 +9,7 @@ import { User } from '../../models/User';
 import { TeamService } from 'src/app/team/team.service';
 import { UserService } from 'src/app/user.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -72,8 +73,6 @@ export class TeamsListComponent implements OnInit {
   // get current User 
   async CurrentUser() {
     this.currentUser = await this.userService.CurrentUser();
-    console.log("enter");
-    console.log(this.currentUser);
   }
 
 
@@ -113,7 +112,6 @@ export class TeamsListComponent implements OnInit {
           `
           return o
         });
-        console.log(this.userList);
 
       }, error => {
         console.log(error);
@@ -127,7 +125,6 @@ export class TeamsListComponent implements OnInit {
       centered: true,
       backdrop: 'static'
      });
-     console.log("current user : "+this.currentUser?._id);
 
    }
 
@@ -166,7 +163,6 @@ export class TeamsListComponent implements OnInit {
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
-        console.log(response);
         this.getAllTeams();
         this.router.navigate(['/teams']);
       },
@@ -176,17 +172,23 @@ export class TeamsListComponent implements OnInit {
   }
    
   // delete a group
-   onDelete(id: string): void {
-    this.teamService.deleteGroup(id)
+  onDelete(id: string, teamM: Team): void {
+    const lengthMembers = Object.keys(teamM).length;
+    if(lengthMembers){
+      Swal.fire('Oops', 'Group has a members!!!', 'error');
+    } else {
+      this.teamService.deleteGroup(id)
       .subscribe(
         (response: any) => {
-          console.log(response);
+          Swal.fire('Whooa!', 'Group has a members!!!', 'success')
           this.getAllTeams();
           this.router.navigate(['/teams']);
         },
         (error: any) => {
           console.log(error);
         });
+    }
+    
   }
 
   

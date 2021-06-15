@@ -1,6 +1,5 @@
 <div class="container">
-    
-
+    <br>
     <div class="row" *ngIf="team">
         <div class="input-group" class="col-md-3">
             <input type="text" class="form-control" [(ngModel)]="team.name" id="team.name"
@@ -9,27 +8,35 @@
         <div class="offset-md-1 col-md-4">
             <div class="row">
                 <p>
-                    Créée le: {{team.created_at | date: "dd / MM / y" }} 
+                    Created at: {{team.created_at | date: "dd / MM / y" }} 
                 </p>
             </div>
             <div class="row">
                 <p>
-                    Mise à jour le : {{team.updated_at | date: "dd / MM / y" }} 
+                   Updated at : {{team.updated_at | date: "dd / MM / y" }} 
                 </p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="row">
-                
+            <div class="row-cols-1" *ngIf="team">
+                <app-ui-button *ngIf="team._id" class="col-md-7"  (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'Filled'" [content]="'Delete'">
+                </app-ui-button>
 
-
-                <app-ui-button class="col-md-6"  [type]="'primary'" [icon]="'save'" [content]="'Mettre à jour'">
+                <app-ui-button class="col-md-7"  [type]="'primary'" [icon]="'save'" [content]="'Update'">
                 </app-ui-button>
             </div>
         </div>
     </div>
     <div class="row mt-4">
         <div class="col">
+          
+                <h2>Members</h2>
+          
+            <div class="col-md-4" id="div-btn">
+                <app-ui-button class="col-md-6"  [type]="'primary'" [icon]="'add'" [content]="'Add members'">
+                </app-ui-button>
+            </div>
+           
             <table class="table table-striped">
                 <thead>
                     <tr class="table-primary">
@@ -40,11 +47,15 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="team">
-                    <tr  *ngIf="team.admin">
-                        <td>{{ team.admin.firstname }}</td>
-                        <td>{{ team.admin.lastname }}</td>
-                        <td>{{ team.admin.email }}</td>
-                        <td></td>
+                    <tr *ngFor="let member of team.members" >
+                        <td>{{ member.firstname }}</td>
+                        <td>{{ member.lastname }}</td>
+                        <td>{{ member.email }}</td>
+                        <td>
+                            <button  type="button"  class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                          </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -52,21 +63,39 @@
     </div>
     <div class="row mt-4">
         <div class="col">
+            
+            <h2>Projects</h2>
+          
+            <div class="col-md-4" id="div-btn">
+                <app-ui-button class="col-md-6"  [type]="'primary'" [icon]="'add'" [content]="'Add Projects'">
+                </app-ui-button>
+            </div>
             <table class="table table-striped">
                 <thead>
                     <tr class="table-primary">
                         <th scope="col">Name</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Created at</th>
                         <th scope="col">Groups</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Creator</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="team">
                     <tr *ngFor="let member of team.members">
                         <td>{{ member.firstname }}</td>
-                        <td>{{ member.email }}</td>
+                        <td>{{ member.lastname }}</td>
                         <td></td>
-                        <td>{{ member | json }}</td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button type="button" (click)="getAllProjectsByGroup()" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
+                                <fa-icon [icon]="faCog"></fa-icon>
+                            </button>
+                            <button *ngIf="team._id" type="button"  class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
