@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectComponent } from './project/project.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { TimerComponent } from './timer/timer.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ResponseResetPasswordComponent } from './pages/response-reset-password/response-reset-password.component';
 import { LoginComponent } from './pages/login/login.component';

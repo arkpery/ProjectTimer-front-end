@@ -16,6 +16,7 @@ import { UiButtonComponent } from './ui-button/ui-button.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
+import { TimerComponent } from './timer/timer.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ResponseResetPasswordComponent } from './pages/response-reset-password/response-reset-password.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -48,6 +49,7 @@ import { UsersTimersComponent } from './users-timers/users-timers.component';
     ProjectListComponent,
     TimelineComponent,
     RibbonComponent,
+    TimerComponent,
     ResetPasswordComponent,
     ResponseResetPasswordComponent,
     LoginComponent,
@@ -68,10 +70,16 @@ import { UsersTimersComponent } from './users-timers/users-timers.component';
     NgbModule,
     HttpClientModule,
     FontAwesomeModule,
-    NgSelectModule,
+    NgSelectModule, 
     FormsModule,
     ReactiveFormsModule,
     ChartsModule
+  ],
+  providers: [
+    NgbModule,
+    NgSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     UserService,
