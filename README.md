@@ -2,6 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
 
+# Prérequis
+Pour pouvoir compiler et lancer le serveur depuis les sources les logiciels suivants sont nécessaire :
+- Docker
+- docker-compose
+- Cygwin sur windows
+
 ## Production server
 
 Run `make` in order to run the development server.
