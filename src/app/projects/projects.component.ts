@@ -16,7 +16,7 @@ export class ProjectsComponent implements OnInit {
 
   faTrash = faTrash;
   faCogs = faCogs;
-  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBjMThjNDJjNzcyYWEwNTQ2NDAyNjJmIiwiZW1haWwiOiJtYXhpbWVAbWFpbC5mciJ9LCJpYXQiOjE2MjMyOTcwOTAsImV4cCI6MTYyNTg4OTA5MH0.pElOdmwMGf9H2RUr1wxunCXSZLXhKhWg1e90gvZ6R1s";
+  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBiZjZhN2ZlNjUwOTcwMDJjOWVhOGNjIiwiZW1haWwiOiJ2aW5jZW50QGNhcnRlZ3Jpc2VleHByZXNzLmNvbSJ9LCJpYXQiOjE2MjM2NjU2NDMsImV4cCI6MTYyNjI1NzY0M30.k6iMzHF7zbpRRlLUTdkfP3cCkiV207WPX8GsHA751Do";
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
   currentUser?: User;
