@@ -11,6 +11,7 @@ import { Project } from '../models/Project';
 export class TeamService {
 
   GROUP_URL = '/groups';
+  PROJECT_URL = '/projects';
 
   constructor(private http: HttpClient) { }
 
@@ -18,13 +19,17 @@ export class TeamService {
     return this.http.get<Team[]>(environment.baseUrl + this.GROUP_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
+  
+
+
   getGroup(id: any): Observable<Team> {
     return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  // createGroup(team: Team): Observable<Team> {
-  //   return this.http.post<Team>(environment.baseUrl + this.GROUP_URL, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
-  // }
+  getProjectByGroup(id: any): Observable<Team> {
+    return this.http.get<Team>(`${environment.baseUrl}${this.PROJECT_URL}/${id}${this.GROUP_URL}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  }
+ 
 
   createGroup(team : Team): Observable<Team> {
     return this.http.post(`${environment.baseUrl}${this.GROUP_URL}`, team, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });

@@ -32,6 +32,8 @@ export class TeamsListComponent implements OnInit {
   members?: []  
   currentUser?: User;
   requestDone: boolean = false;
+  users: Array<User> = [];
+
 
   // list members
   userList = [];
@@ -49,6 +51,7 @@ export class TeamsListComponent implements OnInit {
 
     try {
       await this.CurrentUser();
+      await this.onFetchGroups();
     }
     catch (e) {
       this.requestDone = true;
@@ -59,6 +62,9 @@ export class TeamsListComponent implements OnInit {
     // get list of users (members)
     this.getUsersList();
 
+    console.log("******")
+     console.log(this.defaultMemberId);
+
     this.selectForm = this.fb.group({
       members: []
     });
@@ -68,6 +74,19 @@ export class TeamsListComponent implements OnInit {
 
   }
 
+  async onFetchGroups() {
+    this.teams = await this.teamService.getAllGroup().toPromise();
+    this.users = await this.userService.findAll().toPromise();
+    this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
+    this.requestDone = true;
+  }
+
+  defaultUser(members: Array<User>) {
+    if (members.length) {
+      return (members[0]._id);
+    }
+    return ("");
+  }
 
   // get current User 
   async CurrentUser() {
@@ -174,18 +193,37 @@ export class TeamsListComponent implements OnInit {
   onDelete(id: string, teamM: Team): void {
     const lengthMembers = Object.keys(teamM).length;
     if(lengthMembers){
-      Swal.fire('Oops', 'Group has a members!!!', 'error');
+      Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
-      this.teamService.deleteGroup(id)
-      .subscribe(
-        (response: any) => {
-          Swal.fire('Whooa!', 'Group has a members!!!', 'success')
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this group!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, keep it'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.teamService.deleteGroup(id)
+          .subscribe(
+           (response: any) => {
+          Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
           this.getAllTeams();
           this.router.navigate(['/teams']);
         },
         (error: any) => {
           console.log(error);
         });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire(
+            'Cancelled',
+            'Your group  isn\'t deleted :)',
+            'error'
+          )
+        }
+      })
+      
+      
     }
     
   }

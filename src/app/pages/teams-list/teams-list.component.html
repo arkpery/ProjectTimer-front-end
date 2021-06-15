@@ -24,7 +24,7 @@
                             <ng-select [items]="team.members!" bindLabel="firstname" bindValue="_id"
                                 [(ngModel)]="defaultMemberId[i]"></ng-select>
                         </td>
-                        <td>{{team.created_at | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                        <td>{{team.created_at | date:'yyyy-MM-dd'}}</td>
                         <td *ngIf="team.admin">{{team.admin.firstname}}</td>
                         <td >
                             <button type="button" routerLink="/teams/{{team._id}}"
