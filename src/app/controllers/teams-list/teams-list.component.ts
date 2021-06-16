@@ -11,7 +11,6 @@ import { UserService } from 'src/app/services/users/user.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-teams-list',
   templateUrl: './teams-list.component.html',
@@ -23,7 +22,6 @@ export class TeamsListComponent implements OnInit {
   @Input() teams: Team[] = [];
   @Input() canAdd: boolean = true;
   defaultMemberId: Array<string> = [];
-  ADD_URL = '/users';
 
   createGroupForm!: FormGroup;
   selectForm!: FormGroup;
@@ -36,14 +34,13 @@ export class TeamsListComponent implements OnInit {
 
 
   // list members
-  userList = [];
-
+   userList = [];
+  
   constructor(
     private teamService: TeamService,
     private router: Router,
     private fb: FormBuilder,
     private modalService: NgbModal,
-    private http: HttpClient, 
     private userService: UserService,
   ) { }
 
@@ -61,9 +58,6 @@ export class TeamsListComponent implements OnInit {
 
     // get list of users (members)
     this.getUsersList();
-
-    console.log("******")
-     console.log(this.defaultMemberId);
 
     this.selectForm = this.fb.group({
       members: []
@@ -119,23 +113,24 @@ export class TeamsListComponent implements OnInit {
   }
 
 
-  // Fetching users data 
+   // Fetching users data 
   getUsersList() {
-    this.http
-      .get<any>(environment.baseUrl+this.ADD_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } })
-      .subscribe(response => {
-        this.userList = response.map((o: { search_label: string; firstname: string; lastname: string; email: string; }) => {
-          o.search_label =
-            ` ${o.firstname}  ${o.lastname} ${o.email}
-          `
-          return o
+    console.log()
+     this.userService.findAll()
+      .subscribe(
+        (response: any) => {
+          this.userList = response.map((o: { search_label: string; firstname: string; lastname: string; email: string; }) => {
+            o.search_label =
+              ` ${o.firstname}  ${o.lastname} ${o.email}
+            `
+            return o
+          });
+         
+        },
+        (error: any) => {
+          console.log(error);
         });
-        console.log(this.userList)
-      }, error => {
-        console.log(error);
-      });
   }
-
 
   // open modal to create group
   async createGroup(targetModal: any){
@@ -167,7 +162,6 @@ export class TeamsListComponent implements OnInit {
 
   // clear list selected 
   clearListSelected() {
-    console.log("selected clear")
     this.selectForm.get('members')?.patchValue([]);
   }
 
@@ -180,11 +174,13 @@ export class TeamsListComponent implements OnInit {
       members: this.selectedMembersId
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
-      async (response: any) => {
+      async () => {
+        Swal.fire('successfully created!', 'Group  created.', 'success')
         this.getAllTeams();
         this.router.navigate(['/teams']);
       },
       (error: any) => {
+        Swal.fire('Can\'t create', 'Group not created.', 'error')
         console.log(error);
       });
   }
@@ -228,6 +224,8 @@ export class TeamsListComponent implements OnInit {
     
   }
 
+
   
 
 }
+

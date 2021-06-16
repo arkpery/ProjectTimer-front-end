@@ -2,18 +2,9 @@
 
 /* You can add global styles to this file, and also import other style files */
 
+
 /* Importing Bootstrap SCSS file. */
+
 @import '~bootstrap/scss/bootstrap';
 @import "~@ng-select/ng-select/themes/default.theme.css";
-
-$theme-colors: (
-  "primary":    linear-gradient(90deg, rgba(18,14,83,1) 9%, rgba(29,88,184,1) 38%, rgba(0,212,255,1) 100%),
-  "secondary":  $secondary,
-  "success":    $success,
-  "info":       $info,
-  "warning":    $warning,
-  "danger":     $danger,
-  "light":      $light,
-  "dark":       $dark
-);
-
+$theme-colors: ( "primary": linear-gradient(90deg, rgba(18, 14, 83, 1) 9%, rgba(29, 88, 184, 1) 38%, rgba(0, 212, 255, 1) 100%), "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark);

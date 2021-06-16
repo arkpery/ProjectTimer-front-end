@@ -19,7 +19,6 @@ export class TeamService {
     return this.http.get<Team[]>(environment.baseUrl + this.GROUP_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  
 
 
   getGroup(id: any): Observable<Team> {
@@ -36,21 +35,14 @@ export class TeamService {
   }
 
 
-  public update(team: Team) {
-    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${team._id}`, team, {
+  public update(id: any,team: Team): Observable<Team>  {
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${id}`, team, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }
     });
   }
-  public updateGroup(id: string) {
-    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${id}`, {
-      headers: {
-        "Authorization": `${window.localStorage.getItem("token")}`
-      }
-    });
-  }
-
+  
 
   public findOne(id: string): Observable<Team> {
     return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, {

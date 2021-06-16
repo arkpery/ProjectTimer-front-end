@@ -13,10 +13,6 @@ export class UserService {
 
   hostname: string = "http://localhost:7777";
 
-
-
-
-
   private users: User[] = [];
   userSubject = new Subject<User[]>();
 

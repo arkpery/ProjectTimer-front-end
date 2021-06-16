@@ -29,7 +29,7 @@
     "@ng-select/ng-select": "^6.1.0",
     "@popperjs/core": "^2.9.2",
     "ajv": "^8.5.0",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^4.6.0",
     "chart.js": "^2.9.3",
     "eva-icons": "^1.1.2",
     "gantt-schedule-timeline-calendar": "^3.7.1",
