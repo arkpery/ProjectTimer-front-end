@@ -31,7 +31,6 @@ export class TeamViewComponent implements OnInit {
   faTrash = faTrash;
   currentUser?: User;
   requestDone: boolean = false;
-  closeResult = '';
   selectedMembersId?: [''];
   
   selectForm!: FormGroup;
@@ -71,6 +70,10 @@ export class TeamViewComponent implements OnInit {
     this.findById(this.route.snapshot.params['id']);
     this.findProjectsByGroup(this.route.snapshot.params['id']);
    
+
+    console.log("on init")
+    this.consoleLog()
+    console.log("end init")
   }
 
 
@@ -91,6 +94,10 @@ export class TeamViewComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+        console.log("on getuserlist")
+        this.consoleLog()
+        console.log("end getuserlist")
+
   }
 
   toJSON(team: Team){
@@ -102,11 +109,17 @@ export class TeamViewComponent implements OnInit {
     this.projects = await this.projectService.findAll().toPromise();
     this.defaultGroupId = this.projects.map(project => this.defaultGroup(project.groups));
     this.requestDone = true;
+    console.log("on onFetchGroups")
+        this.consoleLog()
+        console.log("end onFetchGroups")
   }
 
 
   async CurrentUser() {
     this.currentUser = await this.userService.CurrentUser();
+    console.log("on CurrentUser")
+        this.consoleLog()
+        console.log("end CurrentUser")
   }
   
 
@@ -121,6 +134,9 @@ export class TeamViewComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+        console.log("on findById")
+        this.consoleLog()
+        console.log("end findById")
   }
 
   findProjectsByGroup(id: string): void {
@@ -132,6 +148,9 @@ export class TeamViewComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+        console.log("on findProjectsByGroup")
+        this.consoleLog()
+        console.log("end findProjectsByGroup")
   }
 
 
@@ -141,6 +160,7 @@ export class TeamViewComponent implements OnInit {
     }
     return ("");
   }
+
   status(project: Project) {
     return (project.close ? "Fermé" : "En cours");
   }
@@ -184,6 +204,9 @@ export class TeamViewComponent implements OnInit {
         }
       })
     }
+    console.log("on onDelete")
+        this.consoleLog()
+        console.log("end onDelete")
     
   }
   
@@ -196,16 +219,19 @@ export class TeamViewComponent implements OnInit {
       console.log(team._id)
       this.teamService.update(team._id, newMembers).subscribe(
         (response: any) => {
-       Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
-       this.router.navigate([`/teams/${team._id}`]);
+          this.router.navigate([`/teams/${team._id}`]);
+          Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
      },
      (error: any) => {
        console.log(error);
      });
       
   }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    console.log("canceled");
+      });
+      console.log("on updateByAddingUser")
+        this.consoleLog()
+        console.log("end updateByAddingUser")
   }
 
 
@@ -231,11 +257,16 @@ export class TeamViewComponent implements OnInit {
     
     this.teamService.update(team._id,team).subscribe(
       (response: any) => {
+        Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
         this.router.navigate([`/teams/${team._id}`]);
       },
       (error: any) => {
         console.log(error);
       });
+
+      console.log("on deleteUserOnGroup")
+        this.consoleLog()
+        console.log("end deleteUserOnGroup")
    }
 
 
@@ -259,6 +290,27 @@ export class TeamViewComponent implements OnInit {
     return isWordThere.every(all_words);
   }
 
+
+  consoleLog(){
+  console.log("teams :")
+  console.log(this.teams);
+  console.log("team :")
+  console.log(this.team);
+  console.log("projects :")
+  console.log(this.projects);
+  console.log("defaultGroupId :")
+  console.log(this.defaultGroupId);
+  console.log("currentUser :")
+  console.log(this.currentUser);
+  console.log("selectedMembersId :")
+  console.log(this.selectedMembersId);
+  console.log("selectForm :")
+  console.log(this.selectForm);
+  console.log("userList :")
+  console.log(userList);
+  console.log("currentMembers :")
+  console.log(this.currentMembers);
+  }
 
 }
 

@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-4">
             <div class="row-cols-1" *ngIf="team">
-                <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'Filled'" [content]="'Delete'">
+                <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'trash'" [content]="'Delete'">
                 </app-ui-button>
 
                 <app-ui-button class="col-md-7" [type]="'primary'" [icon]="'save'" [content]="'Update'">
@@ -32,11 +32,16 @@
             <h2>Members</h2>
 
             <div class="col-md-4" id="div-btn" *ngIf="team">
-                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'add'" [content]="'Add members'">
+
+                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'fa-user'" [content]="'Add members'">
                 </app-ui-button>
-
-
             </div>
+            <div class="input-group">
+                <span class="input-group-btn">
+                     <a class="btn btn-default" href="" target="_blank"><i class="glyphicon glyphicon-plus"></i></a>
+                </span>
+            </div>
+
 
             <table class="table table-striped">
                 <thead>
@@ -133,7 +138,3 @@
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
 </ng-template>
-
-<hr>
-
-<pre>{{ closeResult }}</pre>
