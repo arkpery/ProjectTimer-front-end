@@ -20,6 +20,9 @@ export class BarChartService {
       if (!timer.taskType) {
         timer.taskType = "WORKING";
       }
+      if (!timer.duration) {
+        timer.duration = 0;
+      }
       const str = moment.parseZone(timer.startTime).format("DD/MM/YYYY");
       if (current.length && current !== str) {
         const obj: any = {};
@@ -52,6 +55,12 @@ export class BarChartService {
     const obj: any = {};
 
     for (let key of keys) {
+      if (!duration[key]) {
+        duration[key] = 0;
+      }
+      if (!count[key]) {
+        count[key] = 1;
+      }
       obj[key] = {
         average: duration[key] / count[key],
         day: current
@@ -72,9 +81,15 @@ export class BarChartService {
       item.label = key;
       item.data = [];
       for (let entry of list) {
+        if (!entry[key]) {
+          entry[key] = {
+            average: 0
+          };
+        }
         item.data.push((entry[key].average) / 1000 / 60);
       }
       data.push(item);
+      console.log(data);
     }
     return ({
       labels, values: data

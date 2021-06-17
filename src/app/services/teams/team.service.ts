@@ -19,8 +19,6 @@ export class TeamService {
     return this.http.get<Team[]>(environment.baseUrl + this.GROUP_URL, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-
-
   getGroup(id: any): Observable<Team> {
     return this.http.get<Team>(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }

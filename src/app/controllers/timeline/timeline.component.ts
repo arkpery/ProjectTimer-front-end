@@ -426,8 +426,10 @@ export class TimelineComponent {
   }
 
   changeTimers(str: string) {
+    console.log(str);
     this.currentDate = moment(str, "DD/MM/YYYY").toDate();
 
+    console.log(this.currentDate);
     this.changeTimer.emit(this.currentDate);
   }
 

@@ -10,6 +10,9 @@ import { TeamService } from 'src/app/services/teams/team.service';
 import { UserService } from 'src/app/services/users/user.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { Project } from 'src/app/models/project/Project';
+import { ProjectService } from 'src/app/services/projects/project.service';
+
 
 @Component({
   selector: 'app-teams-list',
@@ -21,27 +24,29 @@ export class TeamsListComponent implements OnInit {
   faTrash = faTrash
   @Input() teams: Team[] = [];
   @Input() canAdd: boolean = true;
+  @Input() view: string = "default";
+  @Input() projectId!: string;
+
   defaultMemberId: Array<string> = [];
 
   createGroupForm!: FormGroup;
   selectForm!: FormGroup;
   tableForm!: FormGroup;
   selectedMembersId?: [''];
-  members?: []  
+  members?: []
   currentUser?: User;
   requestDone: boolean = false;
   users: Array<User> = [];
-
-
   // list members
-   userList = [];
-  
+  userList = [];
+
   constructor(
     private teamService: TeamService,
     private router: Router,
     private fb: FormBuilder,
     private modalService: NgbModal,
     private userService: UserService,
+    private projectService: ProjectService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -69,7 +74,7 @@ export class TeamsListComponent implements OnInit {
   }
 
   async onFetchGroups() {
-    this.teams = await this.teamService.getAllGroup().toPromise();
+    this.teamService.getAllGroup();
     this.users = await this.userService.findAll().toPromise();
     this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
     this.requestDone = true;
@@ -98,25 +103,38 @@ export class TeamsListComponent implements OnInit {
   //   await this.teamService.update(toUpdate).toPromise();
   // }
 
-  
+
 
   // get list all teams 
-  getAllTeams() {
-    this.teamService.getAllGroup()
-      .subscribe(
-        (response: any) => {
-          this.teams = response;
-        },
-        (error: any) => {
+  async getAllTeams() {
+    if (this.view === "default") {
+      this.teamService.getAllGroup()
+        .subscribe(
+          (response: any) => {
+            this.teams = response;
+            this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
+          },
+          (error: any) => {
+            console.log(error);
+          });
+    }
+    else if (this.view === "project") {
+      const project = await this.projectService.findOne(this.projectId).toPromise();
+      this.teamService.getAllGroupByProject(project)
+        .subscribe((response: any) => {
+          this.teams = response.data;
+          this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
+        }, (error: any) => {
           console.log(error);
         });
+    }
   }
 
 
-   // Fetching users data 
+  // Fetching users data 
   getUsersList() {
     console.log()
-     this.userService.findAll()
+    this.userService.findAll()
       .subscribe(
         (response: any) => {
           this.userList = response.map((o: { search_label: string; firstname: string; lastname: string; email: string; }) => {
@@ -125,7 +143,7 @@ export class TeamsListComponent implements OnInit {
             `
             return o
           });
-         
+
         },
         (error: any) => {
           console.log(error);
@@ -133,15 +151,15 @@ export class TeamsListComponent implements OnInit {
   }
 
   // open modal to create group
-  async createGroup(targetModal: any){
+  async createGroup(targetModal: any) {
     this.modalService.open(targetModal, {
       centered: true,
       backdrop: 'static'
-     });
-   }
+    });
+  }
 
-   // function used to select members added to group
-   customSearchFn(term: string, item: any) {
+  // function used to select members added to group
+  customSearchFn(term: string, item: any) {
     term = term.toLowerCase();
 
     // Creating and array of space saperated term and removinf the empty values using filter
@@ -165,8 +183,8 @@ export class TeamsListComponent implements OnInit {
     this.selectForm.get('members')?.patchValue([]);
   }
 
-   //  create group 
-   onSubmit(){
+  //  create group 
+  onSubmit() {
     this.modalService.dismissAll();
     const formValue = this.createGroupForm.value;
     const newGroup = {
@@ -174,21 +192,37 @@ export class TeamsListComponent implements OnInit {
       members: this.selectedMembersId
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
-      async () => {
+      async (response: any) => {
+        console.log(response);
+        const team = await this.teamService.findOne(response.data.id).toPromise();
+        this.teams.push(team);
+        if (this.view === "project") {
+          const project = await this.projectService.findOne(this.projectId).toPromise();
+          project.groups = this.teams.map(team => team._id);
+          await this.projectService.update(project).toPromise();
+          this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
+          const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
+          this.teams = response.data;
+        }
         Swal.fire('successfully created!', 'Group  created.', 'success')
-        this.getAllTeams();
-        this.router.navigate(['/teams']);
+
       },
       (error: any) => {
         Swal.fire('Can\'t create', 'Group not created.', 'error')
         console.log(error);
       });
   }
-   
+
   // delete a group
-  onDelete(id: string, teamM: Team): void {
-    const lengthMembers = Object.keys(teamM).length;
-    if(lengthMembers){
+  onDelete(id: string, users: Array<User>): void {
+    if (!users){
+      users = [];
+    }
+    console.log(users);
+    const lengthMembers = users.length;
+
+    console.log(`ID: ${id}`);
+    if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
       Swal.fire({
@@ -201,15 +235,28 @@ export class TeamsListComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           this.teamService.deleteGroup(id)
-          .subscribe(
-           (response: any) => {
-          Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
-          this.getAllTeams();
-          this.router.navigate(['/teams']);
-        },
-        (error: any) => {
-          console.log(error);
-        });
+            .subscribe(
+              async (response: any) => {
+                console.log(response);
+                if (this.view === "project") {
+                  const project = await this.projectService.findOne(this.projectId).toPromise();
+                  const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
+                  this.teams = response.data;
+                  console.log(this.teams);
+                  this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
+                  console.log(project);
+                  project.groups = this.teams.map((team) => team._id);
+                  console.log(project);
+                  await this.projectService.update(project).toPromise();
+                  const response2 : any = await this.teamService.getAllGroupByProject(project).toPromise();
+                  this.teams = response2.data;
+                  console.log(this.teams);
+                }
+                Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
+              },
+              (error: any) => {
+                console.log(error);
+              });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
             'Cancelled',
@@ -218,14 +265,14 @@ export class TeamsListComponent implements OnInit {
           )
         }
       })
-      
-      
+
+
     }
-    
+
   }
 
 
-  
+
 
 }
 

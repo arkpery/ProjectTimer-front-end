@@ -19,7 +19,7 @@
                     </div>
                     <div class="row">
                         <p>
-                            Temps total: {{ Total | date: "HH:mm:ss" }}
+                              Temps total: {{ Total | date: "HH:mm:ss" }}
                         </p>
                     </div>
                 </div>
@@ -50,16 +50,21 @@
                         </div>
                     </div>
                     <div *ngIf="rows.length && headers.length && currentDate !== null">
-                        <app-timeline [selectDate]="selectDate"
-                            [currentDate]="currentDate" [headers]="headers" [rows]="rows"></app-timeline>
+                        <app-timeline [selectDate]="selectDate" [currentDate]="currentDate" [headers]="headers"
+                            [rows]="rows"></app-timeline>
                     </div>
                 </div>
             </div>
         </form>
-        <app-teams-list class="my-4" *ngIf="project" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
-        <div class="row my-4" *ngIf="timers && timers.length">
-            <app-bar-chart class="col-md-6" [title]="'Temps moyen par jour(/min)'" *ngIf="timers" [items]="timers" [transform]="barChart"></app-bar-chart>
-            <app-pie-chart class="col-md-6" [title]="'Temps passé en fonction du type de tâche(/s)'" *ngIf="timers" [items]="timers" [transform]="pieChart"></app-pie-chart>
+        <app-teams-list class="my-4" *ngIf="project" [projectId]="project._id" [view]="'project'" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
+        <div class="row" *ngIf="timers">
+            <app-bar-chart class="col-md-12" [title]="'Temps moyen par jour(/min)'" 
+            [items]="timers" [transform]="barChart"></app-bar-chart>
+        </div>
+        <div class="row" *ngIf="timers">
+            <app-pie-chart *ngIf="timers" class="col-md-12"
+            [title]="'Temps passé en fonction du type de tâche(/s)'" [items]="timers"
+            [transform]="pieChart"></app-pie-chart>
         </div>
     </div>
 </article>

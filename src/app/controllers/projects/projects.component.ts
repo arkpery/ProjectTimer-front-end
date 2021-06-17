@@ -6,6 +6,11 @@ import { Group } from '../../models/team/Group';
 import { UserService } from '../../services/users/user.service';
 import { User } from '../../models/user/User';
 import { TimelineComponent } from '../timeline/timeline.component';
+import { TeamService } from 'src/app/services/teams/team.service';
+import { Team } from 'src/app/models/team/team.model';
+import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-projects',
@@ -20,13 +25,26 @@ export class ProjectsComponent implements OnInit {
   defaultGroupId: Array<string> = [];
   currentUser?: User;
   requestDone: boolean = false;
+  groupList: Array<Team> = [];
+  selectedGroupId: Array<string> = [];
+  createProjectForm!: FormGroup;
+  selectForm!: FormGroup;
 
-  constructor(private projectService: ProjectService, private userService: UserService) { }
+  constructor(private projectService: ProjectService, private userService: UserService, private groupService: TeamService,
+    private fb: FormBuilder,
+    private modalService: NgbModal) { }
 
   async ngOnInit(): Promise<void> {
     try {
       await this.CurrentUser();
       await this.onFetchProjects();
+      this.FetchTeam();
+      this.selectForm = this.fb.group({
+        groups: []
+      });
+      this.createProjectForm = this.fb.group({
+        name: ['']
+      });
     }
     catch (e) {
       this.requestDone = true;
@@ -35,6 +53,17 @@ export class ProjectsComponent implements OnInit {
 
   status(project: Project) {
     return (project.close ? "Fermé" : "En cours");
+  }
+
+  FetchTeam() {
+    this.groupService.getAllGroup().subscribe((teams) => {
+      this.groupList = teams.map((team) => {
+        return ({
+          search_label: team.name,
+          _id: team._id
+        });
+      });
+    });
   }
 
   async CurrentUser() {
@@ -59,6 +88,54 @@ export class ProjectsComponent implements OnInit {
       return (groups[0]._id);
     }
     return ("");
+  }
+
+  AddNewProject(modal: any) {
+    this.modalService.open(modal, {
+      centered: true,
+      backdrop: 'static'
+    });
+  }
+
+  customSearchFn(term: string, item: any) {
+    term = term.toLowerCase();
+    let splitTerm = term.split(' ').filter(t => t);
+    let isWordThere: boolean[] = [];
+
+    // Pushing True/False if match is found
+    splitTerm.forEach(arr_term => {
+      let search = item['search_label'].toLowerCase();
+      isWordThere.push(search.indexOf(arr_term) != -1);
+    });
+
+    const all_words = (this_word: any) => this_word;
+    return isWordThere.every(all_words);
+  }
+
+  clearListSelected() {
+    this.selectForm.get('groups')?.patchValue([]);
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    this.modalService.dismissAll();
+
+    console.log(this.selectedGroupId);
+    const formValue = this.createProjectForm.value;
+    const newProject = {
+      name: formValue['name'],
+      groups: this.selectedGroupId,
+      close: false
+    } as Project;
+    this.projectService.save(newProject).subscribe(
+      async () => {
+        Swal.fire('successfully created!', 'Project  created.', 'success')
+        await this.onFetchProjects();
+      },
+      (error: any) => {
+        Swal.fire('Can\'t create', 'Project not created.', 'error')
+        console.log(error);
+      });
   }
 
 }

@@ -32,6 +32,7 @@ export class TeamViewComponent implements OnInit {
   currentUser?: User;
   requestDone: boolean = false;
   selectedMembersId?: [''];
+  defaultUserId: Array<string> = [];
   
   selectForm!: FormGroup;
   // list members
@@ -109,6 +110,12 @@ export class TeamViewComponent implements OnInit {
     this.currentUser = await this.userService.CurrentUser();
   }
   
+  defaultUser(users: Array<User>){
+    if (users.length){
+      return (users[0]._id);
+    }
+    return ("");
+  }
 
   findById(id: string): void {
     this.teamService.getGroup(id)
@@ -116,7 +123,7 @@ export class TeamViewComponent implements OnInit {
         (response: any) => {
           this.team = response;
           this.currentMembers= response.members
-         
+          this.defaultUserId = this.team?.members
         },
         (error: any) => {
           console.log(error);
@@ -170,7 +177,6 @@ export class TeamViewComponent implements OnInit {
           .subscribe(
             (response: any) => {
               Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
-              this.router.navigate(['/teams']);
             },
             (error: any) => {
               console.log(error);
@@ -197,7 +203,9 @@ export class TeamViewComponent implements OnInit {
       console.log(team._id)
       this.teamService.update(team._id, newMembers).subscribe(
         (response: any) => {
-          this.router.navigate([`/teams/${team._id}`]);
+          if (team && team._id){
+            this.findById(team._id);
+          }
           Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
      },
      (error: any) => {
@@ -233,7 +241,9 @@ export class TeamViewComponent implements OnInit {
     this.teamService.update(team._id,team).subscribe(
       (response: any) => {
         Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
-        this.router.navigate([`/teams/${team._id}`]);
+        if (team && team._id){
+          this.findById(team._id);
+        }
       },
       (error: any) => {
         console.log(error);

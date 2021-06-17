@@ -9,6 +9,8 @@ import moment from "moment-timezone";
 import { Group } from '../../models/team/Group';
 import { TeamService } from '../../services/teams/team.service';
 import { Team } from '../../models/team/team.model';
+import { group } from '@angular/animations';
+import { User } from 'src/app/models/user/User';
 
 
 @Component({
@@ -119,14 +121,15 @@ export class ProjectComponent {
     if (!this.timers || !this.timers?.length) {
       return (moment(0).subtract(1, "hours").toDate());
     }
-    const total = this.timers?.map(t => t.duration).reduce((p, v) => {
+    const total = this.timers?.map(t => t.duration ?? 0).reduce((p, v) => {
       p += v;
 
       return (p);
     });
-    const date = moment(total).subtract(1, "hours").toDate()
+    const hours = total / (1000 * 3600);
+    const minutes = (total / (1000 * 60)) % 60;
 
-    return (date);
+    return (`${hours}h `);
   }
 
   barChart(timers: Array<Timer>) {
