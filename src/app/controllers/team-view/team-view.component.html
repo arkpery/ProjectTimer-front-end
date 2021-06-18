@@ -21,7 +21,7 @@
                 <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'trash'" [content]="'Delete'">
                 </app-ui-button>
 
-                <app-ui-button class="col-md-7" [type]="'primary'" [icon]="'save'" [content]="'Update'">
+                <app-ui-button class="col-md-7" [type]="'primary'" (click)="updateTeam(team)" [icon]="'save'" [content]="'Update'">
                 </app-ui-button>
             </div>
         </div>
@@ -92,7 +92,7 @@
                         <td>{{ project.name }}</td>
                         <td>{{ project.created_at | date: "dd / MM / y" }}</td>
                         <td>
-                            <ng-select [items]="project.groups" bindLabel="name" bindValue="_id" [(ngModel)]="defaultGroupId[0]"></ng-select>
+                            <ng-select [items]="project.groups" bindLabel="name" bindValue="_id" [(ngModel)]="defaultGroupId[i]"></ng-select>
                         </td>
                         <td><span class="badge" [ngClass]="{ 'badge-success': !project.close, 'badge-danger': project.close }">{{ status(project) }}</span>
                         </td>
