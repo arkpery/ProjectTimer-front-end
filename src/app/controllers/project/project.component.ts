@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project/Project';
 import { Timer } from '../../models/timer/Timer';
@@ -11,6 +11,8 @@ import { TeamService } from '../../services/teams/team.service';
 import { Team } from '../../models/team/team.model';
 import { group } from '@angular/animations';
 import { User } from 'src/app/models/user/User';
+import { BarChartComponent } from 'src/app/bar-chart/bar-chart.component';
+import { PieChartComponent } from 'src/app/pie-chart/pie-chart.component';
 
 
 @Component({
@@ -21,19 +23,24 @@ import { User } from 'src/app/models/user/User';
 
 export class ProjectComponent {
   project?: Project;
-  timers?: Array<Timer>;
+  timers: Array<Timer> = [];
 
   headers: Array<HeaderColumn> = [];
   rows: Array<Row> = [];
   rowsEl: Array<HTMLElement> = [];
   validTimer: boolean = false;
-  selectDate: Array<Date> = [];
-  currentDate?: Date;
+  selectDate: Array<{ id: number, time: Date }> = [];
+  currentDate?: { id: number, time: Date };
   teams: Team[] = [];
+
+  @ViewChild(BarChartComponent) elBarChart!: BarChartComponent;
+  @ViewChild(PieChartComponent) elPieChart!: PieChartComponent;
+
 
   constructor(private projectService: ProjectService, private timerService: TimerrsService, private teamService: TeamService, private route: ActivatedRoute) {
     this.pieChart = this.pieChart.bind(this);
     this.barChart = this.barChart.bind(this);
+    this.Reload = this.Reload.bind(this);
   }
 
   getAllTeams() {
@@ -41,8 +48,6 @@ export class ProjectComponent {
       .subscribe(
         (response: any) => {
           this.teams = response.data;
-          console.log(this.teams);
-          console.log(response);
         },
         (error: any) => {
           console.log(error);
@@ -52,7 +57,7 @@ export class ProjectComponent {
   async ngOnInit() {
     await this.FetchProject();
     if (this.timers && this.currentDate) {
-      this.rows = await this.projectService.timeline(this.timers, this.currentDate.getTime());
+      this.rows = await this.projectService.timeline(this.timers, this.currentDate.time.getTime());
     }
     this.getAllTeams();
   }
@@ -60,6 +65,28 @@ export class ProjectComponent {
   async close(project: Project) {
     await this.projectService.close(project).toPromise();
     await this.FetchProject();
+  }
+
+  async UpdateRows(param: any) {
+    this.currentDate = param;
+    if (this.timers) {
+      this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
+    }
+  }
+
+  public async Reload() {
+    this.timers = [];
+    if (this.project && this.elPieChart && this.elBarChart) {
+      try {
+        this.timers = await this.timerService.findByProject(this.project).toPromise();
+        this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
+        this.elPieChart.load();
+        this.elBarChart.load();
+      }
+      catch (e){
+        console.log(e.message);
+      }
+    }
   }
 
   async update(project: Project) {
@@ -78,7 +105,6 @@ export class ProjectComponent {
   async FetchProject() {
     this.project = await this.projectService.findOne(this.route.snapshot.paramMap.get("id") as string).toPromise();
     this.timers = await this.timerService.findByProject(this.project).toPromise();
-
     this.headers = [
       {
         key: "ID"
@@ -87,25 +113,29 @@ export class ProjectComponent {
         key: "Description"
       }
     ];
+
     moment.locale("fr");
-    this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).sort((a, b) => {
-      if (a.getTime() > b.getTime()) {
+    this.selectDate = this.timers.map((t, index) => { return { id: index, time: moment.parseZone(t.startTime).toDate() } }).sort((a, b) => {
+      if (a.time.getTime() > b.time.getTime()) {
         return (1);
       }
-      else if (a.getTime() < b.getTime()) {
+      else if (a.time.getTime() < b.time.getTime()) {
         return (-1);
       }
       return (0);
-    }).reduce((p: Array<Date>, v: Date) => {
+    }).reduce((p: Array<{ id: number, time: Date }>, v: { id: number, time: Date }) => {
       if (!p) {
         p = [];
       }
       let flag = false;
 
       for (let item of p) {
-        if (moment(item).format("DD/MM/YYYY") === moment(v).format("DD/MM/YYYY")) {
+        if (moment(item.time).format("DD/MM/YYYY") === moment(v.time).format("DD/MM/YYYY")) {
           flag = true;
         }
+      }
+      v.time.toString = () => {
+        return (moment(v.time).format("DD/MM/YYYY"));
       }
       if (!flag) {
         p.push(v);
@@ -133,7 +163,6 @@ export class ProjectComponent {
   }
 
   barChart(timers: Array<Timer>) {
-    console.log(this.timerService);
     return (this.timerService.barChart(timers));
   }
 

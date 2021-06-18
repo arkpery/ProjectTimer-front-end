@@ -1,5 +1,5 @@
 <div>
-    <ng-select class="my-4" name="date" [items]="toLabels(selectDate)" autofocus (change)="changeTimers($event)" [ngModel]="label"></ng-select>
+    <ng-select *ngIf="currentDate" class="my-4" name="date" [items]="selectDate" bindValue="id" bindLabel="time" [compareWith]="compareWith" (change)="changeTimers($event)" [(ngModel)]="currentDate"></ng-select>
     <span class="badge rounded-pill bg-primary text-white" *ngFor="let filter of filters; let i = index" (click)="removeFilter(i)">
          à {{ filter | date: "HH" }} heures
     </span>

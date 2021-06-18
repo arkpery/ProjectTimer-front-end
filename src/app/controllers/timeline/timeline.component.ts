@@ -1,7 +1,6 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Query, ViewChildren, EventEmitter, Output } from '@angular/core';
 import { Component, ElementRef, Input, OnChanges, OnInit, QueryList, SimpleChanges } from '@angular/core';
-import { cpuUsage } from 'process';
 import { Column, HeaderColumn, Ribbon, Row } from "../../viewModels/index";
 import { RibbonComponent } from '../../ribbon//ribbon.component';
 import moment from "moment";
@@ -16,9 +15,10 @@ import { ChangeDetectorRef } from '@angular/core';
 export class TimelineComponent {
   @Input() headers: Array<HeaderColumn> = [];
   @Input() rows: Array<Row> = [];
-  @Input() currentDate?: Date;
+  @Input() currentDate?: {id: number, time: Date};
   @Input() type: string = "perDay";
-  @Input() selectDate: Array<Date> = [];
+  @Input() selectDate: Array<{id: number, time: Date}> = [];
+  selectedDate: number = 0;
 
   public draw: boolean = false;
 
@@ -37,9 +37,7 @@ export class TimelineComponent {
   private sortedIndex: { [key: string]: number } = {};
   public filters: Array<Date> = [];
 
-  public label: string = "";
-
-  @Output() changeTimer = new EventEmitter<Date>();
+  @Output() public myEvent: EventEmitter<{id: number, time: Date}> = new EventEmitter<{id: number, time: Date}>();
 
   private typesViews: { [key: string]: any } = {
     "perDay": this.perDay.bind(this),
@@ -67,7 +65,6 @@ export class TimelineComponent {
     else {
       this.typesViews[defaultView]();
     }
-    this.label = moment(this.currentDate).format("DD/MM/YYYY");
   }
 
   ngAfterViewChecked() {
@@ -78,7 +75,7 @@ export class TimelineComponent {
     this.filters = this.filters.filter((f, i) => i !== index);
     if (this.type === "perHour") {
       if (this.currentDate) {
-        this.currentDate.setHours(0);
+        this.currentDate.time.setHours(0);
       }
       this.__headers = undefined;
       this.__rows = undefined;
@@ -92,7 +89,7 @@ export class TimelineComponent {
         }
 
         //this.ref.detectChanges();
-      }, 500);
+      }, 100);
     }
   }
 
@@ -105,7 +102,7 @@ export class TimelineComponent {
     if (!this.rows) {
       this.rows = [];
     }
-    this.__currentDate = this.currentDate;
+    this.__currentDate = this.currentDate?.time;
     this.__headers = this.headers.slice();
     for (let i = 0; i < 24; i++) {
       const date = moment().startOf("date").add(i, "hours");
@@ -134,15 +131,15 @@ export class TimelineComponent {
             const date = moment(value, "HH").toDate();
 
             if (date.getHours() === row.start?.getHours() &&
-              this.currentDate.getMonth() === row.start?.getMonth() &&
-              this.currentDate.getFullYear() === row.start?.getFullYear() &&
-              this.currentDate.getDate() === row.start?.getDate()) {
+              this.currentDate.time.getMonth() === row.start?.getMonth() &&
+              this.currentDate.time.getFullYear() === row.start?.getFullYear() &&
+              this.currentDate.time.getDate() === row.start?.getDate()) {
               ribbon.colStart = this.__headers[i];
             }
             if (date.getHours() === row.stop?.getHours() &&
-              this.currentDate.getMonth() === row.stop?.getMonth() &&
-              this.currentDate.getFullYear() === row.stop?.getFullYear() &&
-              this.currentDate.getDate() === row.stop?.getDate()) {
+              this.currentDate.time.getMonth() === row.stop?.getMonth() &&
+              this.currentDate.time.getFullYear() === row.stop?.getFullYear() &&
+              this.currentDate.time.getDate() === row.stop?.getDate()) {
               ribbon.colEnd = this.__headers[i];
             }
           }
@@ -200,7 +197,7 @@ export class TimelineComponent {
     if (!this.rows) {
       this.rows = [];
     }
-    this.__currentDate = this.currentDate;
+    this.__currentDate = this.currentDate?.time;
     this.__headers = this.headers.slice();
     for (let i = 0; i < 60; i++) {
       const date = moment(this.__currentDate).add(i, "minutes");
@@ -223,16 +220,16 @@ export class TimelineComponent {
 
         if (this.currentDate) {
           const ribbon = new Ribbon();
-          if (row.start! && this.currentDate.getHours() > row.start?.getHours() &&
-            this.currentDate.getMonth() === row.start?.getMonth() &&
-            this.currentDate.getFullYear() === row.start?.getFullYear() &&
-            this.currentDate.getDate() === row.start?.getDate()) {
+          if (row.start! && this.currentDate.time.getHours() > row.start?.getHours() &&
+            this.currentDate.time.getMonth() === row.start?.getMonth() &&
+            this.currentDate.time.getFullYear() === row.start?.getFullYear() &&
+            this.currentDate.time.getDate() === row.start?.getDate()) {
             ribbon.colStart = this.__headers[2];
           }
-          if (row.stop! && this.currentDate.getHours() < row.stop?.getHours() &&
-            this.currentDate.getMonth() === row.start?.getMonth() &&
-            this.currentDate.getFullYear() === row.start?.getFullYear() &&
-            this.currentDate.getDate() === row.start?.getDate()) {
+          if (row.stop! && this.currentDate.time.getHours() < row.stop?.getHours() &&
+            this.currentDate.time.getMonth() === row.start?.getMonth() &&
+            this.currentDate.time.getFullYear() === row.start?.getFullYear() &&
+            this.currentDate.time.getDate() === row.start?.getDate()) {
             ribbon.colEnd = this.__headers[this.__headers.length - 1];
           }
           for (let i = 2; i < this.__headers.length; i++) {
@@ -243,18 +240,18 @@ export class TimelineComponent {
 
             if (date.getMinutes() === row.start?.getMinutes() &&
               !ribbon.colStart &&
-              this.currentDate.getHours() === row.start?.getHours() &&
-              this.currentDate.getMonth() === row.start?.getMonth() &&
-              this.currentDate.getFullYear() === row.start?.getFullYear() &&
-              this.currentDate.getDate() === row.start?.getDate()) {
+              this.currentDate.time.getHours() === row.start?.getHours() &&
+              this.currentDate.time.getMonth() === row.start?.getMonth() &&
+              this.currentDate.time.getFullYear() === row.start?.getFullYear() &&
+              this.currentDate.time.getDate() === row.start?.getDate()) {
               ribbon.colStart = this.__headers[i];
             }
             if (row.stop! && date.getMinutes() === row.stop?.getMinutes() &&
               !ribbon.colEnd &&
-              this.currentDate.getHours() === row.stop?.getHours() &&
-              this.currentDate.getMonth() === row.stop?.getMonth() &&
-              this.currentDate.getFullYear() === row.stop?.getFullYear() &&
-              this.currentDate.getDate() === row.stop?.getDate()) {
+              this.currentDate.time.getHours() === row.stop?.getHours() &&
+              this.currentDate.time.getMonth() === row.stop?.getMonth() &&
+              this.currentDate.time.getFullYear() === row.stop?.getFullYear() &&
+              this.currentDate.time.getDate() === row.stop?.getDate()) {
               ribbon.colEnd = this.__headers[i];
             }
           }
@@ -283,9 +280,9 @@ export class TimelineComponent {
 
       if (nb) {
         if (this.currentDate) {
-          this.currentDate.setHours(nb);
-          this.currentDate.setMinutes(0);
-          this.filters.push(this.currentDate);
+          this.currentDate.time.setHours(nb);
+          this.currentDate.time.setMinutes(0);
+          this.filters.push(this.currentDate.time);
         }
         this.__headers = undefined;
         this.__rows = undefined;
@@ -297,7 +294,7 @@ export class TimelineComponent {
             this.ref.detectChanges();
             this.propagate = true;
           }
-        }, 500);
+        }, 100);
       }
     }
   }
@@ -421,16 +418,13 @@ export class TimelineComponent {
 
   }
 
-  toLabels(dates: Array<Date>) {
-    return (dates.map(date => moment(date).format("DD/MM/YYYY")));
+  compareWith(a: {id: number, time: Date}, b: {id: number, time: Date}){
+    return (a.id === b.id);
   }
 
-  changeTimers(str: string) {
-    console.log(str);
-    this.currentDate = moment(str, "DD/MM/YYYY").toDate();
-
-    console.log(this.currentDate);
-    this.changeTimer.emit(this.currentDate);
+  changeTimers(param: {id: number, time: Date}) {
+    this.currentDate =  param;
+    this.myEvent.emit(param);
   }
 
   parent(element: HTMLElement){

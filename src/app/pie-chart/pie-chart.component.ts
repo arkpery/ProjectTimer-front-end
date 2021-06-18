@@ -7,19 +7,24 @@ import { Label, SingleDataSet } from 'ng2-charts';
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.scss']
 })
-export class PieChartComponent implements OnInit {
+export class PieChartComponent {
   @Input() items: Array<any> = [];
   @Input() transform?: Function;
   @Input() title?: string;
+
   constructor() { }
 
-  ngOnInit(): void {
+  public load() {
     if (this.transform) {
       const { labels, values } = this.transform(this.items);
 
       this.pieChartLabels = labels;
       this.pieChartData = values;
     }
+  }
+
+  ngOnInit(): void {
+    this.load();
   }
 
   public pieChartOptions: ChartOptions = {

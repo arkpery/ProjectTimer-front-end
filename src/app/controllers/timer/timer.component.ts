@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project/Project';
@@ -15,13 +15,12 @@ import Swal from 'sweetalert2';
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.scss']
 })
-export class TimerComponent implements OnInit {
-  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBiZjZhN2ZlNjUwOTcwMDJjOWVhOGNjIiwiZW1haWwiOiJ2aW5jZW50QGNhcnRlZ3Jpc2VleHByZXNzLmNvbSJ9LCJpYXQiOjE2MjM3NDMxMjksImV4cCI6MTYyNjMzNTEyOX0.ydrMayvbIQO3oQHGBlBXt6OvRwKdPkIwhmvcR8klo0g";
-  
+export class TimerComponent implements OnInit { 
+  @Input() project!: Project;
+  @Input() reload!: Function;
   closeResult = '';
   interval: any;
   time = new Date(0);
-  project!: Project;
   currentUser!: User;
   timerForm = new FormGroup({});
 
@@ -34,8 +33,7 @@ export class TimerComponent implements OnInit {
     ) {}
 
   async ngOnInit() {
-    window.localStorage.setItem("token", this.token);    
-    await this.getProject();
+ //   await this.getProject();
     await this.CurrentUser();
     this.initTimerForm();  
     this.timerForm.get('user')?.disable();
@@ -48,10 +46,12 @@ export class TimerComponent implements OnInit {
     console.log(this.currentUser);
   }
 
+  /*
   async getProject(){
     this.project = await this.projectService.findOne("60c72ad63ca3db002de75f67").toPromise();
     console.log(this.project);
   }
+  */
 
   initTimerForm(){
     this.timerForm = this.formBuilder.group({
@@ -69,17 +69,18 @@ export class TimerComponent implements OnInit {
     const newTimer: Timer = {
       description: formValue['description'],
       taskType: formValue['taskType'],
-      user: formValue['user'],
+      user: this.currentUser._id,
       startTime: formValue['startTime'],
       duration: formValue['duration'],
-      project: formValue['project']
+      project: this.project._id
     };
     console.log("this.time : " + this.time);
     console.log(newTimer);
     this.timerrsService.save(newTimer).subscribe(
-        response => {
+        async (response) => {
           Swal.fire('Whooa!', 'Task has a created', 'success');
           console.log(response);
+          await this.reload();
         },
         error => {
           Swal.fire('Oops', error, 'error');

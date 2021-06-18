@@ -11,8 +11,8 @@ import { HeaderColumn, Row } from '../../viewModels';
   styleUrls: ['./users-timers.component.scss']
 })
 export class UsersTimersComponent {
-  selectDate: Array<Date> = [];
-  currentDate?: Date;
+  selectDate: Array<{ id: number, time: Date }> = [];
+  currentDate?: { id: number, time: Date };
   timers: Array<Timer> = [];
   headers: Array<HeaderColumn> = [];
   rows: Array<Row> = [];
@@ -21,6 +21,14 @@ export class UsersTimersComponent {
     this.pieChart = this.pieChart.bind(this);
     this.barChart = this.barChart.bind(this);
   }
+
+  async UpdateRows(param: any) {
+    this.currentDate = param;
+    if (this.timers && this.currentDate) {
+      this.rows = this.userService.timeline(this.timers, this.currentDate.time.getTime());
+    }
+  }
+
 
   async ngOnInit() {
     try {
@@ -36,24 +44,27 @@ export class UsersTimersComponent {
       ];
 
       moment.locale("fr");
-      this.selectDate = this.timers.map((t) => t.startTime).map((t) => moment.parseZone(t).toDate()).sort((a, b) => {
-        if (a.getTime() > b.getTime()) {
+      this.selectDate = this.timers.map((t, index) => { return { id: index, time: moment.parseZone(t.startTime).toDate() } }).sort((a, b) => {
+        if (a.time.getTime() > b.time.getTime()) {
           return (1);
         }
-        else if (a.getTime() < b.getTime()) {
+        else if (a.time.getTime() < b.time.getTime()) {
           return (-1);
         }
         return (0);
-      }).reduce((p: Array<Date>, v: Date) => {
+      }).reduce((p: Array<{ id: number, time: Date }>, v: { id: number, time: Date }) => {
         if (!p) {
           p = [];
         }
         let flag = false;
 
         for (let item of p) {
-          if (moment(item).format("DD/MM/YYYY") === moment(v).format("DD/MM/YYYY")) {
+          if (moment(item.time).format("DD/MM/YYYY") === moment(v.time).format("DD/MM/YYYY")) {
             flag = true;
           }
+        }
+        v.time.toString = () => {
+          return (moment(v.time).format("DD/MM/YYYY"));
         }
         if (!flag) {
           p.push(v);
@@ -64,7 +75,7 @@ export class UsersTimersComponent {
         this.currentDate = this.selectDate[0];
       }
       if (this.timers && this.currentDate) {
-        this.rows = this.userService.timeline(this.timers, this.currentDate.getTime());
+        this.rows = this.userService.timeline(this.timers, this.currentDate.time.getTime());
       }
     }
     catch (e) {
@@ -73,7 +84,6 @@ export class UsersTimersComponent {
   }
 
   barChart(timers: Array<Timer>) {
-    console.log(this.timerService);
     return (this.timerService.barChart(timers));
   }
 
