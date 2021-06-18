@@ -38,6 +38,7 @@ import { ProjectService } from './services/projects/project.service';
 import { TimerrsService } from './services/timers/timerrs.service';
 import { UsersTimersComponent } from './controllers/users-timers/users-timers.component';
 import { UserService } from './services/users/user.service';
+import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { UserService } from './services/users/user.service';
     TeamsComponent,
     BarChartComponent,
     PieChartComponent,
-    UsersTimersComponent
+    UsersTimersComponent,
+    ProfilViewComponent
   ],
   imports: [
     BrowserModule,

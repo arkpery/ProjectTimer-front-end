@@ -73,4 +73,20 @@ export class UserService {
     return (this.timelineService.apply(timers, timestamp));
   }
 
+  public update(user: User) {
+    return this.http.put(`${this.hostname}/users/${user._id}`, user, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+  }
+
+  getUser(id: any): Observable<User> {
+    return this.http.get<User>(`${environment.baseUrl}/users/${id}`, { 
+      headers: { 
+        'Authorization': `${localStorage.getItem('token')}` 
+      } 
+    });
+  }
+
 }

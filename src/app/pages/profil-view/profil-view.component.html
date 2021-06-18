@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="row justify-content-md-center mt-5">
+        <div class="card w-75 mb-5">
+            <form [formGroup]="updateForm" (ngSubmit)="onSubmitForm()">
+                <div class="card-header">
+                    <h5>{{currentUser.firstname}} {{currentUser.lastname}}</h5>
+                </div>
+                <div class="card-block card-body">
+                    <div class="row">
+                        <div class="col-md-4 form-group text-center">
+                            <div class="personal-image">
+                                <label class="label">
+                                    <input type="file" (change)="onFileSelected($event)"/>
+                                    <figure class="personal-figure">
+                                        <img [src]='currentUser.avatar' (error) ="onImgError($event)"
+                                            class="personal-avatar" alt="avatar">
+                                        <figcaption class="personal-figcaption">
+                                            <img
+                                                src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png">
+                                        </figcaption>
+                                    </figure>
+                                </label>
+                            </div>
+                            <h6 class="card-subtitle mb-2 text-muted">Created at : {{currentUser.created_at | date }}
+                            </h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Updated at : {{currentUser.created_at | date }}
+                            </h6>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Firstname</label>
+                                <input type="text" class="form-control form-control-sm" [value]="currentUser.firstname"
+                                    id="firstname" name="firstname" formControlName="firstname">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Lastname</label>
+                                <input type="text" class="form-control form-control-sm" [value]="currentUser.lastname"
+                                    id="lastname" name="lastname" formControlName="lastname">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Date of birth</label>
+                                <input type="Date" class="form-control form-control-sm"
+                                    [value]="currentUser.birthdate | date:'yyyy-MM-dd'" id="birthdate" name="birthdate"
+                                    formControlName="birthdate">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Groups</label>
+                                <input type="text" class="form-control form-control-sm" [value]="currentUser.groups"
+                                    id="groups" name="groups" formControlName="groups">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Email</label>
+                                <input type="text" class="form-control form-control-sm" [value]="currentUser.email"
+                                    id="email" name="email" formControlName="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Password</label>
+                                <input type="password" class="form-control form-control-sm" id="password" name="password"
+                                    formControlName="password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
