@@ -179,7 +179,7 @@ export class TeamsListComponent implements OnInit {
   }
 
   // clear list selected 
-  clearListSelected() {
+  clearListSelectedMembers() {
     this.selectForm.get('members')?.patchValue([]);
   }
 
@@ -235,7 +235,6 @@ export class TeamsListComponent implements OnInit {
           this.teamService.deleteGroup(id)
             .subscribe(
               async (response: any) => {
-                console.log(response);
                 if (this.view === "project") {
                   const project = await this.projectService.findOne(this.projectId).toPromise();
                   const response : any = await this.teamService.getAllGroupByProject(project).toPromise();

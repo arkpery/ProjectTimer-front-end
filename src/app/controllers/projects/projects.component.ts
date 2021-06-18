@@ -133,6 +133,7 @@ export class ProjectsComponent implements OnInit {
       groups: this.selectedGroupId,
       close: false
     } as Project;
+    console.log(newProject)
     this.projectService.save(newProject).subscribe(
       async () => {
         Swal.fire('successfully created!', 'Project  created.', 'success')
