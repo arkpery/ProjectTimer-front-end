@@ -118,6 +118,12 @@ export class ProjectsComponent implements OnInit {
 
   onSubmit(event: Event) {
     event.preventDefault();
+
+    if (!this.selectedGroupId || !this.selectedGroupId.length) {
+      Swal.fire('Can\'t create', 'The project need at least one group.', 'error');
+      return;
+    }
+
     this.modalService.dismissAll();
 
     console.log(this.selectedGroupId);
