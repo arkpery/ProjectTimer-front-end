@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user/user.model';
+import Swal from 'sweetalert2';
 import { UserService } from '../../services/users/user.service';
 
 @Component({
@@ -10,12 +12,13 @@ import { UserService } from '../../services/users/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  message = '';
+  loginForm = new FormGroup({});
+  submitted = false;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.message = '';
+    this.initForm();
   }
 
   ngDoCheck() {
@@ -26,6 +29,12 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  initForm() {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
   
   async CurrentUser() {
     if(!window.localStorage.getItem("token")){
@@ -36,19 +45,27 @@ export class LoginComponent implements OnInit {
     window.localStorage.setItem("user", JSON.stringify(currentUser));
   }
 
-  onSubmit(form: NgForm) {
-    this.userService.login(form.value)
+  onSubmitForm() {
+    this.submitted = true;
+    const formValue = this.loginForm.value;
+    const login = {
+      email: formValue['email'],
+      password: formValue['password']
+    } as User;
+    this.userService.login(login)
       .subscribe(
         async (response: any) => {
           if (response.user){
             window.localStorage.setItem("token", response.user.accessToken);
-
             await this.CurrentUser();
             this.router.navigate(['/projects']);
           }
         },
         (error: any) => {
+          Swal.fire('Oops...', 'Email address or password incorrect', 'error');
           console.log(error);
         });
   }
+
+  get f() { return this.loginForm.controls; }
 }

@@ -7,21 +7,24 @@
                     <div class="row">
                         <div class="col-md-9 col-lg-8 mx-auto">
                             <h2 class="login-register-heading mb-4">Login</h2>
-                            <form (ngSubmit)="onSubmit(login)" #login="ngForm">
+                            <form [formGroup]="loginForm" (ngSubmit)="onSubmitForm()">
                                 <div class="mb-3 form-group">
                                     <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email"
-                                        aria-describedby="emailHelp" name="email" ngModel required>
-                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                    <input type="email" class="form-control" id="email" name="email" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                        <div *ngIf="f.email.errors.required">Email is required</div>
+                                        <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
                                     </div>
                                 </div>
                                 <div class="mb-3 form-group">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" name="password" ngModel required>
-                                    <div id="passwordHelp" class="form-text">We'll never share your password with anyone
-                                        else.</div>
+                                    <input type="password" class="form-control" id="password" name="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                                    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                        <div *ngIf="f.password.errors.required">Password is required</div>
+                                        <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary me-2" value="login" [disabled]="login.invalid">Login</button>
+                                <button type="submit" class="btn btn-primary me-2" value="login">Login</button>
                                 <a routerLink="/register" class="btn btn-link" role="button" data-bs-toggle="button">Register</a>
                             </form>
                         </div>

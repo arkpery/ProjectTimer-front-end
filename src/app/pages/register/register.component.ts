@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../../models/user/User';
 import { UserService } from 'src/app/services/users/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,8 @@ import { UserService } from 'src/app/services/users/user.service';
 export class RegisterComponent implements OnInit {
 
   registerForm = new FormGroup({});
+  submitted = false;
+  
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
 
@@ -30,7 +33,7 @@ export class RegisterComponent implements OnInit {
   initForm() {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
       birthdate: '',
@@ -49,6 +52,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmitForm() {
+    this.submitted = true;
     const formValue = this.registerForm.value;
     const newUser = {
       email: formValue['email'],
@@ -56,8 +60,7 @@ export class RegisterComponent implements OnInit {
       firstname: formValue['firstname'],
       lastname: formValue['lastname'],
       birthdate: formValue['birthdate'],
-      avatar: formValue['avatar'],
-      groups: []
+      avatar: formValue['avatar']
     } as User;
     this.userService.addUser(newUser).subscribe(
       async (response: any) => {
@@ -66,8 +69,11 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/projects']);
       },
       (error: any) => {
+        Swal.fire('Oops...', 'erreur', 'error');
         console.log(error);
       });
   }
+
+  get f() { return this.registerForm.controls; }
 
 }
