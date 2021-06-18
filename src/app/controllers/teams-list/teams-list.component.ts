@@ -93,16 +93,6 @@ export class TeamsListComponent implements OnInit {
   }
 
 
-  // update group
-  // async update(team: Team) {
-  //    const toUpdate: Team = {
-  //      _id: team._id,
-  //     members: team.members.map((g: User) => g._id)
-  //   };
-
-  //   await this.teamService.update(toUpdate).toPromise();
-  // }
-
 
 
   // get list all teams 
@@ -246,6 +236,8 @@ export class TeamsListComponent implements OnInit {
                   this.teams = response2.data;
                 }
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
+                
+                this.onFetchGroups()
               },
               (error: any) => {
                 console.log(error);

@@ -213,7 +213,10 @@ export class TeamViewComponent implements OnInit {
           this.teamService.deleteGroup(id)
             .subscribe(
               (response: any) => {
+
+                this.router.navigate(['/teams']);
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
+          
               },
               (error: any) => {
                 console.log(error);
@@ -244,7 +247,12 @@ export class TeamViewComponent implements OnInit {
         console.log(error);
       });
   }
-  
+
+
+  async onDeleteProjectOnGroup(project: Project) {
+    await this.projectService.deleteOne(project).toPromise();
+    await this.onFetchGroups();
+  }
 
   updateByAddingUser(content : any, team: Team) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
