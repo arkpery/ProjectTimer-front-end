@@ -76,12 +76,16 @@ export class ProjectComponent {
 
   public async Reload() {
     this.timers = [];
-    if (this.project && this.elPieChart && this.elBarChart) {
+    if (this.project) {
       try {
         this.timers = await this.timerService.findByProject(this.project).toPromise();
         this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
-        this.elPieChart.load();
-        this.elBarChart.load();
+        if (this.elBarChart){
+          this.elBarChart.load();
+        }
+        if (this.elPieChart){
+          this.elPieChart.load();
+        }
       }
       catch (e){
         console.log(e.message);
