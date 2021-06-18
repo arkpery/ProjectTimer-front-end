@@ -36,16 +36,16 @@
           <option value="{{project._id}}">{{project.name}}</option>
         </select>
       </div>
-      <div>
+      <div class="btn btn-group">
         <button class="btn btn-primary me-4" (click)="startTimer()">Start</button>
         <button class="btn btn-danger ms-4" (click)="pauseTimer()">Stop</button>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" [disabled]="timerForm.invalid" (click)="onSubmitForm()">Create Task</button>
+    <button type="button" class="btn btn-outline-dark" [disabled]="timerForm.invalid" (click)="onSubmitForm()">Create
+      Task</button>
   </div>
 </ng-template>
 
-
-<button class="btn btn-lg btn-danger" (click)="open(content)">Add Task</button>
+<app-ui-button (click)="open(content)" [type]="'primary'" [icon]="'home'" [content]="'Ajouter une tâche'"></app-ui-button>

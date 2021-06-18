@@ -16,6 +16,15 @@ export class BarChartService {
     let current: any = {};
     let keys: Array<string> = [];
 
+    timers = timers.sort((a: Timer, b: Timer) => {
+      if (a.startTime > b.startTime) {
+        return (1);
+      }
+      if (a.startTime < b.startTime) {
+        return (-1);
+      }
+      return (0);
+    });
     for (let timer of timers) {
       if (!timer.taskType) {
         timer.taskType = "WORKING";
@@ -23,6 +32,7 @@ export class BarChartService {
       if (!timer.duration) {
         timer.duration = 0;
       }
+
       const str = moment.parseZone(timer.startTime).format("DD/MM/YYYY");
       if (current.length && current !== str) {
         const obj: any = {};
@@ -36,7 +46,7 @@ export class BarChartService {
         list.push(obj);
         for (let key of keys) {
           duration[key] = 0;
-          count[key] = 0;
+          count[key] = 1;
         }
       }
       if (keys.indexOf(timer.taskType) === -1) {
@@ -46,7 +56,7 @@ export class BarChartService {
         duration[timer.taskType] = 0;
       }
       if (!count[timer.taskType]) {
-        count[timer.taskType] = 0;
+        count[timer.taskType] = 1;
       }
       count[timer.taskType]++;
       duration[timer.taskType] += timer.duration;
@@ -75,6 +85,8 @@ export class BarChartService {
     });
     const data = [];
 
+    console.log(labels);
+    console.log(list);
     for (let key of keys) {
       const item: any = {};
 

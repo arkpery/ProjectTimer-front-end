@@ -19,7 +19,7 @@
                     </div>
                     <div class="row">
                         <p>
-                              Temps total: {{ Total | date: "HH:mm:ss" }}
+                            Temps total: {{ Total | date: "HH:mm:ss" }}
                         </p>
                     </div>
                 </div>
@@ -45,26 +45,25 @@
                             <h2>Timeline</h2>
                         </div>
                         <div *ngIf="!project.close">
-                            <app-ui-button [type]="'primary'" [icon]="'home'" [content]="'Ajouter une tâche'">
-                            </app-ui-button>
+                            <app-timer [reload]="Reload" [project]="project"></app-timer>
                         </div>
                     </div>
-                    <div *ngIf="rows.length && headers.length && currentDate !== null">
-                        <app-timeline [selectDate]="selectDate" [currentDate]="currentDate" [headers]="headers"
+                    <div *ngIf="rows.length && headers.length && selectDate && currentDate !== null">
+                        <app-timeline [selectDate]="selectDate" (myEvent)="UpdateRows($event)" [currentDate]="currentDate" [headers]="headers"
                             [rows]="rows"></app-timeline>
                     </div>
                 </div>
             </div>
         </form>
-        <app-teams-list class="my-4" *ngIf="project" [projectId]="project._id" [view]="'project'" [canAdd]="!project.close" [teams]="teams"></app-teams-list>
-        <div class="row" *ngIf="timers">
-            <app-bar-chart class="col-md-12" [title]="'Temps moyen par jour(/min)'" 
-            [items]="timers" [transform]="barChart"></app-bar-chart>
+        <app-teams-list class="my-4" *ngIf="project" [projectId]="project._id" [view]="'project'"
+            [canAdd]="!project.close" [teams]="teams"></app-teams-list>
+        <div class="row" *ngIf="timers.length">
+            <app-bar-chart #elBarChart class="col-md-12" [title]="'Temps moyen par jour(/min)'" [items]="timers"
+                [transform]="barChart"></app-bar-chart>
         </div>
-        <div class="row" *ngIf="timers">
-            <app-pie-chart *ngIf="timers" class="col-md-12"
-            [title]="'Temps passé en fonction du type de tâche(/s)'" [items]="timers"
-            [transform]="pieChart"></app-pie-chart>
+        <div class="row" *ngIf="timers.length">
+            <app-pie-chart #elPieChart class="col-md-12" [title]="'Temps passé en fonction du type de tâche(/s)'"
+                [items]="timers" [transform]="pieChart"></app-pie-chart>
         </div>
     </div>
 </article>
