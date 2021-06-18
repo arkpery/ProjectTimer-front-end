@@ -76,12 +76,16 @@ export class ProjectComponent {
 
   public async Reload() {
     this.timers = [];
-    if (this.project && this.elPieChart && this.elBarChart) {
+    if (this.project) {
       try {
         this.timers = await this.timerService.findByProject(this.project).toPromise();
         this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
-        this.elPieChart.load();
-        this.elBarChart.load();
+        if (this.elBarChart){
+          this.elBarChart.load();
+        }
+        if (this.elPieChart){
+          this.elPieChart.load();
+        }
       }
       catch (e){
         console.log(e.message);
@@ -149,17 +153,20 @@ export class ProjectComponent {
 
   get Total() {
     if (!this.timers || !this.timers?.length) {
-      return (moment(0).subtract(1, "hours").toDate());
+      return (moment(0).subtract(1, "hours").format("HH:mm:ss"));
     }
     const total = this.timers?.map(t => t.duration ?? 0).reduce((p, v) => {
       p += v;
 
       return (p);
     });
-    const hours = total / (1000 * 3600);
-    const minutes = (total / (1000 * 60)) % 60;
+    const totalSeconds = Math.ceil(total / (1000));
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const seconds = totalSeconds % 60;
+    const minutes = totalMinutes % 60;
 
-    return (`${hours}h `);
+    return (`${totalHours} h ${minutes > 9 ? `${minutes}` : `0${minutes}`} ${seconds > 9 ? `${seconds}` : `0${seconds}`}s`);
   }
 
   barChart(timers: Array<Timer>) {

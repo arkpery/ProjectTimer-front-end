@@ -2,20 +2,20 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Team } from 'src/app/models/team/team.model';
 import { TeamService } from 'src/app/services/teams/team.service';
-import {  faCog,faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Project } from '../../models/project/Project';
 import Swal from 'sweetalert2';
 import { ProjectService } from '../../services/projects/project.service';
 import { Group } from '../../models/team/Group';
 import { User } from 'src/app/models/user/User';
 import { UserService } from 'src/app/services/users/user.service';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-const {userList} = require('../teams-list/teams-list.component');
+const { userList } = require('../teams-list/teams-list.component');
 
 @Component({
   selector: 'app-team-view',
@@ -35,27 +35,18 @@ export class TeamViewComponent implements OnInit {
   requestDone: boolean = false;
   selectedMembersId?: [''];
   defaultUserId: Array<string> = [];
+
   
   selectFormMembers!: FormGroup;
   // list members
   userList = []
-
   createNewProjectFormOnTeams! : FormGroup;
   selectFormProjects!: FormGroup;
   selectedProjectsId?: string;
   projectList: Array<Team> = [];
   defaultProjectId: Array<string> = [];
-
-
-  
-
-  currentMembers:  Array<User> = [];
+  currentMembers: Array<User> = [];
   faCog = faCog;
-
-
-
-  showCreateProjectName :boolean = false;
-  showSelectProjectName :boolean = true;
   
   constructor(
     private teamService: TeamService,
@@ -75,13 +66,11 @@ export class TeamViewComponent implements OnInit {
     catch (e) {
       this.requestDone = true;
     }
-    
+
 
     this.selectFormMembers = this.fb.group({
       members: []
     });
-
-
     this.createNewProjectFormOnTeams = this.fb.group({
       name: ''
     });
@@ -89,8 +78,6 @@ export class TeamViewComponent implements OnInit {
     this.selectFormProjects = this.fb.group({
       projects: []
     });
-
-    
 
      // get list of users (members)
      this.getUsersList();
@@ -100,7 +87,7 @@ export class TeamViewComponent implements OnInit {
 
     this.findById(this.route.snapshot.params['id']);
     this.findProjectsByGroup(this.route.snapshot.params['id']);
-      
+
   }
 
 
@@ -115,7 +102,7 @@ export class TeamViewComponent implements OnInit {
             `
             return o
           });
-         
+
         },
         (error: any) => {
           console.log(error);
@@ -139,7 +126,7 @@ export class TeamViewComponent implements OnInit {
 
  }
 
-  toJSON(team: Team){
+  toJSON(team: Team) {
     return (JSON.stringify(team));
   }
 
@@ -155,9 +142,9 @@ export class TeamViewComponent implements OnInit {
   async CurrentUser() {
     this.currentUser = await this.userService.CurrentUser();
   }
-  
-  defaultUser(users: Array<User>){
-    if (users.length){
+
+  defaultUser(users: Array<User>) {
+    if (users.length) {
       return (users[0]._id);
     }
     return ("");
@@ -175,7 +162,7 @@ export class TeamViewComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.team = response;
-          this.currentMembers= response.members
+          this.currentMembers = response.members
           this.defaultUserId = this.team?.members
         },
         (error: any) => {
@@ -188,6 +175,7 @@ export class TeamViewComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.projects = response;
+          this.defaultGroupId = this.projects.map((project => this.defaultGroup(project.groups)));
         },
         (error: any) => {
           console.log(error);
@@ -206,15 +194,11 @@ export class TeamViewComponent implements OnInit {
     return (project.close ? "Fermé" : "En cours");
   }
 
-   
-
-  
-
 
   // delete a group
   onDelete(id: string, teamM: Team): void {
     const lengthMembers = Object.keys(teamM).length;
-    if(lengthMembers){
+    if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
       Swal.fire({
@@ -227,13 +211,13 @@ export class TeamViewComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           this.teamService.deleteGroup(id)
-          .subscribe(
-            (response: any) => {
-              Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
-            },
-            (error: any) => {
-              console.log(error);
-            });
+            .subscribe(
+              (response: any) => {
+                Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
+              },
+              (error: any) => {
+                console.log(error);
+              });
 
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
@@ -244,31 +228,31 @@ export class TeamViewComponent implements OnInit {
         }
       })
     }
-    
-  }
-  
 
+  }
 
   updateByAddingUser(content : any, team: Team) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+
       const newMembers = {
         members: this.selectedMembersId
       } as Team;
       this.teamService.update(team._id, newMembers).subscribe(
         (response: any) => {
-          if (team && team._id){
+          if (team && team._id) {
             this.findById(team._id);
           }
           Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
-     },
-     (error: any) => {
-       console.log(error);
-     });
-      
-  }, (reason) => {
-    console.log("canceled");
-      });
+        },
+        (error: any) => {
+          console.log(error);
+        });
+
+    }, (reason) => {
+      console.log("canceled");
+    });
   }
+
 
 
   updateGroupByAddingExistingProject(createProjectModalOnTeams : any,team: Team){
@@ -279,6 +263,7 @@ export class TeamViewComponent implements OnInit {
        this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
         (response: any) => {
          console.log(response)
+
 
           if (team && team._id){
             this.findProjectsByGroup(team._id);
@@ -303,6 +288,7 @@ export class TeamViewComponent implements OnInit {
   }
 
 
+
   clearListSelectedProjects(){
     this.selectFormProjects.get('projects')?.patchValue([]);
   }
@@ -313,27 +299,22 @@ export class TeamViewComponent implements OnInit {
    deleteUserOnGroup(team: Team, idMember: string){
     this.currentMembers.forEach( (item : User, index) => {
       if(item._id === idMember) this.currentMembers.splice(index,1);
+
     });
-    
-    this.teamService.update(team._id,team).subscribe(
+
+    this.teamService.update(team._id, team).subscribe(
       (response: any) => {
         Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
-        if (team && team._id){
+        if (team && team._id) {
           this.findById(team._id);
         }
       },
       (error: any) => {
         console.log(error);
       });
-   }
+  }
 
    
-
-
-
-
-
-
    /**
     * Method to serach an item from the combobox.
     * @param term {String} Term that user entered

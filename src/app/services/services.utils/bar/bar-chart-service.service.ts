@@ -84,9 +84,6 @@ export class BarChartService {
       return ("");
     });
     const data = [];
-
-    console.log(labels);
-    console.log(list);
     for (let key of keys) {
       const item: any = {};
 
@@ -101,7 +98,6 @@ export class BarChartService {
         item.data.push((entry[key].average) / 1000 / 60);
       }
       data.push(item);
-      console.log(data);
     }
     return ({
       labels, values: data

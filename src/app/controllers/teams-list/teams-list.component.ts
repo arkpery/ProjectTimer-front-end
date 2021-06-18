@@ -218,10 +218,8 @@ export class TeamsListComponent implements OnInit {
     if (!users){
       users = [];
     }
-    console.log(users);
     const lengthMembers = users.length;
 
-    console.log(`ID: ${id}`);
     if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
