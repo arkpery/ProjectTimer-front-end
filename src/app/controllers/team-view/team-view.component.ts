@@ -231,6 +231,21 @@ export class TeamViewComponent implements OnInit {
 
   }
 
+
+  updateTeam(team: Team) {
+    this.teamService.update(team._id, team).subscribe((response: any) => {
+      Swal.fire('successfully added!', 'Team updated.', 'success');
+      if (team && team._id) {
+        this.findById(team._id);
+        this.findProjectsByGroup(team._id);
+      }
+    },
+      (error: any) => {
+        console.log(error);
+      });
+  }
+  
+
   updateByAddingUser(content : any, team: Team) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
 
