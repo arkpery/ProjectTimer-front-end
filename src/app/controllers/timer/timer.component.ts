@@ -42,8 +42,6 @@ export class TimerComponent implements OnInit {
 
   async CurrentUser(){
     this.currentUser = await this.userService.CurrentUser();
-    console.log("enter");
-    console.log(this.currentUser);
   }
 
   /*
@@ -74,12 +72,10 @@ export class TimerComponent implements OnInit {
       duration: formValue['duration'],
       project: this.project._id
     };
-    console.log("this.time : " + this.time);
-    console.log(newTimer);
+
     this.timerrsService.save(newTimer).subscribe(
         async (response) => {
           Swal.fire('Whooa!', 'Task has a created', 'success');
-          console.log(response);
           await this.reload();
         },
         error => {
