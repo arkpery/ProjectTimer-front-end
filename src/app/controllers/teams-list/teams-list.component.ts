@@ -218,10 +218,8 @@ export class TeamsListComponent implements OnInit {
     if (!users){
       users = [];
     }
-    console.log(users);
     const lengthMembers = users.length;
 
-    console.log(`ID: ${id}`);
     if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
@@ -242,15 +240,11 @@ export class TeamsListComponent implements OnInit {
                   const project = await this.projectService.findOne(this.projectId).toPromise();
                   const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response.data;
-                  console.log(this.teams);
                   this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
-                  console.log(project);
                   project.groups = this.teams.map((team) => team._id);
-                  console.log(project);
                   await this.projectService.update(project).toPromise();
                   const response2 : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response2.data;
-                  console.log(this.teams);
                 }
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
               },
