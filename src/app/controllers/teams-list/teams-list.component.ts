@@ -179,7 +179,7 @@ export class TeamsListComponent implements OnInit {
   }
 
   // clear list selected 
-  clearListSelected() {
+  clearListSelectedMembers() {
     this.selectForm.get('members')?.patchValue([]);
   }
 
@@ -237,20 +237,15 @@ export class TeamsListComponent implements OnInit {
           this.teamService.deleteGroup(id)
             .subscribe(
               async (response: any) => {
-                console.log(response);
                 if (this.view === "project") {
                   const project = await this.projectService.findOne(this.projectId).toPromise();
                   const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response.data;
-                  console.log(this.teams);
                   this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
-                  console.log(project);
                   project.groups = this.teams.map((team) => team._id);
-                  console.log(project);
                   await this.projectService.update(project).toPromise();
                   const response2 : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response2.data;
-                  console.log(this.teams);
                 }
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
               },

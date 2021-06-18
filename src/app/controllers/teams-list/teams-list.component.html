@@ -73,7 +73,7 @@
                         <ng-select [items]="userList" bindLabel="search_label" bindValue="_id" labelForId="state" [multiple]="true" placeholder="Select members" clearAllText="Clear" [searchable]="true" [(ngModel)]="selectedMembersId" [searchFn]="customSearchFn" formControlName="members">
                         </ng-select>
                         <br>
-                        <button (click)="clearListSelected()" class="btn btn-sm btn-secondary">Clear</button>
+                        <button (click)="clearListSelectedMembers()" class="btn btn-sm btn-secondary">Clear</button>
                     </div>
                 </div>
 

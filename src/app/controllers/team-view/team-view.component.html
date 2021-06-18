@@ -28,11 +28,8 @@
     </div>
     <div class="row mt-4">
         <div class="col">
-
             <h2>Members</h2>
-
             <div class="col-md-4" id="div-btn" *ngIf="team">
-
                 <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'fa-user'" [content]="'Add members'">
                 </app-ui-button>
             </div>
@@ -41,7 +38,6 @@
                      <a class="btn btn-default" href="" target="_blank"><i class="glyphicon glyphicon-plus"></i></a>
                 </span>
             </div>
-
 
             <table class="table table-striped">
                 <thead>
@@ -67,13 +63,11 @@
             </table>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col">
-
+    <div class="row mt-4" *ngIf="team">
+        <div class="col"  >
             <h2>Projects</h2>
-
-            <div class="col-md-4" id="div-btn">
-                <app-ui-button class="col-md-6" [type]="'primary'" [icon]="'add'" [content]="'Add Projects'">
+            <div class="col-md-4" id="div-btn" >
+                <app-ui-button  class="col-md-6" (click)="updateGroupByAddingExistingProject(createProjectModalOnTeams,team)" [type]="'primary'" [icon]="'fa-user'" [content]="'Add project'">
                 </app-ui-button>
             </div>
             <table class="table table-striped">
@@ -113,6 +107,8 @@
 </div>
 
 
+<!--  begin modal add memebers  -->
+
 <ng-template #content let-modal>
     <div class="modal-header" *ngIf="team">
         <h4 class="modal-title" id="modal-basic-title">Add member to {{team.name}} </h4>
@@ -123,18 +119,87 @@
     </div>
     <div class="modal-body">
         <form>
-            <div class="form-group row" [formGroup]="selectForm">
+            <div class="form-group row" [formGroup]="selectFormMembers">
                 <label for="typeahead-template" class="col-sm-4 col-form-label">Select a members:</label>
                 <div class="col-sm-8">
-                    <ng-select [items]="userList" bindLabel="search_label" bindValue="_id" labelForId="state" [multiple]="true" placeholder="Select members" clearAllText="Clear" [searchable]="true" [(ngModel)]="selectedMembersId" [searchFn]="customSearchFn" formControlName="members">
+                    <ng-select [items]="userList" 
+                    bindLabel="search_label"
+                     bindValue="_id" 
+                     labelForId="state"
+                      [multiple]="true" 
+                      placeholder="Select members" 
+                      clearAllText="Clear" 
+                      [searchable]="true" 
+                      [(ngModel)]="selectedMembersId" 
+                      [searchFn]="customSearchFn" 
+                      formControlName="members">
                     </ng-select>
                     <br>
-                    <button class="btn btn-sm btn-secondary">Clear</button>
+                    <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
                 </div>
             </div>
+            
         </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
 </ng-template>
+<!--  end modal add memebers  -->
+
+<!--  begin modal add project  -->
+
+
+
+<ng-template #createProjectModalOnTeams let-modal>
+    <div class="modal-header" *ngIf="team">
+        <h4 class="modal-title" id="modal-basic-title">Add project to {{team.name}} </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group row" [formGroup]="selectFormProjects">
+                <label for="typeahead-template" class="col-sm-4 col-form-label">Select a project:</label>
+                <div class="col-sm-8">
+                    <ng-select [items]="projectList" 
+                    bindLabel="search_label"
+                     bindValue="_id" 
+                     labelForId="state"
+                      [multiple]="true" 
+                      placeholder="Select project" 
+                      clearAllText="Clear" 
+                      [searchable]="true" 
+                      [(ngModel)]="selectedProjectsId" 
+                      [searchFn]="customSearchFn" 
+                      formControlName="projects">
+                      <ng-template ng-footer-tmp>
+                        <button type="button" routerLink="/projects/" (click)="modal.dismiss()" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
+                            Create project
+                        </button>
+                    </ng-template>
+                    </ng-select>
+                    <br>
+                    <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
