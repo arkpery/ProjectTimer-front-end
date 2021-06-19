@@ -238,8 +238,9 @@ export class TeamViewComponent implements OnInit {
 
 
   updateTeam(team: Team) {
+    
     this.teamService.update(team._id, team).subscribe((response: any) => {
-      Swal.fire('successfully added!', 'Team updated.', 'success');
+      Swal.fire('successfully updated!', 'Team updated.', 'success');
       if (team && team._id) {
         this.findById(team._id);
         this.findProjectsByGroup(team._id);
@@ -287,25 +288,34 @@ export class TeamViewComponent implements OnInit {
       }
     }
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        
         this.selectedMembers = this.memebersAlreadySelected.concat(this.selectedMembersId);
         const newMembers = {
         members: this.selectedMembers 
       } as Team;
+
+      if(!this.selectedMembersId?.length){
+        Swal.fire('Can\'t add', 'Please select a member.', 'error')
+      } else {
+        this.teamService.update(team._id, newMembers).subscribe(
+          (response: any) => {
+           
+            if (team && team._id) {
+              this.findById(team._id);
+            }
+  
+            this.getUsersList();
+            this.clearListSelectedMembers()
+  
+            Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
+          },
+          (error: any) => {
+            Swal.fire('Can\'t add', 'Member not added.', 'error')
+            console.log(error);
+          });
+      }
      
-      this.teamService.update(team._id, newMembers).subscribe(
-        (response: any) => {
-         
-          if (team && team._id) {
-            this.findById(team._id);
-          }
-
-          this.getUsersList();
-
-          Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
-        },
-        (error: any) => {
-          console.log(error);
-        });
+      
 
     }, (reason) => {
       console.log("canceled");
@@ -317,23 +327,27 @@ export class TeamViewComponent implements OnInit {
 
   updateGroupByAddingExistingProject(createProjectModalOnTeams : any,team: Team){
     this.modalService.open(createProjectModalOnTeams, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-       this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
-        (response: any) => {
-         console.log(response)
-
-
-          if (team && team._id){
-            this.findProjectsByGroup(team._id);
-            this.findById(team._id);
-          }
-          Swal.fire('project successfully added!', 'Project  created.', 'success');
-          
-        },
-        (error: any) => {
-          Swal.fire('Can\'t add', 'Project not created.', 'error')
-          console.log(error);
-        });
-
+      if(!this.selectedProjectsId?.length){
+        Swal.fire('Can\'t add', 'Please select a project.', 'error')
+      } else {
+        this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
+          (response: any) => {
+           console.log(response)
+  
+            if (team && team._id){
+              this.findProjectsByGroup(team._id);
+              this.findById(team._id);
+            }
+            this.clearListSelectedProjects();
+            Swal.fire('project successfully added!', 'Project  created.', 'success');
+            
+          },
+          (error: any) => {
+            Swal.fire('Can\'t add', 'Project not created.', 'error')
+            console.log(error);
+          });
+      }
+       
       }, (reason) => {
          console.log("canceled");
            });

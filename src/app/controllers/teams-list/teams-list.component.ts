@@ -142,6 +142,9 @@ export class TeamsListComponent implements OnInit {
 
   // open modal to create group
   async createGroup(targetModal: any) {
+    if(this.currentUser){
+      deleteUser(this.userList,this.currentUser._id)
+    }
     this.modalService.open(targetModal, {
       centered: true,
       backdrop: 'static'
@@ -177,9 +180,18 @@ export class TeamsListComponent implements OnInit {
   onSubmit() {
     this.modalService.dismissAll();
     const formValue = this.createGroupForm.value;
+   
+    let selectMembers= []
+    if(this.selectedMembersId){
+      selectMembers.push(this.currentUser?._id)
+      selectMembers.push((this.selectedMembersId?.toString()))
+    } else {
+      selectMembers.push(this.currentUser?._id)
+    }
+    
     const newGroup = {
       name: formValue['name'],
-      members: this.selectedMembersId
+      members: selectMembers
     } as Team;
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
@@ -194,6 +206,7 @@ export class TeamsListComponent implements OnInit {
           const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
           this.teams = response.data;
         }
+        this.clearListSelectedMembers()
         Swal.fire('successfully created!', 'Group  created.', 'success')
 
       },
@@ -236,7 +249,7 @@ export class TeamsListComponent implements OnInit {
                   this.teams = response2.data;
                 }
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
-                
+                this.getAllTeams()
                 this.onFetchGroups()
               },
               (error: any) => {
@@ -256,8 +269,13 @@ export class TeamsListComponent implements OnInit {
 
   }
 
-
-
-
 }
 
+function deleteUser(arr: any[], email: any) {
+  for(var i = 0; i < arr.length; i++) {
+     if(arr[i]._id === email) {
+       arr.splice(i, 1)
+       return;
+     }
+  }
+}

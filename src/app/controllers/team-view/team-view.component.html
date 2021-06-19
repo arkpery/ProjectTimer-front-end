@@ -54,9 +54,9 @@
                         <td>{{ member.lastname }}</td>
                         <td>{{member.email}}</td>
                         <td>
-                            <a *ngIf="team"   class="mx-2 link link-danger" (click)="deleteUserOnGroup(team,member._id)" >
-                            <fa-icon [icon]="faTrash"></fa-icon>
-                            </a>
+                            <a *ngIf="team._id"   class="btn-danger btn-sm"  (click)="deleteUserOnGroup(team,member._id)" >
+                                <fa-icon [icon]="faTrash"></fa-icon>
+                                </a>
                         </td>
                     </tr>
                 </tbody>
@@ -97,7 +97,7 @@
                                 <fa-icon [icon]="faCogs"></fa-icon>
                             </a>
                             <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id"
-                                        class="mx-2 link link-danger" (click)="onDeleteProjectOnGroup(project)">
+                            class="btn-danger btn-sm" (click)="onDeleteProjectOnGroup(project)">
                                         <fa-icon [icon]="faTrash"></fa-icon>
                             </a>
                         </div>    
@@ -137,12 +137,7 @@
                       [searchFn]="customSearchFn" 
                       formControlName="members"
                       >
-
                     </ng-select>
-
-                   
-
-
                     <br>
                     <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
                 </div>
@@ -151,6 +146,7 @@
         </form>
     </div>
     <div class="modal-footer">
+        <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
 </ng-template>
@@ -198,6 +194,7 @@
         </form>
     </div>
     <div class="modal-footer">
+        <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
 </ng-template>
