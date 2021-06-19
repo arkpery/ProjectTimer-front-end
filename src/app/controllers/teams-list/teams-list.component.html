@@ -82,15 +82,15 @@
                         formControlName="members">
                         </ng-select>
                         <br>
-                        <button (click)="clearListSelectedMembers()" class="btn btn-sm btn-secondary">Clear</button>
+                        <button type="button" (click)="clearListSelectedMembers()" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+          data-dismiss="modal">Clear selection</button>
                     </div>
                 </div>
 
                 <br><br>
-
                 <div class="modal-footer">
-                    <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="favorite styled">Create</button>
+                    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss()" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary">Create</button>
                 </div>
             </form>
 

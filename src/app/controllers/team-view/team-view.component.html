@@ -96,8 +96,8 @@
                             <a class="mx-2 link link-info" routerLink="/projects/{{project._id}}">
                                 <fa-icon [icon]="faCogs"></fa-icon>
                             </a>
-                            <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id"
-                            class="btn-danger btn-sm" (click)="onDeleteProjectOnGroup(project)">
+                            <a *ngIf="team._id && this.currentUser && project.admin._id === this.currentUser._id" 
+                            class="btn-danger btn-sm" (click)="onDeleteProjectOnGroup(team,project)">
                                         <fa-icon [icon]="faTrash"></fa-icon>
                             </a>
                         </div>    
@@ -139,15 +139,17 @@
                       >
                     </ng-select>
                     <br>
-                    <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
+                    <button type="button" (click)="clearListSelectedMembers()" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                    data-dismiss="modal">Clear selection</button>
                 </div>
             </div>
             
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+
+        <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss()" data-dismiss="modal">Close</button>
+        <button (click)="modal.close('Save click')" class="btn btn-primary">Create</button>
     </div>
 </ng-template>
 <!--  end modal add memebers  -->
@@ -187,15 +189,18 @@
                     </ng-template>
                     </ng-select>
                     <br>
-                    <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
+                    <button type="button" (click)="clearListSelectedProjects()" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+          data-dismiss="modal">Clear selection</button>
                 </div>
             </div>
             
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+
+        <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss()" data-dismiss="modal">Cancel</button>
+        <button (click)="modal.close('Save click')" class="btn btn-primary">Create</button>
+
     </div>
 </ng-template>
 

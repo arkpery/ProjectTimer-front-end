@@ -252,30 +252,42 @@ export class TeamViewComponent implements OnInit {
   }
 
 
-  async onDeleteProjectOnGroup(project: Project) {
-    await this.projectService.deleteOne(project).toPromise();
-    await this.onFetchGroups();
+   onDeleteProjectOnGroup(team:Team,project: Project) {
+     console.log(team)
+     console.log(project._id)
+    this.teamService.update(team._id, project).subscribe(
+      (response: any) => {
+        Swal.fire('successfully deleted!', 'The project  has been deleted for this group.', 'success')
+         this.onFetchGroups();
+      },
+      (error: any) => {
+        Swal.fire('Not deleted!', 'The project not deleted for this group.', 'error')
+
+        console.log(error);
+      });
+    
   }
 
   
-   // delete user on team view
+  //  // delete user on team view
    deleteUserOnGroup(team: Team, idMember: string){
-    this.currentMembers.forEach( (item : User, index) => {
-      if(item._id === idMember) {
-        this.currentMembers.splice(index,1);
-      };
-    });
-    this.teamService.update(team._id, team).subscribe(
-      (response: any) => {
-        Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
-        if (team && team._id) {
-          this.findById(team._id);
-        }
-        this.getUsersList();
-      },
-      (error: any) => {
-        console.log(error);
-      });
+  //   this.currentMembers.forEach( (item : User, index) => {
+  //     if(item._id === idMember) {
+  //       this.currentMembers.splice(index,1);
+  //     };
+  //   });
+  //   this.teamService.update(team._id, team).subscribe(
+  //     (response: any) => {
+  //       Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
+  //       if (team && team._id) {
+  //         this.findById(team._id);
+  //       }
+  //       this.getUsersList();
+  //     },
+  //     (error: any) => {
+  //       console.log(error);
+  //     });
+  
   }
 
 
