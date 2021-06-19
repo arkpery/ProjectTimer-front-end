@@ -43,12 +43,17 @@ export class TeamService {
 
 
   updateGroupByAddingProject(idGroup: any, idProject: any){
+    console.log(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/${idProject}`)
     return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/${idProject}`,null, {
       headers: {
         "Authorization": `${window.localStorage.getItem("token")}`
       }
     });
 
+  }
+
+  deleteProjectOnGroup(idGroup: any, idProject: any): Observable<any> {
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/delete/${idProject}`,null, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
   
 
@@ -64,14 +69,10 @@ export class TeamService {
     return this.http.delete(`${environment.baseUrl}${this.GROUP_URL}/${id}`, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
   }
 
-  deleteProjectOnGroup(idGroup: any, idProject: any): Observable<any> {
-    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/delete/${idProject}`,null, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
-  }
-
   
 
   getAllGroupByProject(project: Project): Observable<Team[]> {
-    return this.http.put<Team[]>(`${environment.baseUrl}${this.GROUP_URL}/project/delete/${project._id}`,null, {
+    return this.http.get<Team[]>(`${environment.baseUrl}${this.GROUP_URL}/project/${project._id}`, {
       headers: {
         "Authorization": `${localStorage.getItem("token")}`
       }

@@ -238,7 +238,6 @@ export class TeamViewComponent implements OnInit {
 
 
   updateTeam(team: Team) {
-    
     this.teamService.update(team._id, team).subscribe((response: any) => {
       Swal.fire('successfully updated!', 'Team updated.', 'success');
       if (team && team._id) {
@@ -257,7 +256,10 @@ export class TeamViewComponent implements OnInit {
      this.teamService.deleteProjectOnGroup(team._id,project._id).subscribe(
       (response: any) => {
         Swal.fire('successfully deleted!', 'The project  has been deleted for this group.', 'success')
-         this.onFetchGroups();
+        if (team && team._id){
+          this.findProjectsByGroup(team._id);
+          this.findById(team._id);
+        }
       },
       (error: any) => {
         Swal.fire('Not deleted!', 'The project not deleted for this group.', 'error')
@@ -342,7 +344,6 @@ export class TeamViewComponent implements OnInit {
       } else {
         this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
           (response: any) => {
-           console.log(response)
   
             if (team && team._id){
               this.findProjectsByGroup(team._id);
