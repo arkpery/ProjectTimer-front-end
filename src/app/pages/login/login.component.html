@@ -18,6 +18,7 @@
                                 </div>
                                 <div class="mb-3 form-group">
                                     <label for="password" class="form-label">Password</label>
+                                    <a routerLink="/request-reset-password" class="btn btn-link" role="button" data-bs-toggle="button">Forgot Password?</a>
                                     <input type="password" class="form-control" id="password" name="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
                                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                         <div *ngIf="f.password.errors.required">Password is required</div>
