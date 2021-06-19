@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Team } from 'src/app/models/team/team.model';
 import { TeamService } from 'src/app/services/teams/team.service';
-import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCogs } from '@fortawesome/free-solid-svg-icons';
 import { Project } from '../../models/project/Project';
 import Swal from 'sweetalert2';
 import { ProjectService } from '../../services/projects/project.service';
@@ -15,7 +15,6 @@ import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-const { userList } = require('../teams-list/teams-list.component');
 
 @Component({
   selector: 'app-team-view',
@@ -30,7 +29,6 @@ export class TeamViewComponent implements OnInit {
   teams: Array<Team> = [];
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
-  faTrash = faTrash;
   currentUser?: User;
   requestDone: boolean = false;
   selectedMembersId?: [''];
@@ -39,15 +37,19 @@ export class TeamViewComponent implements OnInit {
   
   selectFormMembers!: FormGroup;
   // list members
-  userList = []
+  userList : Array<any> = [];
   createNewProjectFormOnTeams! : FormGroup;
   selectFormProjects!: FormGroup;
   selectedProjectsId?: string;
   projectList: Array<Team> = [];
   defaultProjectId: Array<string> = [];
   currentMembers: Array<User> = [];
-  faCog = faCog;
   
+  faCogs = faCogs;
+  
+  faTrash = faTrash;
+  memebersAlreadySelected: Array<any> = [];
+  selectedMembers: Array<any> = [];;
   constructor(
     private teamService: TeamService,
     private route: ActivatedRoute,
@@ -254,17 +256,51 @@ export class TeamViewComponent implements OnInit {
     await this.onFetchGroups();
   }
 
-  updateByAddingUser(content : any, team: Team) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+  
+   // delete user on team view
+   deleteUserOnGroup(team: Team, idMember: string){
+    this.currentMembers.forEach( (item : User, index) => {
+      if(item._id === idMember) {
+        this.currentMembers.splice(index,1);
+      };
+    });
+    this.teamService.update(team._id, team).subscribe(
+      (response: any) => {
+        Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
+        if (team && team._id) {
+          this.findById(team._id);
+        }
+        this.getUsersList();
+      },
+      (error: any) => {
+        console.log(error);
+      });
+  }
 
-      const newMembers = {
-        members: this.selectedMembersId
+
+  updateByAddingUser(content : any, team: Team) {
+    this.memebersAlreadySelected = []
+    if(team.members){
+      for (let i = 0; i < team.members.length; i++) {
+        this.memebersAlreadySelected.push(team.members[i]._id);
+        deleteUser(this.userList,team.members[i]._id)
+      }
+    }
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.selectedMembers = this.memebersAlreadySelected.concat(this.selectedMembersId);
+        const newMembers = {
+        members: this.selectedMembers 
       } as Team;
+     
       this.teamService.update(team._id, newMembers).subscribe(
         (response: any) => {
+         
           if (team && team._id) {
             this.findById(team._id);
           }
+
+          this.getUsersList();
+
           Swal.fire('successfully added!', 'The memeber(s)  has been added.', 'success')
         },
         (error: any) => {
@@ -276,13 +312,11 @@ export class TeamViewComponent implements OnInit {
     });
   }
 
+ 
 
 
   updateGroupByAddingExistingProject(createProjectModalOnTeams : any,team: Team){
-    
     this.modalService.open(createProjectModalOnTeams, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      console.log(team._id)
-    console.log(this.selectedProjectsId)
        this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
         (response: any) => {
          console.log(response)
@@ -318,25 +352,6 @@ export class TeamViewComponent implements OnInit {
 
   
 
-   // delete user on team view
-   deleteUserOnGroup(team: Team, idMember: string){
-    this.currentMembers.forEach( (item : User, index) => {
-      if(item._id === idMember) this.currentMembers.splice(index,1);
-
-    });
-
-    this.teamService.update(team._id, team).subscribe(
-      (response: any) => {
-        Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
-        if (team && team._id) {
-          this.findById(team._id);
-        }
-      },
-      (error: any) => {
-        console.log(error);
-      });
-  }
-
    
    /**
     * Method to serach an item from the combobox.
@@ -346,42 +361,30 @@ export class TeamViewComponent implements OnInit {
     */
    // function used to select members added to group
    customSearchFn(term: string, item: any) {
-    
-
-    if (!item) {
-      return "not term"
-    }
-
     term = term.toLowerCase();
-
-    // Creating and array of space saperated term and removinf the empty values using filter
     let splitTerm = term.split(' ').filter(t => t);
-
     let isWordThere: boolean[] = [];
 
     // Pushing True/False if match is found
     splitTerm.forEach(arr_term => {
       let search = item['search_label'].toLowerCase();
       isWordThere.push(search.indexOf(arr_term) != -1);
-      
     });
-    const selectedValue = item;
 
-
-   
-
-    const all_words = (this_word: any) =>  this_word;
-    
-      if(isWordThere ){
-        // Every method will return true if all values are true in isWordThere.
-          return isWordThere.every(all_words);
-      } else {
-        console.log("create one")
-        return "create a project";
-      }
-    
+    const all_words = (this_word: any) => this_word;
+    return isWordThere.every(all_words);
    
   }
+
 }
 
 
+
+function deleteUser(arr: any[], email: any) {
+  for(var i = 0; i < arr.length; i++) {
+     if(arr[i]._id === email) {
+       arr.splice(i, 1)
+       return;
+     }
+  }
+}

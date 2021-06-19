@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from 'src/app/models/team/team.model';
 import { User } from '../../models/user/User';
@@ -20,7 +20,7 @@ import { ProjectService } from 'src/app/services/projects/project.service';
   styleUrls: ['./teams-list.component.scss']
 })
 export class TeamsListComponent implements OnInit {
-  faCog = faCog;
+  faCogs = faCogs;
   faTrash = faTrash
   @Input() teams: Team[] = [];
   @Input() canAdd: boolean = true;

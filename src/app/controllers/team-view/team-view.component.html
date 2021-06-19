@@ -54,9 +54,9 @@
                         <td>{{ member.lastname }}</td>
                         <td>{{member.email}}</td>
                         <td>
-                            <button *ngIf="team" type="button" (click)="deleteUserOnGroup(team,member._id)" class="btn btn-danger btn-circle btn-floating btn-sm">
+                            <a *ngIf="team"   class="mx-2 link link-danger" (click)="deleteUserOnGroup(team,member._id)" >
                             <fa-icon [icon]="faTrash"></fa-icon>
-                          </button>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -92,13 +92,15 @@
                         </td>
                         <td>{{ project.admin.email }}</td>
                         <td *ngIf="team">
-                            <button type="button" routerLink="/projects/{{project._id}}" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
-                                <fa-icon [icon]="faCog"></fa-icon>
-                            </button>
+                            <div>
+                            <a class="mx-2 link link-info" routerLink="/projects/{{project._id}}">
+                                <fa-icon [icon]="faCogs"></fa-icon>
+                            </a>
                             <a *ngIf="this.currentUser && project.admin._id === this.currentUser._id"
                                         class="mx-2 link link-danger" (click)="onDeleteProjectOnGroup(project)">
                                         <fa-icon [icon]="faTrash"></fa-icon>
-                                    </a>
+                            </a>
+                        </div>    
                         </td>
                     </tr>
                 </tbody>
@@ -126,15 +128,21 @@
                     <ng-select [items]="userList" 
                     bindLabel="search_label"
                      bindValue="_id" 
-                     labelForId="state"
                       [multiple]="true" 
                       placeholder="Select members" 
+                      [clearable]="false"
                       clearAllText="Clear" 
                       [searchable]="true" 
                       [(ngModel)]="selectedMembersId" 
                       [searchFn]="customSearchFn" 
-                      formControlName="members">
+                      formControlName="members"
+                      >
+
                     </ng-select>
+
+                   
+
+
                     <br>
                     <button class="btn btn-sm btn-secondary" (click)="clearListSelectedMembers()" >Clear</button>
                 </div>
