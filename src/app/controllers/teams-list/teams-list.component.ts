@@ -1,17 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
 import { faCogs, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from 'src/app/models/team/team.model';
 import { User } from '../../models/user/User';
 import { TeamService } from 'src/app/services/teams/team.service';
 import { UserService } from 'src/app/services/users/user.service';
-import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
-import { Project } from 'src/app/models/project/Project';
 import { ProjectService } from 'src/app/services/projects/project.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -42,15 +39,15 @@ export class TeamsListComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
-    private router: Router,
     private fb: FormBuilder,
     private modalService: NgbModal,
     private userService: UserService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private spinner : NgxSpinnerService
   ) { }
 
   async ngOnInit(): Promise<void> {
-
+    this.spinner.show();
     try {
       await this.CurrentUser();
       await this.onFetchGroups();
@@ -70,14 +67,17 @@ export class TeamsListComponent implements OnInit {
     this.createGroupForm = this.fb.group({
       name: ['']
     });
+    this.spinner.hide();
 
   }
 
   async onFetchGroups() {
+    this.spinner.show();
     this.teamService.getAllGroup();
     this.users = await this.userService.findAll().toPromise();
     this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
     this.requestDone = true;
+    this.spinner.show();
   }
 
   defaultUser(members: Array<User>) {
@@ -107,8 +107,10 @@ export class TeamsListComponent implements OnInit {
           (error: any) => {
             console.log(error);
           });
+          this.spinner.hide();
     }
     else if (this.view === "project") {
+      this.spinner.show();
       const project = await this.projectService.findOne(this.projectId).toPromise();
       this.teamService.getAllGroupByProject(project)
         .subscribe((response: any) => {
@@ -117,13 +119,14 @@ export class TeamsListComponent implements OnInit {
         }, (error: any) => {
           console.log(error);
         });
+        this.spinner.hide();
     }
   }
 
 
   // Fetching users data 
   getUsersList() {
-    console.log()
+    this.spinner.show();
     this.userService.findAll()
       .subscribe(
         (response: any) => {
@@ -138,6 +141,7 @@ export class TeamsListComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+        this.spinner.hide();
   }
 
   // open modal to create group
@@ -193,6 +197,7 @@ export class TeamsListComponent implements OnInit {
       name: formValue['name'],
       members: selectMembers
     } as Team;
+    this.spinner.show();
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
         console.log(response);
@@ -214,6 +219,7 @@ export class TeamsListComponent implements OnInit {
         Swal.fire('Can\'t create', 'Group not created.', 'error')
         console.log(error);
       });
+      this.spinner.hide();
   }
 
   // delete a group
@@ -235,6 +241,7 @@ export class TeamsListComponent implements OnInit {
         cancelButtonText: 'No, keep it'
       }).then((result) => {
         if (result.isConfirmed) {
+          this.spinner.show();
           this.teamService.deleteGroup(id)
             .subscribe(
               async (response: any) => {
@@ -255,6 +262,8 @@ export class TeamsListComponent implements OnInit {
               (error: any) => {
                 console.log(error);
               });
+              this.spinner.hide();
+
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
             'Cancelled',

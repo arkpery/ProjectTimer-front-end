@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { UserService } from '../../services/users/user.service';
 
 @Component({
@@ -15,7 +16,10 @@ export class ResetPasswordComponent implements OnInit {
   successMessage!: string;
   IsvalidForm = true;
 
-  constructor(private userService: UserService, private router: Router
+  constructor(
+    private userService: UserService, 
+    private router: Router,
+    private spinner : NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -26,9 +30,9 @@ export class ResetPasswordComponent implements OnInit {
 
 
   RequestResetUser(form: { valid: any; }) {
-    console.log(form)
     if (form.valid) {
       this.IsvalidForm = true;
+      this.spinner.show();
       this.userService.requestReset(this.RequestResetForm.value).subscribe(
         data => {
           this.RequestResetForm.reset();
@@ -45,6 +49,8 @@ export class ResetPasswordComponent implements OnInit {
           }
         }
       );
+      this.spinner.hide();
+
     } else {
       this.IsvalidForm = false;
     }

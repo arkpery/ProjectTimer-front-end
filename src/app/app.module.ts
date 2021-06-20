@@ -13,7 +13,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UiButtonComponent } from './ui-button/ui-button.component';
-import { ProjectListComponent } from './controllers/project-list/project-list.component';
 import { TimelineComponent } from './controllers/timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
 import { TimerComponent } from './controllers/timer/timer.component';
@@ -47,7 +46,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     UiNavbarComponent,
     ProjectComponent,
     UiButtonComponent,
-    ProjectListComponent,
     TimelineComponent,
     RibbonComponent,
     TimerComponent,

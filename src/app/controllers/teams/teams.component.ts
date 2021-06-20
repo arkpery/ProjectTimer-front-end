@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Team } from '../../models/team/team.model';
 import { TeamService } from '../../services/teams/team.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-teams',
@@ -14,11 +16,15 @@ export class TeamsComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
-    private router: Router
+    private router: Router,
+    private spinner : NgxSpinnerService,
+
   ) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.getAllTeams();
+    this.spinner.hide();
   }
 
   getAllTeams() {

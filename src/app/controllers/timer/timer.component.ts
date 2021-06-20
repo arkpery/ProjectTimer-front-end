@@ -4,10 +4,10 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project/Project';
 import { User } from '../../models/user/User';
 import { Timer } from '../../models/timer/Timer';
-import { ProjectService } from '../../services/projects/project.service';
 import { UserService } from '../../services/users/user.service';
 import { TimerrsService } from '../../services/timers/timerrs.service';
 import Swal from 'sweetalert2';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -26,22 +26,25 @@ export class TimerComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal, 
-    private projectService: ProjectService,
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private timerrsService: TimerrsService
+    private timerrsService: TimerrsService,
+    private spinner : NgxSpinnerService
     ) {}
 
   async ngOnInit() {
- //   await this.getProject();
+    this.spinner.show();
     await this.CurrentUser();
     this.initTimerForm();  
     this.timerForm.get('user')?.disable();
     this.timerForm.get('project')?.disable(); 
+    this.spinner.hide();
   }
 
   async CurrentUser(){
+    this.spinner.show();
     this.currentUser = await this.userService.CurrentUser();
+    this.spinner.hide();
   }
 
   /*
@@ -73,6 +76,7 @@ export class TimerComponent implements OnInit {
       project: this.project._id
     };
 
+    this.spinner.show();
     this.timerrsService.save(newTimer).subscribe(
         async (response) => {
           Swal.fire('Whooa!', 'Task has a created', 'success');
@@ -81,7 +85,8 @@ export class TimerComponent implements OnInit {
         error => {
           Swal.fire('Oops', error, 'error');
           console.log(error);
-        });    
+        }); 
+        this.spinner.hide();
   }
 
   open(content: any) {

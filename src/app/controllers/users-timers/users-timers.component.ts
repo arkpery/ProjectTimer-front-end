@@ -4,6 +4,7 @@ import { UserService } from '../../services/users/user.service';
 import moment from "moment-timezone";
 import { Timer } from '../../models/timer/Timer';
 import { HeaderColumn, Row } from '../../viewModels';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-users-timers',
@@ -17,7 +18,11 @@ export class UsersTimersComponent {
   headers: Array<HeaderColumn> = [];
   rows: Array<Row> = [];
 
-  constructor(private userService: UserService, private timerService: TimerrsService) {
+  constructor(
+    private userService: UserService,
+     private timerService: TimerrsService,
+     private spinner : NgxSpinnerService,
+     ) {
     this.pieChart = this.pieChart.bind(this);
     this.barChart = this.barChart.bind(this);
   }
@@ -25,12 +30,15 @@ export class UsersTimersComponent {
   async UpdateRows(param: any) {
     this.currentDate = param;
     if (this.timers && this.currentDate) {
+      this.spinner.show();
       this.rows = this.userService.timeline(this.timers, this.currentDate.time.getTime());
+      this.spinner.hide();
     }
   }
 
 
   async ngOnInit() {
+    this.spinner.show();
     try {
       const user = await this.userService.CurrentUser();
       this.timers = await this.timerService.findByUser(user).toPromise();
@@ -81,6 +89,7 @@ export class UsersTimersComponent {
     catch (e) {
 
     }
+    this.spinner.hide();
   }
 
   barChart(timers: Array<Timer>) {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { UserService } from 'src/app/services/users/user.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class ResponseResetPasswordComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private spinner : NgxSpinnerService
   ) {
     this.CurrentState = 'Wait';
     this.route.params.subscribe(params => {
@@ -36,6 +38,7 @@ export class ResponseResetPasswordComponent implements OnInit {
   }
 
   VerifyToken() {
+    this.spinner.show();
     this.userService.ValidPasswordToken({ resettoken: this.resetToken }).subscribe(
       data => {
         this.CurrentState = 'Verified';
@@ -44,6 +47,7 @@ export class ResponseResetPasswordComponent implements OnInit {
         this.CurrentState = 'NotVerified';
       }
     );
+    this.spinner.hide();
   }
 
   Init() {
@@ -74,9 +78,9 @@ export class ResponseResetPasswordComponent implements OnInit {
 
 
   ResetPassword(form: { get: (arg0: string) => any; valid: any; }) {
-    console.log(form.get('confirmPassword'));
     if (form.valid) {
       this.IsResetFormValid = true;
+      this.spinner.show();
       this.userService.newPassword(this.ResponseResetForm.value).subscribe(
         data => {
           this.ResponseResetForm.reset();
@@ -92,6 +96,7 @@ export class ResponseResetPasswordComponent implements OnInit {
           }
         }
       );
+      this.spinner.hide();
     } else { this.IsResetFormValid = false; }
   }
 

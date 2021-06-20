@@ -5,12 +5,12 @@ import { faTrash, faCogs } from '@fortawesome/free-solid-svg-icons';
 import { Group } from '../../models/team/Group';
 import { UserService } from '../../services/users/user.service';
 import { User } from '../../models/user/User';
-import { TimelineComponent } from '../timeline/timeline.component';
 import { TeamService } from 'src/app/services/teams/team.service';
 import { Team } from 'src/app/models/team/team.model';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-projects',
@@ -30,11 +30,16 @@ export class ProjectsComponent implements OnInit {
   createProjectForm!: FormGroup;
   selectForm!: FormGroup;
 
-  constructor(private projectService: ProjectService, private userService: UserService, private groupService: TeamService,
+  constructor(    
+    private spinner : NgxSpinnerService,
+    private projectService: ProjectService,
+     private userService: UserService, 
+     private groupService: TeamService,
     private fb: FormBuilder,
     private modalService: NgbModal) { }
 
   async ngOnInit(): Promise<void> {
+    this.spinner.show();
     try {
       await this.CurrentUser();
       await this.onFetchProjects();
@@ -49,6 +54,7 @@ export class ProjectsComponent implements OnInit {
     catch (e) {
       this.requestDone = true;
     }
+    this.spinner.hide();
   }
 
   status(project: Project) {
@@ -56,6 +62,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   FetchTeam() {
+    this.spinner.show();
     this.groupService.getAllGroup().subscribe((teams) => {
       this.groupList = teams.map((team) => {
         return ({
@@ -64,23 +71,28 @@ export class ProjectsComponent implements OnInit {
         });
       });
     });
+    this.spinner.hide();
   }
 
   async CurrentUser() {
+    this.spinner.show();
     this.currentUser = await this.userService.CurrentUser();
-    console.log("enter");
-    console.log(this.currentUser);
+    this.spinner.hide();
   }
 
   async onFetchProjects() {
+    this.spinner.show();
     this.projects = await this.projectService.findAll().toPromise();
     this.defaultGroupId = this.projects.map(project => this.defaultGroup(project.groups));
     this.requestDone = true;
+    this.spinner.hide();
   }
 
   async onDeleteProject(project: Project) {
+    this.spinner.show();
     await this.projectService.deleteOne(project).toPromise();
     await this.onFetchProjects();
+    this.spinner.hide();
   }
 
   defaultGroup(groups: Array<Group>) {
@@ -125,8 +137,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     this.modalService.dismissAll();
-
-    console.log(this.selectedGroupId);
+    this.spinner.show();
     const formValue = this.createProjectForm.value;
     const newProject = {
       name: formValue['name'],
@@ -143,6 +154,7 @@ export class ProjectsComponent implements OnInit {
         Swal.fire('Can\'t create', 'Project not created.', 'error')
         console.log(error);
       });
+      this.spinner.hide();
   }
 
 }

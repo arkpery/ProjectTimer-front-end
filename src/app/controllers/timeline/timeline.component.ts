@@ -1,10 +1,7 @@
-import { ThrowStmt } from '@angular/compiler';
-import { Query, ViewChildren, EventEmitter, Output } from '@angular/core';
-import { Component, ElementRef, Input, OnChanges, OnInit, QueryList, SimpleChanges } from '@angular/core';
+import {  ViewChildren, EventEmitter, Output } from '@angular/core';
+import { Component, ElementRef, Input, QueryList } from '@angular/core';
 import { Column, HeaderColumn, Ribbon, Row } from "../../viewModels/index";
-import { RibbonComponent } from '../../ribbon//ribbon.component';
 import moment from "moment";
-import { faDiceD20 } from '@fortawesome/free-solid-svg-icons';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -32,7 +29,6 @@ export class TimelineComponent {
   public __rows?: Array<Row>;
   public viewModel?: { [key: string]: any };
   public ribbons: Array<{ [key: string]: any }> = [];
-  private columns: Array<Column> = [];
 
   private sortedIndex: { [key: string]: number } = {};
   public filters: Array<Date> = [];
@@ -45,7 +41,10 @@ export class TimelineComponent {
     "perHour": this.perHour.bind(this)
   }
 
-  constructor(public el: ElementRef, private ref: ChangeDetectorRef) {
+  constructor(
+    public el: ElementRef, 
+    private ref: ChangeDetectorRef,
+    ) {
 
   }
 

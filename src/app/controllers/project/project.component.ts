@@ -1,18 +1,17 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project/Project';
 import { Timer } from '../../models/timer/Timer';
 import { ProjectService } from '../../services/projects/project.service';
 import { TimerrsService } from '../../services/timers/timerrs.service';
-import { Column, HeaderColumn, Ribbon, Row } from '../../viewModels';
+import {  HeaderColumn, Row } from '../../viewModels';
 import moment from "moment-timezone";
 import { Group } from '../../models/team/Group';
 import { TeamService } from '../../services/teams/team.service';
 import { Team } from '../../models/team/team.model';
-import { group } from '@angular/animations';
-import { User } from 'src/app/models/user/User';
 import { BarChartComponent } from 'src/app/bar-chart/bar-chart.component';
 import { PieChartComponent } from 'src/app/pie-chart/pie-chart.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -37,13 +36,20 @@ export class ProjectComponent {
   @ViewChild(PieChartComponent) elPieChart!: PieChartComponent;
 
 
-  constructor(private projectService: ProjectService, private timerService: TimerrsService, private teamService: TeamService, private route: ActivatedRoute) {
+  constructor(
+    private projectService: ProjectService,
+     private timerService: TimerrsService, 
+     private teamService: TeamService, 
+     private route: ActivatedRoute,
+     private spinner : NgxSpinnerService) 
+     {
     this.pieChart = this.pieChart.bind(this);
     this.barChart = this.barChart.bind(this);
     this.Reload = this.Reload.bind(this);
   }
 
   getAllTeams() {
+    this.spinner.show();
     this.teamService.getAllGroupByProject(this.project!)
       .subscribe(
         (response: any) => {
@@ -52,25 +58,32 @@ export class ProjectComponent {
         (error: any) => {
           console.log(error);
         });
+        this.spinner.hide();
   }
 
   async ngOnInit() {
+    this.spinner.show();
     await this.FetchProject();
     if (this.timers && this.currentDate) {
       this.rows = await this.projectService.timeline(this.timers, this.currentDate.time.getTime());
     }
     this.getAllTeams();
+    this.spinner.hide();
   }
 
   async close(project: Project) {
+    this.spinner.show();
     await this.projectService.close(project).toPromise();
     await this.FetchProject();
+    this.spinner.hide();
   }
 
   async UpdateRows(param: any) {
     this.currentDate = param;
     if (this.timers) {
+      this.spinner.show();
       this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
+      this.spinner.hide();
     }
   }
 
@@ -78,8 +91,10 @@ export class ProjectComponent {
     this.timers = [];
     if (this.project) {
       try {
+        this.spinner.show();
         this.timers = await this.timerService.findByProject(this.project).toPromise();
         this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
+        this.spinner.hide();
         if (this.elBarChart){
           this.elBarChart.load();
         }
@@ -101,14 +116,17 @@ export class ProjectComponent {
       groups: project.groups.map((g: Group) => g._id),
       admin: project.admin._id
     };
-
+    this.spinner.show();
     await this.projectService.update(toUpdate).toPromise();
     await this.FetchProject();
+    this.spinner.hide();
   }
 
   async FetchProject() {
+    this.spinner.show();
     this.project = await this.projectService.findOne(this.route.snapshot.paramMap.get("id") as string).toPromise();
     this.timers = await this.timerService.findByProject(this.project).toPromise();
+    this.spinner.hide();
     this.headers = [
       {
         key: "ID"
