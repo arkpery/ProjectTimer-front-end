@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class ProfilViewComponent implements OnInit {
 
-  public myProfil = new User;
+  myProfil?: User;
   selectedFile = null;
   submitted = false;
   currentUser: any;  

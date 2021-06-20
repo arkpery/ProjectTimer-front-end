@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="row justify-content-md-center mt-5">
+<div class="container" >
+    <div class="row justify-content-md-center mt-5" *ngIf="myProfil"> 
         <div class="card w-75 mb-5">
             <form [formGroup]="updateForm" (ngSubmit)="onSubmitForm()">
                 <div class="card-header">
@@ -51,7 +51,7 @@
                                     [value]="myProfil.birthdate | date:'yyyy-MM-dd'" id="birthdate" name="birthdate"
                                     formGroupName="birthdate">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="myProfil">
                                 <label class="control-label">Groups</label>
                                 <input type="text" class="form-control form-control-sm" [value]="myProfil.groups"
                                     id="groups" name="groups" formGroupName="groups">
