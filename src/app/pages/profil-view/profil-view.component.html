@@ -51,7 +51,7 @@
                                     [value]="myProfil.birthdate | date:'yyyy-MM-dd'" id="birthdate" name="birthdate"
                                     formGroupName="birthdate">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="myProfil">
                                 <label class="control-label">Groups</label>
                                 <input type="text" class="form-control form-control-sm" [value]="myProfil.groups"
                                     id="groups" name="groups" formGroupName="groups">

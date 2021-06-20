@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
   styleUrls: ["./profil-view.component.scss"],
 })
 export class ProfilViewComponent implements OnInit {
+
   myProfil?: User;
   selectedFile = null;
   submitted = false;
