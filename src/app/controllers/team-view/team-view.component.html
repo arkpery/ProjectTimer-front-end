@@ -21,7 +21,7 @@
                 <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'trash'" [content]="'Delete'">
                 </app-ui-button>
 
-                <app-ui-button class="col-md-7" [type]="'primary'" (click)="updateTeam(team)" [icon]="'save'" [content]="'Update'">
+                <app-ui-button class="col-md-7" [type]="'primary'" (click)="updateTeam(team)" [icon]="'edit'" [content]="'Update'">
                 </app-ui-button>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="col">
             <h2>Members</h2>
             <div class="col-md-4" id="div-btn" *ngIf="team">
-                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'fa-user'" [content]="'Add members'">
+                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'add'" [content]="'Add members'">
                 </app-ui-button>
             </div>
             <div class="input-group">
@@ -67,7 +67,7 @@
         <div class="col"  >
             <h2>Projects</h2>
             <div class="col-md-4" id="div-btn" >
-                <app-ui-button  class="col-md-6" (click)="updateGroupByAddingExistingProject(createProjectModalOnTeams,team)" [type]="'primary'" [icon]="'fa-user'" [content]="'Add project'">
+                <app-ui-button  class="col-md-6" (click)="updateGroupByAddingExistingProject(createProjectModalOnTeams,team)" [type]="'primary'" [icon]="'project'" [content]="'Add project'">
                 </app-ui-button>
             </div>
             <table class="table table-striped">
@@ -204,6 +204,8 @@
 </ng-template>
 
 
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 
 
 

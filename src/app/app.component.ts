@@ -15,7 +15,7 @@ export class AppComponent {
     },
     {
       id: 2,
-      link: "/groups",
+      link: "/teams",
       title: "Groupes"
     },
     {

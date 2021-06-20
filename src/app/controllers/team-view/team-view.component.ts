@@ -14,6 +14,7 @@ import { FormGroup } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -46,8 +47,10 @@ export class TeamViewComponent implements OnInit {
   currentMembers: Array<User> = [];
   
   faCogs = faCogs;
-  
   faTrash = faTrash;
+
+ 
+  
   memebersAlreadySelected: Array<any> = [];
   selectedMembers: Array<any> = [];;
   constructor(
@@ -58,9 +61,11 @@ export class TeamViewComponent implements OnInit {
     private userService: UserService,
     private fb: FormBuilder,
     private modalService: NgbModal,
+    private spinner : NgxSpinnerService,
   ) { }
 
   async ngOnInit(): Promise<void> {
+    this.spinner.show();
     try {
       await this.CurrentUser();
       await this.onFetchGroups();
@@ -89,12 +94,14 @@ export class TeamViewComponent implements OnInit {
 
     this.findById(this.route.snapshot.params['id']);
     this.findProjectsByGroup(this.route.snapshot.params['id']);
+    this.spinner.hide();
 
   }
 
 
   // Fetching users data 
   getUsersList() {
+
      this.userService.findAll()
       .subscribe(
         (response: any) => {
@@ -109,6 +116,7 @@ export class TeamViewComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+
 
   }
   getProjectsList() {
@@ -135,10 +143,13 @@ export class TeamViewComponent implements OnInit {
   
 
   async onFetchGroups() {
+    this.spinner.show();
     this.teams = await this.teamService.getAllGroup().toPromise();
     this.projects = await this.projectService.findAll().toPromise();
     this.defaultGroupId = this.projects.map(project => this.defaultGroup(project.groups));
     this.requestDone = true;
+    this.spinner.hide();
+
   }
 
   async CurrentUser() {
@@ -212,17 +223,19 @@ export class TeamViewComponent implements OnInit {
         cancelButtonText: 'No, keep it'
       }).then((result) => {
         if (result.isConfirmed) {
+          this.spinner.show();
           this.teamService.deleteGroup(id)
             .subscribe(
               (response: any) => {
-
                 this.router.navigate(['/teams']);
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
-          
+
               },
               (error: any) => {
+
                 console.log(error);
               });
+              this.spinner.hide();
 
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
@@ -233,6 +246,7 @@ export class TeamViewComponent implements OnInit {
         }
       })
     }
+
 
   }
 
@@ -252,7 +266,7 @@ export class TeamViewComponent implements OnInit {
 
 
    onDeleteProjectOnGroup(team:Team,project: Project) {
-     console.log(project._id)
+    this.spinner.show();
      this.teamService.deleteProjectOnGroup(team._id,project._id).subscribe(
       (response: any) => {
         Swal.fire('successfully deleted!', 'The project  has been deleted for this group.', 'success')
@@ -266,7 +280,8 @@ export class TeamViewComponent implements OnInit {
 
         console.log(error);
       });
-    
+      this.spinner.hide();
+
   }
 
   
@@ -277,6 +292,8 @@ export class TeamViewComponent implements OnInit {
         this.currentMembers.splice(index,1);
       };
     });
+    this.spinner.show();
+
     this.teamService.update(team._id, team).subscribe(
       (response: any) => {
         Swal.fire('successfully deleted!', 'The memeber  has been deleted.', 'success')
@@ -288,6 +305,8 @@ export class TeamViewComponent implements OnInit {
       (error: any) => {
         console.log(error);
       });
+      this.spinner.hide();
+
   }
 
 
@@ -309,6 +328,7 @@ export class TeamViewComponent implements OnInit {
       if(!this.selectedMembersId?.length){
         Swal.fire('Can\'t add', 'Please select a member.', 'error')
       } else {
+        this.spinner.show();
         this.teamService.update(team._id, newMembers).subscribe(
           (response: any) => {
            
@@ -325,6 +345,8 @@ export class TeamViewComponent implements OnInit {
             Swal.fire('Can\'t add', 'Member not added.', 'error')
             console.log(error);
           });
+          this.spinner.hide();
+
       }
      
       
@@ -342,6 +364,8 @@ export class TeamViewComponent implements OnInit {
       if(!this.selectedProjectsId?.length){
         Swal.fire('Can\'t add', 'Please select a project.', 'error')
       } else {
+        this.spinner.show();
+
         this.teamService.updateGroupByAddingProject(team._id,this.selectedProjectsId).subscribe(
           (response: any) => {
   
@@ -357,6 +381,8 @@ export class TeamViewComponent implements OnInit {
             Swal.fire('Can\'t add', 'Project not created.', 'error')
             console.log(error);
           });
+          this.spinner.hide();
+
       }
        
       }, (reason) => {
