@@ -10,7 +10,8 @@ export class User {
         public lastname?: string,        
         public birthdate?: Date,
         public avatar?: File,
-        public groups?: Array<Group> | Array<string> | any
+        public groups?: Array<Group> | Array<string> | any,
+        public created_at?: Date
     ) {
 
     }

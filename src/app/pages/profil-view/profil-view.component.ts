@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { User } from 'src/app/models/user/User';
+import { User } from 'src/app/models/user/user.model';
 import { UserService } from 'src/app/services/users/user.service';
 import Swal from 'sweetalert2';
 
@@ -12,10 +12,12 @@ import Swal from 'sweetalert2';
 })
 export class ProfilViewComponent implements OnInit {
 
+  public myProfil = new User;
   selectedFile = null;
   submitted = false;
-  currentUser: any;
+  currentUser: any;  
   updateForm = new FormGroup({});
+  requestDone: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -23,18 +25,32 @@ export class ProfilViewComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
-    this.findById();
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.CurrentUser();
+    }
+    catch (e) {
+      this.requestDone = true;
+    }
+
+    this.findById(this.currentUser._id);
     this.initForm();
   }
 
-  findById() {
-    this.userService.CurrentUser().then(
-      res => {
-        this.currentUser = res;
-        console.log(res);
-      }
-    );
+  async CurrentUser() {
+    this.currentUser = await this.userService.CurrentUser();
+  }
+
+  findById(id: string): void {
+    this.userService.getUser(id)
+      .subscribe(
+        (response: any) => {
+          this.myProfil = response;
+          console.log(response);
+        },
+        (error: any) => {
+          console.log(error);
+        });
   }
 
   onImgError(event :any){
@@ -61,13 +77,12 @@ export class ProfilViewComponent implements OnInit {
 
   initForm() {
     this.updateForm = this.formBuilder.group({
-      email: this.currentUser.email,
-      password: this.currentUser.password,
-      firstname: this.currentUser.firstname,
-      lastname: this.currentUser.lastname,
-      birthdate: this.currentUser.birthdate,
-      avatar: this.currentUser.avatar,
-      groups: this.currentUser.groups
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      birthdate: '',
+      avatar: ''
     });
   }
   
@@ -76,20 +91,21 @@ export class ProfilViewComponent implements OnInit {
     this.submitted = true;
     const formValue = this.updateForm.value;
     const updateUser = {
-      _id: this.currentUser._id,
       email: formValue['email'],
       password: formValue['password'],
       firstname: formValue['firstname'],
       lastname: formValue['lastname'],
-      birthdate: formValue['birthdate']
+      birthdate: formValue['birthdate'],
+      avatar: formValue['avatar']
     } as User;
-    this.userService.update(updateUser).subscribe(
-      async (response: any) => {
-        console.log(response);
-      },
-      (error: any) => {
-        console.log(error);
-      });
+    //this.userService.update(this.currentUser._id, updateUser).subscribe(
+    //  async (response: any) => {
+    //    console.log(response);
+    //  },
+    //  (error: any) => {
+    //    console.log(error);
+    //  });
   }
 
+  get f() { return this.updateForm.controls; }
 }
