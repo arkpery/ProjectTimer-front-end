@@ -30,7 +30,7 @@
                                 <fa-icon [icon]="faCogs"></fa-icon>
                             </a>
                             
-                            <a *ngIf="team._id"   class="btn-danger btn-sm"  (click)="onDelete(team._id,team.members)" >
+                            <a *ngIf="team._id && currentUser && currentUser._id && currentUser._id === team.admin._id" class="btn-danger btn-sm"  (click)="onDelete(team._id,team.members)" >
                                 <fa-icon [icon]="faTrash"></fa-icon>
                                 </a>
                         </td>

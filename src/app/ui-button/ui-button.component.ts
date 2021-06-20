@@ -11,6 +11,8 @@ export class UiButtonComponent implements OnInit {
   @Input() content!: string;
   @Input() type!: string;
   @Input() icon!: string;
+  @Input() disabled!: boolean;
+  
   icons?: Array<{ key: string, value: IconProp }>;
 
 

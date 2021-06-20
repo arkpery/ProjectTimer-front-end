@@ -25,14 +25,14 @@
                 </div>
                 <div class="col-md-4">
                     <div class="row">
-                        <app-ui-button *ngIf="!project.close" class="col-md-6" (click)="close(project)"
+                        <app-ui-button *ngIf="!project.close" class="col-md-6" [disabled]="project.admin._id !== user._id" (click)="close(project)"
                             [type]="'danger'" [icon]="'trash'" [content]="'Clore'">
                         </app-ui-button>
 
-                        <app-badge *ngIf="project.close" [type]="'danger'" class="col-md-6" [content]="'Projet clos'">
+                        <app-badge *ngIf="project.close" [type]="'danger'" class="col-md-6" [disabled]="project.admin._id !== user._id" [content]="'Projet clos'">
                         </app-badge>
 
-                        <app-ui-button class="col-md-6" (click)="update(project)" [type]="'primary'" [icon]="'save'"
+                        <app-ui-button class="col-md-6" (click)="update(project)" [disabled]="project.admin._id !== user._id" [type]="'primary'" [icon]="'save'"
                             [content]="'Mettre à jour'">
                         </app-ui-button>
                     </div>

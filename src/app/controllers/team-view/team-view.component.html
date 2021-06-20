@@ -24,10 +24,10 @@
         </div>
         <div class="col-md-4">
             <div class="row-cols-1" *ngIf="team._id">
-                <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [type]="'danger'" [icon]="'trash'" [content]="'Delete'">
+                <app-ui-button *ngIf="team._id" class="col-md-7" (click)="onDelete(team._id,team.members)" [disabled]="!isAdmin(team)" [type]="'danger'" [icon]="'trash'" [content]="'Delete'">
                 </app-ui-button>
 
-                <app-ui-button  class="col-md-7" [type]="'primary'" data-toggle="tooltip" data-placement="bottom" title="To update : please insert the new name on the field team name"  (click)="updateTeam(team)" [icon]="'edit'" [content]="'Update'">
+                <app-ui-button  class="col-md-7" [type]="'primary'" data-toggle="tooltip" data-placement="bottom" title="To update : please insert the new name on the field team name" [disabled]="!isAdmin(team)"  (click)="updateTeam(team)" [icon]="'edit'" [content]="'Update'">
                 </app-ui-button>
            
             </div>
@@ -37,7 +37,7 @@
         <div class="col">
             <h2>Members</h2>
             <div class="col-md-3" id="div-btn" *ngIf="team">
-                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [type]="'primary'" [icon]="'add'" [content]="'Add members'">
+                <app-ui-button class="col-md-6" (click)="updateByAddingUser(content, team)" [disabled]="!isAdmin(team)" [type]="'primary'" [icon]="'add'" [content]="'Add members'">
                 </app-ui-button>
             </div>
             <div class="input-group">
@@ -61,7 +61,7 @@
                         <td>{{ member.lastname }}</td>
                         <td>{{member.email}}</td>
                         <td>
-                            <a *ngIf="team._id"   class="btn-danger btn-sm"  (click)="deleteUserOnGroup(team,member._id)" >
+                            <a *ngIf="team._id && currentUser._id === team.admin._id"   class="btn-danger btn-sm"  (click)="deleteUserOnGroup(team,member._id)" >
                                 <fa-icon [icon]="faTrash"></fa-icon>
                                 </a>
                         </td>

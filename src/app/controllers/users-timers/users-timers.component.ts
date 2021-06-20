@@ -38,7 +38,7 @@ export class UsersTimersComponent {
 
 
   async ngOnInit() {
-    this.spinner.show();
+   // this.spinner.show();
     try {
       const user = await this.userService.CurrentUser();
       this.timers = await this.timerService.findByUser(user).toPromise();
@@ -89,7 +89,7 @@ export class UsersTimersComponent {
     catch (e) {
 
     }
-    this.spinner.hide();
+   // this.spinner.hide();
   }
 
   barChart(timers: Array<Timer>) {

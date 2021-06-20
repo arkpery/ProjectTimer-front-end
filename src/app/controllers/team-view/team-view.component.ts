@@ -28,7 +28,7 @@ export class TeamViewComponent implements OnInit {
   teams: Array<Team> = [];
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
-  currentUser?: User;
+  currentUser!: User;
   requestDone: boolean = false;
   selectedMembersId?: [''];
   defaultUserId: Array<string> = [];
@@ -61,6 +61,10 @@ export class TeamViewComponent implements OnInit {
     private modalService: NgbModal,
     private spinner : NgxSpinnerService,
   ) { }
+
+  isAdmin(team: Team){
+    return (this.currentUser._id === team.admin._id);
+  }
 
   async ngOnInit(): Promise<void> {
     this.spinner.show();
@@ -208,6 +212,9 @@ export class TeamViewComponent implements OnInit {
 
   // delete a group
   onDelete(id: string, teamM: Team): void {
+    if (!this.isAdmin(teamM)){
+      return;
+    }
     const lengthMembers = Object.keys(teamM).length;
     if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
@@ -250,6 +257,9 @@ export class TeamViewComponent implements OnInit {
 
 
   updateTeam(team:Team) {
+    if (!this.isAdmin(team)){
+      return;
+    }
     const newName = {
       name: team.name 
     } as Team;

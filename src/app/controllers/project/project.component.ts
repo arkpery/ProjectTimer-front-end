@@ -12,6 +12,7 @@ import { Team } from '../../models/team/team.model';
 import { BarChartComponent } from 'src/app/bar-chart/bar-chart.component';
 import { PieChartComponent } from 'src/app/pie-chart/pie-chart.component';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { User } from 'src/app/models/user/user.model';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ProjectComponent {
   project?: Project;
   timers: Array<Timer> = [];
+  user!: User;
 
   headers: Array<HeaderColumn> = [];
   rows: Array<Row> = [];
@@ -48,6 +50,18 @@ export class ProjectComponent {
     this.Reload = this.Reload.bind(this);
   }
 
+
+  CurrentUser(){
+    const json = window.localStorage.getItem("user");
+    if(!json){
+      return;
+    }
+    const user = JSON.parse(json);
+
+    console.log(user);
+    this.user = user;
+  }
+
   getAllTeams() {
     this.spinner.show();
     this.teamService.getAllGroupByProject(this.project!)
@@ -62,8 +76,10 @@ export class ProjectComponent {
   }
 
   async ngOnInit() {
+    this.CurrentUser();
     this.spinner.show();
     await this.FetchProject();
+    this.refreshDate();
     if (this.timers && this.currentDate) {
       this.rows = await this.projectService.timeline(this.timers, this.currentDate.time.getTime());
     }
@@ -71,10 +87,18 @@ export class ProjectComponent {
     this.spinner.hide();
   }
 
+  isAdmin(){
+    return(this.project?.admin._id === this.user._id);
+  }
+
   async close(project: Project) {
+    if (!this.isAdmin()){
+      return;
+    }
     this.spinner.show();
     await this.projectService.close(project).toPromise();
     await this.FetchProject();
+    this.refreshDate();
     this.spinner.hide();
   }
 
@@ -94,6 +118,7 @@ export class ProjectComponent {
         this.spinner.show();
         this.timers = await this.timerService.findByProject(this.project).toPromise();
         this.rows = await this.projectService.timeline(this.timers, this.currentDate?.time.getTime()!);
+        this.refreshDate();
         this.spinner.hide();
         if (this.elBarChart){
           this.elBarChart.load();
@@ -109,6 +134,9 @@ export class ProjectComponent {
   }
 
   async update(project: Project) {
+    if (!this.isAdmin()){
+      return;
+    }
     const toUpdate: Project = {
       _id: project._id,
       name: project.name,
@@ -135,8 +163,11 @@ export class ProjectComponent {
         key: "Description"
       }
     ];
-
     moment.locale("fr");
+    this.refreshDate();
+  }
+
+  refreshDate(){
     this.selectDate = this.timers.map((t, index) => { return { id: index, time: moment.parseZone(t.startTime).toDate() } }).sort((a, b) => {
       if (a.time.getTime() > b.time.getTime()) {
         return (1);

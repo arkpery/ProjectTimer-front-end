@@ -58,7 +58,9 @@ export class BarChartService {
       if (!count[timer.taskType]) {
         count[timer.taskType] = 1;
       }
-      count[timer.taskType]++;
+      else {
+        count[timer.taskType]++;
+      }
       duration[timer.taskType] += timer.duration;
       current = str;
     }

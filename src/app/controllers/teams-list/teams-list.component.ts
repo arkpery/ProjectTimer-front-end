@@ -31,7 +31,7 @@ export class TeamsListComponent implements OnInit {
   tableForm!: FormGroup;
   selectedMembersId?: [''];
   members?: []
-  currentUser?: User;
+  currentUser!: User;
   requestDone: boolean = false;
   users: Array<User> = [];
   // list members
