@@ -249,17 +249,23 @@ export class TeamViewComponent implements OnInit {
   }
 
 
-  updateTeam(team: Team) {
-    this.teamService.update(team._id, team).subscribe((response: any) => {
-      Swal.fire('successfully updated!', 'Team updated.', 'success');
-      if (team && team._id) {
-        this.findById(team._id);
-        this.findProjectsByGroup(team._id);
-      }
+  updateTeam(team:Team) {
+    const newName = {
+      name: team.name 
+    } as Team;
+    this.spinner.show();
+    this.teamService.update(team._id, newName).subscribe((response: any) => {
+        if (team && team._id){
+          this.findById(team._id);
+          this.findProjectsByGroup(team._id);
+        }
+        Swal.fire('successfully updated!', 'Team updated.', 'success');
     },
       (error: any) => {
         console.log(error);
       });
+      this.spinner.hide();
+
   }
 
 
