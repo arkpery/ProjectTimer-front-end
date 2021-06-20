@@ -11,6 +11,7 @@ import { TeamsComponent } from './controllers/teams/teams.component';
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 import { TeamViewComponent } from './controllers/team-view/team-view.component';
 import { UsersTimersComponent } from './controllers/users-timers/users-timers.component';
+import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'response-reset-password/:token', component: ResponseResetPasswordComponent },
   { path: 'teams', canActivate: [AuthGuardService], component: TeamsComponent },
   { path: 'teams/:id', canActivate: [AuthGuardService], component: TeamViewComponent },
+  { path: 'my-profil', canActivate: [AuthGuardService], component: ProfilViewComponent },
   { path: '', component: LoginComponent }
 ];
 

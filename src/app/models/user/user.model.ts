@@ -1,3 +1,5 @@
+import { Group } from "../team/Group";
+
 export class User {
     _id?: string;
     
@@ -8,7 +10,8 @@ export class User {
         public lastname?: string,        
         public birthdate?: Date,
         public avatar?: File,
-        public groups?: string[]
+        public groups?: Array<Group> | Array<string> | any,
+        public created_at?: Date
     ) {
 
     }
