@@ -8,21 +8,26 @@ import { Label } from 'ng2-charts';
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
-export class BarChartComponent implements OnInit {
-
+export class BarChartComponent {
   @Input() items: Array<any> = [];
   @Input() transform?: Function;
   @Input() title?: string;
 
+  show: boolean = false;
+
   constructor() { }
 
-  ngOnInit(): void {
+  public load() {
     if (this.transform) {
       const { labels, values } = this.transform(this.items);
 
       this.barChartLabels = labels;
       this.barChartData = values;
     }
+  }
+
+  ngOnInit(): void {
+    this.load();
   }
 
   public barChartOptions: ChartOptions = {

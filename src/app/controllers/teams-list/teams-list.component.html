@@ -23,16 +23,16 @@
                         <td>
                             <ng-select [items]="team.members!" bindLabel="firstname" bindValue="_id" [(ngModel)]="defaultMemberId[i]"></ng-select>
                         </td>
-                        <td>{{team.created_at | date:'yyyy-MM-dd'}}</td>
+                        <td>{{team.created_at | date:'dd-MM-yyyy'}}</td>
                         <td *ngIf="team.admin">{{team.admin.firstname}}</td>
                         <td>
-                            <button type="button" routerLink="/teams/{{team._id}}" class="btn btn-primary btn-circle btn-floating btn-sm me-1">
-                                <fa-icon [icon]="faCog"></fa-icon>
-                            </button>
-                            <button *ngIf="team._id" type="button" (click)="onDelete(team._id,team.members)" class="btn btn-danger btn-circle btn-floating btn-sm">
-                              <fa-icon [icon]="faTrash"></fa-icon>
-
-                            </button>
+                            <a class="mx-2 link link-info" routerLink="/teams/{{team._id}}" >
+                                <fa-icon [icon]="faCogs"></fa-icon>
+                            </a>
+                            
+                            <a *ngIf="team._id && currentUser && currentUser._id && currentUser._id === team.admin._id" class="btn-danger btn-sm"  (click)="onDelete(team._id,team.members)" >
+                                <fa-icon [icon]="faTrash"></fa-icon>
+                                </a>
                         </td>
                     </tr>
                 </tbody>
@@ -70,21 +70,32 @@
                 <div class="form-group row" [formGroup]="selectForm">
                     <label for="typeahead-template" class="col-sm-4 col-form-label">Select a members:</label>
                     <div class="col-sm-8">
-                        <ng-select [items]="userList" bindLabel="search_label" bindValue="_id" labelForId="state" [multiple]="true" placeholder="Select members" clearAllText="Clear" [searchable]="true" [(ngModel)]="selectedMembersId" [searchFn]="customSearchFn" formControlName="members">
+                        <ng-select [items]="userList" 
+                        bindLabel="search_label" bindValue="_id" 
+                        labelForId="state" 
+                        [multiple]="true" 
+                        placeholder="Select members" 
+                        learAllText="Clear" 
+                        [searchable]="true" 
+                        [(ngModel)]="selectedMembersId" 
+                        [searchFn]="customSearchFn" 
+                        formControlName="members">
                         </ng-select>
                         <br>
-                        <button (click)="clearListSelected()" class="btn btn-sm btn-secondary">Clear</button>
+                        <button type="button" (click)="clearListSelectedMembers()" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+          data-dismiss="modal">Clear selection</button>
                     </div>
                 </div>
 
                 <br><br>
-
                 <div class="modal-footer">
-                    <button type="button" (click)="modal.dismiss()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="favorite styled">Create</button>
+                    <button type="button" class="btn btn-outline-primary" (click)="modal.dismiss()" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary">Create</button>
                 </div>
             </form>
 
         </div>
     </ng-template>
 </ng-container>
+
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

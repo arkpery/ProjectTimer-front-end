@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faSave, faTrash, faAppleAlt, faHome, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrash, faAppleAlt, faHome, faProjectDiagram, faUserPlus, faEdit, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ui-button',
@@ -11,6 +11,8 @@ export class UiButtonComponent implements OnInit {
   @Input() content!: string;
   @Input() type!: string;
   @Input() icon!: string;
+  @Input() disabled!: boolean;
+  
   icons?: Array<{ key: string, value: IconProp }>;
 
 
@@ -29,6 +31,18 @@ export class UiButtonComponent implements OnInit {
       {
         key: "home",
         value: faHome
+      },
+      {
+        key: "add",
+        value: faUserPlus
+      },
+      {
+        key: "project",
+        value: faProjectDiagram
+      },
+      {
+        key: "edit",
+        value: faEdit
       },
       {
         key: "default",

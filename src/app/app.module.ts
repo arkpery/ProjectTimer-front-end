@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,7 +13,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UiButtonComponent } from './ui-button/ui-button.component';
-import { ProjectListComponent } from './controllers/project-list/project-list.component';
 import { TimelineComponent } from './controllers/timeline/timeline.component';
 import { RibbonComponent } from './ribbon/ribbon.component';
 import { TimerComponent } from './controllers/timer/timer.component';
@@ -39,6 +38,7 @@ import { TimerrsService } from './services/timers/timerrs.service';
 import { UsersTimersComponent } from './controllers/users-timers/users-timers.component';
 import { UserService } from './services/users/user.service';
 import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -47,7 +47,6 @@ import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
     UiNavbarComponent,
     ProjectComponent,
     UiButtonComponent,
-    ProjectListComponent,
     TimelineComponent,
     RibbonComponent,
     TimerComponent,
@@ -75,7 +74,8 @@ import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
     NgSelectModule, 
     FormsModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    NgxSpinnerModule
   ],
   
   providers: [
@@ -92,6 +92,7 @@ import { ProfilViewComponent } from './pages/profil-view/profil-view.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

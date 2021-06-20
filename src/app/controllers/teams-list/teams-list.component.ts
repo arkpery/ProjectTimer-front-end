@@ -1,17 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
-import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from 'src/app/models/team/team.model';
 import { User } from '../../models/user/User';
 import { TeamService } from 'src/app/services/teams/team.service';
 import { UserService } from 'src/app/services/users/user.service';
-import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
-import { Project } from 'src/app/models/project/Project';
 import { ProjectService } from 'src/app/services/projects/project.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -20,7 +17,7 @@ import { ProjectService } from 'src/app/services/projects/project.service';
   styleUrls: ['./teams-list.component.scss']
 })
 export class TeamsListComponent implements OnInit {
-  faCog = faCog;
+  faCogs = faCogs;
   faTrash = faTrash
   @Input() teams: Team[] = [];
   @Input() canAdd: boolean = true;
@@ -34,7 +31,7 @@ export class TeamsListComponent implements OnInit {
   tableForm!: FormGroup;
   selectedMembersId?: [''];
   members?: []
-  currentUser?: User;
+  currentUser!: User;
   requestDone: boolean = false;
   users: Array<User> = [];
   // list members
@@ -42,15 +39,15 @@ export class TeamsListComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
-    private router: Router,
     private fb: FormBuilder,
     private modalService: NgbModal,
     private userService: UserService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private spinner : NgxSpinnerService
   ) { }
 
   async ngOnInit(): Promise<void> {
-
+    this.spinner.show();
     try {
       await this.CurrentUser();
       await this.onFetchGroups();
@@ -70,14 +67,17 @@ export class TeamsListComponent implements OnInit {
     this.createGroupForm = this.fb.group({
       name: ['']
     });
+    this.spinner.hide();
 
   }
 
   async onFetchGroups() {
+    this.spinner.show();
     this.teamService.getAllGroup();
     this.users = await this.userService.findAll().toPromise();
     this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
     this.requestDone = true;
+    this.spinner.show();
   }
 
   defaultUser(members: Array<User>) {
@@ -93,16 +93,6 @@ export class TeamsListComponent implements OnInit {
   }
 
 
-  // update group
-  // async update(team: Team) {
-  //    const toUpdate: Team = {
-  //      _id: team._id,
-  //     members: team.members.map((g: User) => g._id)
-  //   };
-
-  //   await this.teamService.update(toUpdate).toPromise();
-  // }
-
 
 
   // get list all teams 
@@ -117,8 +107,10 @@ export class TeamsListComponent implements OnInit {
           (error: any) => {
             console.log(error);
           });
+          this.spinner.hide();
     }
     else if (this.view === "project") {
+      this.spinner.show();
       const project = await this.projectService.findOne(this.projectId).toPromise();
       this.teamService.getAllGroupByProject(project)
         .subscribe((response: any) => {
@@ -127,13 +119,14 @@ export class TeamsListComponent implements OnInit {
         }, (error: any) => {
           console.log(error);
         });
+        this.spinner.hide();
     }
   }
 
 
   // Fetching users data 
   getUsersList() {
-    console.log()
+    this.spinner.show();
     this.userService.findAll()
       .subscribe(
         (response: any) => {
@@ -148,10 +141,14 @@ export class TeamsListComponent implements OnInit {
         (error: any) => {
           console.log(error);
         });
+        this.spinner.hide();
   }
 
   // open modal to create group
   async createGroup(targetModal: any) {
+    if(this.currentUser){
+      deleteUser(this.userList,this.currentUser._id)
+    }
     this.modalService.open(targetModal, {
       centered: true,
       backdrop: 'static'
@@ -179,7 +176,7 @@ export class TeamsListComponent implements OnInit {
   }
 
   // clear list selected 
-  clearListSelected() {
+  clearListSelectedMembers() {
     this.selectForm.get('members')?.patchValue([]);
   }
 
@@ -187,10 +184,20 @@ export class TeamsListComponent implements OnInit {
   onSubmit() {
     this.modalService.dismissAll();
     const formValue = this.createGroupForm.value;
+   
+    let selectMembers= []
+    if(this.selectedMembersId){
+      selectMembers.push(this.currentUser?._id)
+      selectMembers.push((this.selectedMembersId?.toString()))
+    } else {
+      selectMembers.push(this.currentUser?._id)
+    }
+    
     const newGroup = {
       name: formValue['name'],
-      members: this.selectedMembersId
+      members: selectMembers
     } as Team;
+    this.spinner.show();
     this.teamService.createGroup(newGroup).subscribe(
       async (response: any) => {
         console.log(response);
@@ -204,6 +211,7 @@ export class TeamsListComponent implements OnInit {
           const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
           this.teams = response.data;
         }
+        this.clearListSelectedMembers()
         Swal.fire('successfully created!', 'Group  created.', 'success')
 
       },
@@ -211,6 +219,7 @@ export class TeamsListComponent implements OnInit {
         Swal.fire('Can\'t create', 'Group not created.', 'error')
         console.log(error);
       });
+      this.spinner.hide();
   }
 
   // delete a group
@@ -218,10 +227,8 @@ export class TeamsListComponent implements OnInit {
     if (!users){
       users = [];
     }
-    console.log(users);
     const lengthMembers = users.length;
 
-    console.log(`ID: ${id}`);
     if (lengthMembers) {
       Swal.fire('Can\'t delete', 'Group has a members!!!', 'error');
     } else {
@@ -234,29 +241,29 @@ export class TeamsListComponent implements OnInit {
         cancelButtonText: 'No, keep it'
       }).then((result) => {
         if (result.isConfirmed) {
+          this.spinner.show();
           this.teamService.deleteGroup(id)
             .subscribe(
               async (response: any) => {
-                console.log(response);
                 if (this.view === "project") {
                   const project = await this.projectService.findOne(this.projectId).toPromise();
                   const response : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response.data;
-                  console.log(this.teams);
                   this.defaultMemberId = this.teams.map(team => this.defaultUser(team.members));
-                  console.log(project);
                   project.groups = this.teams.map((team) => team._id);
-                  console.log(project);
                   await this.projectService.update(project).toPromise();
                   const response2 : any = await this.teamService.getAllGroupByProject(project).toPromise();
                   this.teams = response2.data;
-                  console.log(this.teams);
                 }
                 Swal.fire('successfully deleted!', 'The group  has been deleted.', 'success')
+                this.getAllTeams()
+                this.onFetchGroups()
               },
               (error: any) => {
                 console.log(error);
               });
+              this.spinner.hide();
+
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
             'Cancelled',
@@ -271,8 +278,13 @@ export class TeamsListComponent implements OnInit {
 
   }
 
-
-
-
 }
 
+function deleteUser(arr: any[], email: any) {
+  for(var i = 0; i < arr.length; i++) {
+     if(arr[i]._id === email) {
+       arr.splice(i, 1)
+       return;
+     }
+  }
+}

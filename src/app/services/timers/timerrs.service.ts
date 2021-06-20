@@ -17,8 +17,6 @@ export class TimerrsService {
 
 
   constructor(private http: HttpClient, private barChartService: BarChartService, private pieChartService: PieChartService) { 
-    console.log(this.barChartService);
-    console.log(this.pieChartService);
   }
 
 
@@ -87,15 +85,10 @@ export class TimerrsService {
   }
 
   public pieChart(timers: Array<Timer>) {
-
-    console.log(this);
-    console.log(this.barChartService);
-    console.log(this.pieChartService);
     return (this.pieChartService.apply(timers));
   }
 
   public barChart(timers: Array<Timer>) {
-    console.log(this);
     return (this.barChartService.apply(timers));
   }
 

@@ -42,6 +42,7 @@ export class TimelineService {
         columns.push(column);
       }
       const start = moment.parseZone(timer.startTime).toDate();
+      start.setHours(start.getHours() - 2);
       const end = moment(start.getTime() + timer.duration).toDate();
       row.content = timer.taskType;
       if (timer.user) {

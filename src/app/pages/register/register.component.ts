@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user/User';
 import { UserService } from 'src/app/services/users/user.service';
 import Swal from 'sweetalert2';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,12 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
+  constructor(
+    private formBuilder: FormBuilder,
+     private userService: UserService, 
+     private router: Router,
+     private spinner : NgxSpinnerService
+     ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -62,16 +68,19 @@ export class RegisterComponent implements OnInit {
       birthdate: formValue['birthdate'],
       avatar: formValue['avatar']
     } as User;
+    this.spinner.show();
     this.userService.addUser(newUser).subscribe(
       async (response: any) => {
+        Swal.fire('Register successfully', 'user registered', 'success');
         window.localStorage.setItem("token", response.accessToken);
         await this.CurrentUser();
         this.router.navigate(['/projects']);
       },
       (error: any) => {
-        Swal.fire('Oops...', 'erreur', 'error');
+        Swal.fire('Oops...', 'erreur registration', 'error');
         console.log(error);
       });
+      this.spinner.hide();
   }
 
   get f() { return this.registerForm.controls; }

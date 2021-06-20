@@ -40,6 +40,21 @@ export class TeamService {
       }
     });
   }
+
+
+  updateGroupByAddingProject(idGroup: any, idProject: any){
+    console.log(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/${idProject}`)
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/${idProject}`,null, {
+      headers: {
+        "Authorization": `${window.localStorage.getItem("token")}`
+      }
+    });
+
+  }
+
+  deleteProjectOnGroup(idGroup: any, idProject: any): Observable<any> {
+    return this.http.put(`${environment.baseUrl}${this.GROUP_URL}/${idGroup}/project/delete/${idProject}`,null, { headers: { 'Authorization': `${localStorage.getItem('token')}` } });
+  }
   
 
   public findOne(id: string): Observable<Team> {

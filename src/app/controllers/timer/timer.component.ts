@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project/Project';
 import { User } from '../../models/user/User';
 import { Timer } from '../../models/timer/Timer';
-import { ProjectService } from '../../services/projects/project.service';
 import { UserService } from '../../services/users/user.service';
 import { TimerrsService } from '../../services/timers/timerrs.service';
 import Swal from 'sweetalert2';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -15,43 +15,44 @@ import Swal from 'sweetalert2';
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.scss']
 })
-export class TimerComponent implements OnInit {
-  token: string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjBiZjZhN2ZlNjUwOTcwMDJjOWVhOGNjIiwiZW1haWwiOiJ2aW5jZW50QGNhcnRlZ3Jpc2VleHByZXNzLmNvbSJ9LCJpYXQiOjE2MjM3NDMxMjksImV4cCI6MTYyNjMzNTEyOX0.ydrMayvbIQO3oQHGBlBXt6OvRwKdPkIwhmvcR8klo0g";
-  
+export class TimerComponent implements OnInit { 
+  @Input() project!: Project;
+  @Input() reload!: Function;
   closeResult = '';
   interval: any;
   time = new Date(0);
-  project!: Project;
   currentUser!: User;
   timerForm = new FormGroup({});
 
   constructor(
     private modalService: NgbModal, 
-    private projectService: ProjectService,
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private timerrsService: TimerrsService
+    private timerrsService: TimerrsService,
+    private spinner : NgxSpinnerService
     ) {}
 
   async ngOnInit() {
-    window.localStorage.setItem("token", this.token);    
-    await this.getProject();
+    this.spinner.show();
     await this.CurrentUser();
     this.initTimerForm();  
     this.timerForm.get('user')?.disable();
     this.timerForm.get('project')?.disable(); 
+    this.spinner.hide();
   }
 
   async CurrentUser(){
+    this.spinner.show();
     this.currentUser = await this.userService.CurrentUser();
-    console.log("enter");
-    console.log(this.currentUser);
+    this.spinner.hide();
   }
 
+  /*
   async getProject(){
     this.project = await this.projectService.findOne("60c72ad63ca3db002de75f67").toPromise();
     console.log(this.project);
   }
+  */
 
   initTimerForm(){
     this.timerForm = this.formBuilder.group({
@@ -69,22 +70,23 @@ export class TimerComponent implements OnInit {
     const newTimer: Timer = {
       description: formValue['description'],
       taskType: formValue['taskType'],
-      user: formValue['user'],
+      user: this.currentUser._id,
       startTime: formValue['startTime'],
       duration: formValue['duration'],
-      project: formValue['project']
+      project: this.project._id
     };
-    console.log("this.time : " + this.time);
-    console.log(newTimer);
+
+    this.spinner.show();
     this.timerrsService.save(newTimer).subscribe(
-        response => {
+        async (response) => {
           Swal.fire('Whooa!', 'Task has a created', 'success');
-          console.log(response);
+          await this.reload();
         },
         error => {
           Swal.fire('Oops', error, 'error');
           console.log(error);
-        });    
+        }); 
+        this.spinner.hide();
   }
 
   open(content: any) {

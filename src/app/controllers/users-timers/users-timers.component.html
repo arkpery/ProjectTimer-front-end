@@ -8,17 +8,20 @@
                     </div>
                 </div>
                 <div *ngIf="rows.length && headers.length && currentDate !== null">
-                    <app-timeline [selectDate]="selectDate" [currentDate]="currentDate" [headers]="headers"
+                    <app-timeline [selectDate]="selectDate" (myEvent)="UpdateRows($event)" [currentDate]="currentDate" [headers]="headers"
                         [rows]="rows">
                     </app-timeline>
                 </div>
             </div>
         </div>
-        <div class="row my-4" *ngIf="timers && timers.length">
-            <app-bar-chart class="col-md-6" [title]="'Temps moyen par jour(/min)'" *ngIf="timers" [items]="timers"
+        <div class="row" *ngIf="timers.length">
+            <app-bar-chart class="col-md-12" [title]="'Temps moyen par jour(/min)'" [items]="timers"
                 [transform]="barChart"></app-bar-chart>
-            <app-pie-chart class="col-md-6" [title]="'Temps passé en fonction du type de tâche(/s)'" *ngIf="timers"
+        </div>
+        <div class="row" *ngIf="timers.length">
+            <app-pie-chart class="col-md-12" [title]="'Temps passé en fonction du type de tâche(/s)'"
                 [items]="timers" [transform]="pieChart"></app-pie-chart>
         </div>
     </div>
 </div>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
