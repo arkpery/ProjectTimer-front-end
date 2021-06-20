@@ -1,5 +1,0 @@
-FROM node:12.14.1-alpine3.9
-WORKDIR /home/node/app
-EXPOSE 4200/tcp
-RUN apk add git && \
-    npm install -g @angular/cli

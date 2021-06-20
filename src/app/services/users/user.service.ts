@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../../models/user/User';
 import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { TimelineService } from '../services.utils/timeline/timeline-service.service';
 import { Timer } from '../../models/timer/Timer';
+import { User } from 'src/app/models/user/User';
 
 @Injectable({
   providedIn: 'root'

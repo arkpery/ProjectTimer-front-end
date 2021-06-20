@@ -1,4 +1,4 @@
-import {  ViewChildren, EventEmitter, Output } from '@angular/core';
+import { ViewChildren, EventEmitter, Output } from '@angular/core';
 import { Component, ElementRef, Input, QueryList } from '@angular/core';
 import { Column, HeaderColumn, Ribbon, Row } from "../../viewModels/index";
 import moment from "moment";
@@ -12,9 +12,9 @@ import { ChangeDetectorRef } from '@angular/core';
 export class TimelineComponent {
   @Input() headers: Array<HeaderColumn> = [];
   @Input() rows: Array<Row> = [];
-  @Input() currentDate?: {id: number, time: Date};
+  @Input() currentDate?: { id: number, time: Date };
   @Input() type: string = "perDay";
-  @Input() selectDate: Array<{id: number, time: Date}> = [];
+  @Input() selectDate: Array<{ id: number, time: Date }> = [];
   selectedDate: number = 0;
 
   public draw: boolean = false;
@@ -33,7 +33,7 @@ export class TimelineComponent {
   private sortedIndex: { [key: string]: number } = {};
   public filters: Array<Date> = [];
 
-  @Output() public myEvent: EventEmitter<{id: number, time: Date}> = new EventEmitter<{id: number, time: Date}>();
+  @Output() public myEvent: EventEmitter<{ id: number, time: Date }> = new EventEmitter<{ id: number, time: Date }>();
 
   private typesViews: { [key: string]: any } = {
     "perDay": this.perDay.bind(this),
@@ -42,9 +42,9 @@ export class TimelineComponent {
   }
 
   constructor(
-    public el: ElementRef, 
+    public el: ElementRef,
     private ref: ChangeDetectorRef,
-    ) {
+  ) {
 
   }
 
@@ -82,7 +82,7 @@ export class TimelineComponent {
       this.viewModel = undefined;
       this.perDay();
       setTimeout(() => {
-        if (!this.propagate){
+        if (!this.propagate) {
           this.ref.detectChanges();
           this.propagate = true;
         }
@@ -274,27 +274,25 @@ export class TimelineComponent {
       }
       this.sortedIndex[key] = -this.sortedIndex[key];
     }
-    else if (this.type === "perDay" && header.key) {
-      const nb = parseInt(header.key, 10);
+    else if (this.type === "perDay") {
+      const nb = parseInt(header.key!, 10);
 
-      if (nb) {
-        if (this.currentDate) {
-          this.currentDate.time.setHours(nb);
-          this.currentDate.time.setMinutes(0);
-          this.filters.push(this.currentDate.time);
-        }
-        this.__headers = undefined;
-        this.__rows = undefined;
-        this.styles = undefined;
-        this.viewModel = undefined;
-        this.perHour();
-        setTimeout(() => {
-          if (!this.propagate){
-            this.ref.detectChanges();
-            this.propagate = true;
-          }
-        }, 100);
+      if (this.currentDate) {
+        this.currentDate.time.setHours(nb);
+        this.currentDate.time.setMinutes(0);
+        this.filters.push(this.currentDate.time);
       }
+      this.__headers = undefined;
+      this.__rows = undefined;
+      this.styles = undefined;
+      this.viewModel = undefined;
+      this.perHour();
+      setTimeout(() => {
+        if (!this.propagate) {
+          this.ref.detectChanges();
+          this.propagate = true;
+        }
+      }, 100);
     }
   }
 
@@ -417,16 +415,16 @@ export class TimelineComponent {
 
   }
 
-  compareWith(a: {id: number, time: Date}, b: {id: number, time: Date}){
+  compareWith(a: { id: number, time: Date }, b: { id: number, time: Date }) {
     return (a.id === b.id);
   }
 
-  changeTimers(param: {id: number, time: Date}) {
-    this.currentDate =  param;
+  changeTimers(param: { id: number, time: Date }) {
+    this.currentDate = param;
     this.myEvent.emit(param);
   }
 
-  parent(element: HTMLElement){
+  parent(element: HTMLElement) {
     const rect = element.getBoundingClientRect();
     const style = {
       "min-width.px": rect.width

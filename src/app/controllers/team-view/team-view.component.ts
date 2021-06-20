@@ -226,7 +226,7 @@ export class TeamViewComponent implements OnInit {
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, keep it'
-      }).then((result) => {
+      }).then((result: any) => {
         if (result.isConfirmed) {
           this.spinner.show();
           this.teamService.deleteGroup(id)
@@ -261,7 +261,9 @@ export class TeamViewComponent implements OnInit {
       return;
     }
     const newName = {
-      name: team.name 
+      name: team.name,
+      members: team.members.map((team: any) => team._id),
+      admin: team.admin._id
     } as Team;
     this.spinner.show();
     this.teamService.update(team._id, newName).subscribe((response: any) => {
@@ -332,7 +334,7 @@ export class TeamViewComponent implements OnInit {
         deleteUser(this.userList,team.members[i]._id)
       }
     }
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result: any) => {
         
         this.selectedMembers = this.memebersAlreadySelected.concat(this.selectedMembersId);
         const newMembers = {
@@ -365,7 +367,7 @@ export class TeamViewComponent implements OnInit {
      
       
 
-    }, (reason) => {
+    }, (reason: any) => {
       console.log("canceled");
     });
   }
@@ -374,7 +376,7 @@ export class TeamViewComponent implements OnInit {
 
 
   updateGroupByAddingExistingProject(createProjectModalOnTeams : any,team: Team){
-    this.modalService.open(createProjectModalOnTeams, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalService.open(createProjectModalOnTeams, {ariaLabelledBy: 'modal-basic-title'}).result.then((result : any) => {
       if(!this.selectedProjectsId?.length){
         Swal.fire('Can\'t add', 'Please select a project.', 'error')
       } else {
@@ -399,7 +401,7 @@ export class TeamViewComponent implements OnInit {
 
       }
        
-      }, (reason) => {
+      }, (reason :any) => {
          console.log("canceled");
            });
     }

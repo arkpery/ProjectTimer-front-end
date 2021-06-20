@@ -12,8 +12,7 @@ import { Team } from '../../models/team/team.model';
 import { BarChartComponent } from 'src/app/bar-chart/bar-chart.component';
 import { PieChartComponent } from 'src/app/pie-chart/pie-chart.component';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { User } from 'src/app/models/user/user.model';
-
+import { User } from "../../models/user/User";
 
 @Component({
   selector: 'app-project',
@@ -153,7 +152,7 @@ export class ProjectComponent {
   async FetchProject() {
     this.spinner.show();
     this.project = await this.projectService.findOne(this.route.snapshot.paramMap.get("id") as string).toPromise();
-    this.timers = await this.timerService.findByProject(this.project).toPromise();
+    this.timers = await this.timerService.findByProject(this.project!).toPromise();
     this.spinner.hide();
     this.headers = [
       {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { User } from "src/app/models/user/user.model";
+import { User } from "src/app/models/user/User";
 import { UserService } from "src/app/services/users/user.service";
 import Swal from "sweetalert2";
 
@@ -65,7 +65,7 @@ export class ProfilViewComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: `Save`,
       denyButtonText: `Don't save`,
-    }).then((result) => {
+    }).then((result: any) => {
       if (result.isConfirmed) {
         Swal.fire("Saved!", "", "success");
       } else if (result.isDenied) {
@@ -103,13 +103,16 @@ export class ProfilViewComponent implements OnInit {
       birthdate: formValue["birthdate"],
       avatar: formValue["avatar"],
     } as User;
-    //this.userService.update(this.currentUser._id, updateUser).subscribe(
-    //  async (response: any) => {
-    //    console.log(response);
-    //  },
-    //  (error: any) => {
-    //    console.log(error);
-    //  });
+    updateUser._id = this.currentUser._id;
+    /*
+    this.userService.update(updateUser).subscribe(
+      async (response: any) => {
+        Swal.fire("Saved!", "", "success");
+      },
+      (error: any) => {
+        Swal.fire("Failed", "", "error");
+       });
+       */
   }
 
   MustMatch(controlName: string, matchingControlName: string) {

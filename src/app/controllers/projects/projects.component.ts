@@ -23,7 +23,7 @@ export class ProjectsComponent implements OnInit {
   faCogs = faCogs;
   projects: Array<Project> = [];
   defaultGroupId: Array<string> = [];
-  currentUser?: User;
+  currentUser!: User;
   requestDone: boolean = false;
   groupList: Array<Team> = [];
   selectedGroupId: Array<string> = [];
@@ -63,8 +63,8 @@ export class ProjectsComponent implements OnInit {
 
   FetchTeam() {
     this.spinner.show();
-    this.groupService.getAllGroup().subscribe((teams) => {
-      this.groupList = teams.map((team) => {
+    this.groupService.getAllGroup().subscribe((teams: Array<Team>) => {
+      this.groupList = teams.map((team: Team) => {
         return ({
           search_label: team.name,
           _id: team._id

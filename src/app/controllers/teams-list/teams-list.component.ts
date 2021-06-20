@@ -239,7 +239,7 @@ export class TeamsListComponent implements OnInit {
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, keep it'
-      }).then((result) => {
+      }).then((result: any) => {
         if (result.isConfirmed) {
           this.spinner.show();
           this.teamService.deleteGroup(id)
